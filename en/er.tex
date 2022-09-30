@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%% book.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[graybox,envcountchap,sectrefs]{svmono}
+
+% Springer packages
+
+\usepackage{txfonts}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{type1cm}         
+\usepackage{makeidx}         % allows index generation
+\usepackage{graphicx}        % standard LaTeX graphics tool
+                             % when including figure files
+\usepackage{multicol}        % used for the two-column index
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+\usepackage{chapterbib}
+
+\makeindex
+
+\graphicspath{{images/}}     % Location of images for \includegraphics
+
+% Our packages
+
+\usepackage{url}
+\usepackage{leftidx}         % Pre sub- and superscripts (kinematics chapter)
+\usepackage{framed}          % Frames around activities
+\usepackage{er}              % Our style file
+\usepackage{ertikz}          % TikZ packages and definitions
+
+%\includeonly{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\include{front}
+
+\mainmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{basic}
+\include{sensors}
+\include{reactive}
+\include{fmg}
+\include{motion}
+\include{control}
+\include{obstacle}
+\include{localization}
+\include{mapping}
+\include{mapbased}
+\include{fuzzy}
+\include{image}
+\include{neural}
+\include{machine}
+\include{swarm}
+\include{kinematics}
+\appendix
+\include{math}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+
+\include{printindex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

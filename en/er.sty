@@ -1,0 +1,81 @@
+% !TeX root = er.tex
+% Style file for Elements of Robotics
+
+\hyphenation{lab-y-rinth}
+\hyphenation{ro-bot-ic}
+\hyphenation{ro-bot-ics}
+
+% Counters
+\newcounter{actcounter}[chapter]  % Activity counter within chapter
+\renewcommand*{\theactcounter}{\thechapter.\arabic{actcounter}}
+                                  %   include chapter when printing
+\newcounter{algcounter}[chapter]  % Algorithm counter within chapter
+\renewcommand*{\thealgcounter}{\thechapter.\arabic{algcounter}}
+                                  %   include chapter when printing
+\newcounter{sctr}                 % Statement counter
+
+% LEGO with registered trademark
+\newcommand*{\lego}{LEGO$^\textrm{\scriptsize\textregistered}$}
+
+% A* algorithm
+\newcommand*{\astar}{A$\!^{*}$}
+
+% Space out array environment
+\newcommand*{\spacearray}{
+\renewcommand{\arraystretch}{1.6}
+\setlength{\arraycolsep}{4pt}
+}
+
+% Short commands for \leftidx pre superscripts in kinematics chapter
+\newcommand*{\ax}{\leftidx{^a}\!{x}{}}
+\newcommand*{\ay}{\leftidx{^a}\!{y}{}}
+\newcommand*{\aprimex}{\leftidx{^{a1}}\!{x}{}}
+\newcommand*{\aprimey}{\leftidx{^{a1}}\!{y}{}}
+\newcommand*{\bx}{\leftidx{^b}\!{x}{}}
+\newcommand*{\by}{\leftidx{^b}\!{y}{}}
+\newcommand*{\ap}{\leftidx{^a}\!{p}{}}
+\newcommand*{\bp}{\leftidx{^b}\!{p}{}}
+\newcommand*{\aprimep}{\leftidx{^{a1}}\!{p}{}}
+
+% Activities: #1 is the activity name, #2 is for label{act.#2}
+\newcommand*{\act}[2]{\refstepcounter{actcounter}\noindent%
+\textbf{Activity \theactcounter: #1}\index{activity!#1}%
+\label{act.#2}}
+
+% Indentation
+\newcommand*{\idv}{\hspace*{3em}}   % Variables
+\newcommand*{\idc}{\hspace*{1.5em}} % Continuation lines
+
+% Statement line number
+\newcommand*{\stl}{\hspace*{4pt}\footnotesize%
+\thesctr{}\stepcounter{sctr}:}
+
+% Assignment operator
+\newcommand*{\ass}{$\leftarrow\;$}
+
+% Font for small sans serif display of variables, etc.
+\newcommand*{\p}[1]{\textsf{\small #1}}
+\newcommand*{\sub}[1]{\textit{\scriptsize #1}}
+
+% Environment for displaying algorithms
+\newenvironment{alg}[2]%
+{
+\refstepcounter{algcounter}        % Increment algorithm counter
+\label{alg.#2}
+\setcounter{sctr}{1}               % Reset statement counter
+\renewcommand*{\arraystretch}{1.2} % Increase row spacing
+\begin{center}
+\index{algorithm!#1}   % Index algorithm
+\begin{sffamily}                   % Font
+  % Line number right-justified; statement, comment left-justified
+\begin{tabular}{|r@{\hspace{.8ex}}l@{\hspace{1ex}}l|}\hline
+  % Algorithm number and name centered in wide box
+\multicolumn{3}{|p{.9\textwidth}|}%
+{\centering\textbf{Algorithm \thealgcounter: #1}}\\\hline
+}
+{
+\hline
+\end{tabular}
+\end{sffamily}
+\end{center}
+}

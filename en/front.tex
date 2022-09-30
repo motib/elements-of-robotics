@@ -1,0 +1,57 @@
+% !TeX root = er.tex
+
+\author{Mordechai (Moti) Ben-Ari\\Francesco Mondada}
+\title{Elements of Robotics}
+\maketitle
+
+\frontmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{dedication}
+For Itay, Sahar and Nofar.\\
+Mordechai Ben-Ari
+
+\bigskip
+
+For Luca, Nora, and Leonardo.\\
+Francesco Mondada
+\end{dedication}
+
+\preface
+
+
+Robotics is a vibrant field which grows in importance from year to year. It is also a subject that students enjoy at all levels from kindergarten to graduate school. The aim of learning robotics varies with the age group. For young kids, robots are an educational toy;  for students in middle- and high-schools, robotics can increase the motivation of students to study STEM (science, technology, engineering, mathematics); at the introductory university level, students can learn how the physics, mathematics and computer science that they study can be applied to practical engineering projects; finally, upper-level undergraduate and graduate students prepare for careers in robotics.
+
+This book is aimed at the middle of the age range: students in secondary schools and in their first years of university. We focus on robotics algorithms and their mathematical and physical principles. We go beyond trial-and-error play, but we don't expect the student to be able to design and build robots and robotic algorithms that perform tasks in the real world. The presentation of the algorithms without advanced mathematics and engineering is necessarily simplified, but we believe that the concepts and algorithms of robotics can be learned and appreciated at this level, and can serve as a bridge to the study of robotics at the advanced undergraduate and graduate levels.
+
+The required background is a knowledge of programming, mathematics and physics at the level of secondary schools or the first year of university. From mathematics: algebra, trigonometry, calculus, matrices and probability. Appendix~\ref{ch.math} provides tutorials for some of the more advanced mathematics. From physics: time, velocity, acceleration, force and friction.
+
+Hardly a day goes by without the appearance of a new robot intended for educational purposes. Whatever the form and function of a robot, the scientific and engineering principles and algorithms remain the same. For this reason, the  book is not based on any specific robot. In Chap.~\ref{ch.basic} we define a generic robot: a small autonomous mobile robot with differential drive and sensors capable of detecting the direction and distance to an object, as well as ground sensors that can detect markings on a table or floor. This definition is sufficiently general so that students should be able to implement most of algorithms on any educational robot. The quality of the implementation may vary according to the capabilities of each platform, but the students will be able to learn robotics principles and how to go from theoretical algorithms to the behavior of a real robot.
+
+For similar reasons, we choose not to describe algorithms in any specific programming language. Not only do different platforms support different languages, but educational robots often use different programming approaches, such as textual programming and visual programming using blocks or states. We present algorithms in pseudocode and leave it to the students to implement these high-level descriptions in the language and environment for the robot they are using.
+
+The book contains a large number of \emph{activities}, most of which ask you to implement algorithms and to explore their behavior. The robot you use may not have the capabilities to perform all the activities, so feel free to adapt them to your robot.
+
+This book arose from the development of learning materials for the Thymio educational robot (\url{https://www.thymio.org}). The book's website \url{http://elementsofrobotics.net} contains implementations of most of the activities for that robot. Some of the more advanced algorithms are difficult to implement on educational robots so Python programs are provided. Please let us know if you implement the activities for other educational robots and we will post a link on the book's website.
+
+Chapter~\ref{ch.basic} presents an overview of the field of robotics and specifies the  generic robot and the pseudocode used in the algorithms. Chapters~\ref{ch.sensors}--\ref{ch.control} present the fundamental concepts of autonomous mobile robots: sensors, reactive behavior, finite state machines, motion and odometry, and control. Chapters~\ref{ch.obstacle}--\ref{ch.kinematics} describe more advanced robotics algorithms: obstacle avoidance, localization, mapping, fuzzy logic, image processing, neural networks, machine learning, swarm robotics, and the kinematics of robotic manipulators. A detailed overview of the content is given in Sect.~\ref{s.overview}.
+
+\bigskip
+
+\noindent\textbf{Acknowledgments:}
+
+This book arose from work on the Thymio robot and the Aseba software system initiated by the second author's research group at the Robotic Systems Laboratory of the Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne. We would like to thank all the students, engineers, teachers and artists of the Thymio community without whose efforts this book could not have been written.
+
+Open access to this book was supported by the Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne and the National Centre of Competence in Research (NCCR) Robotics.
+
+We are indebted to Jennifer S. Kay, Fanny Riedo, Amaury Dame and Yves Piguet for their comments which enabled us to correct errors and clarify the presentation.
+
+We would like to thank the staff at Springer, in particular Helen Desmond and Beverley Ford, for their help and support.
+
+\bigskip
+
+\begin{flushright}\noindent
+Rehovot\hfill {\it Moti Ben-Ari}\\
+Lausanne\hfill {\it Francesco Mondada}\\
+\end{flushright}
+ 
+\tableofcontents

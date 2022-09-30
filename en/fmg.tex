@@ -1,0 +1,208 @@
+% !TeX root = er.tex
+
+\chapter{Finite State Machines}\label{ch.fmg}
+
+\abstract*{Robots have embedded computers with memory that can be used to store the current state of an algorithm. Finite state machines specify the conditions under which the state of the robot changes and the actions taken when the state changes. Finite state machines are demonstrated first by Braitenberg vehicles and then by an algorithm that causes the robot to search for an object and then approach it.}
+
+The Braitenberg vehicles and the line following algorithms (Chap.~\ref{ch.reactive}) demonstrate reactive behavior, where the action of the robot depends on the \emph{current} values returned by robot's sensors, not on events that happened previously. In Sect.~\ref{s.sm} we present the concept of state and finite state machines (FSM). Sections~\ref{s.reactive-state}--\ref{s.search-and-approach} show how certain Braitenberg vehicles can be implemented with FSMs. Section\ref{s.fsm-implementation} discusses the implementation of FSMs using state variables.
+
+\section{State machines}\label{s.sm}
+
+The concept of state is very familiar. Consider a toaster: initially, the toaster is in the \p{off} state; when you push the lever down, a transition is made to the \p{on} state and the heating elements are turned on; finally, when the timer expires, a transition is made back to the \p{off} state and the heating elements are turned off.
+
+A \emph{finite state machine (FSM)}\index{finite state machine}\footnote{Finite state machines are also called finite automata.}  consists of a set of \emph{states} $s_i$ and a set of \emph{transitions} between pairs of states $s_i, s_j$. A transition is labeled $\mathit{condition} / \mathit{action}$: a condition that causes the transition to be taken and an action that is performed when the transition is taken.
+
+FSMs can be displayed in \emph{state diagrams}\index{state diagram}:
+\begin{center}
+\begin{tikzpicture}[node distance = 6mm and 5cm,align=left]
+\node[draw,circle,minimum size=12mm] (off) {\p{off}};
+\node[draw,circle,minimum size=12mm] (on) [right=of off] {\p{on}};
+\draw[->,bend left=15] (off) to node[above] {\p{lever down $\leadsto$ turn heat on}} (on);
+\draw[->,bend left=15] (on) to node[below] {\p{timer expired $\leadsto$ turn heat off}} (off);
+\draw[->] (-15mm,10mm) to (off);
+\node[draw,right=of on,xshift=-4cm] { \p{off = toaster off} \\ \p{on = toaster on}};
+\end{tikzpicture}
+\end{center}
+
+A state is denoted by a circle labeled with the name of the state. States are given short names to save space and their full names are given in a box next to the state diagram. The incoming arrow denotes the initial state. A transition is shown as an arrow from the \emph{source} state to the \emph{target} state. The arrow is labeled with the condition and the action of the transition. The action is not continuing; for example, the action \p{turn left} means set the motors so that the robot turns to the left, but the transition to the next state is taken without waiting for the robot to reach a specific position.
+
+\section{Reactive behavior with state}\label{s.reactive-state}
+
+Here is the specification of a Braitenberg vehicle whose behavior is non-reactive:
+
+\begin{quote}
+\normalsize\noindent\textbf{Specification (Persistent)}:\index{Braitenberg vehicle!persistent} The robot moves forwards until it detects an object. It then moves backwards for one second and reverses to move forwards again.
+\end{quote}
+Figure~\ref{fig.persistent} shows the state diagram for this behavior.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[node distance = 2cm and 6cm,align=left]
+\node[draw,circle,minimum size=12mm] (forwards)  {\textsf{\small fwd}};
+\node[draw,circle,minimum size=12mm] (backwards) [right=of forwards] {\textsf{\small back}};
+\draw[->,bend left=15] (forwards) to node[above] {\textsf{\small detected $\leadsto$}\\\p{set motors backwards, set timer}} (backwards);
+\draw[->,bend left=15] (backwards) to node[below] {\textsf{\small timer expired $\leadsto$ set motors forwards}} (forwards);
+\draw[->] (-15mm,15mm) to  (forwards);
+\node at (0mm,18mm) {\textsf{\small true $\leadsto$ set motors forwards}};
+\node[draw,above=of backwards,yshift=-1cm,xshift=-1cm] {\textsf{\small fwd = robot moving forwards}\\\textsf{\small back=robot moving backwards}};
+\end{tikzpicture}
+\caption{FSM for the persistent Braitenberg vehicle}\label{fig.persistent}
+\end{center}
+\end{figure}
+
+Initially, when the system is turned on, the motors are set to move forwards. (The condition \p{true} is always true so this is done unconditionally.) In state \p{fwd}, if an object is detected, the transition to state \p{back} is taken, the robot moves backwards and the timer is set. When one second has passed the timer expires; the transition to state \p{fwd} is taken and the robot moves forwards. If an object is detected when the robot is in the \p{back} state, \emph{no} action is performed, because there is no transition labeled with this condition. This shows that the behavior is not reactive, that is, it depends on the current state of the robot as well as on the event that occurs.
+
+\begin{framed}
+\act{Consistent}{consistent}
+\begin{itemize}
+\item Draw the state diagram for the Consistent Braitenberg vehicle.
+\begin{quote}
+\normalsize\noindent\textbf{Specification (Consistent):}\index{Braitenberg vehicle!consistent} The robot cycles through four states, changing state once every second: moving forwards, turning left, turning right, moving backwards.
+\end{quote}
+\end{itemize}
+\end{framed}
+
+\section{Search and approach}\label{s.search-and-approach}
+
+This section presents a more complex example of a robotic behavior that uses states.
+
+\begin{quote}
+\normalsize\noindent\textbf{Specification (Search and approach):} The robot searches left and right ($\pm 45^\circ$). When it detects an object, the robot approaches the object and stops when it is near the object.
+\end{quote}
+
+There are two configurations of the sensors of a robot that enable it to search left and right as shown in Figs.~\ref{fig.separate-sensors},~\ref{fig.rotating-sensor}. If the sensors are fixed to the body of the robot, the robot itself has to turn left and right; otherwise, if the sensor is mounted so that it can rotate, the robot can remain still and the sensor is rotated. We assume that the robot has fixed sensors.
+
+Figure~\ref{fig.search-approach} shows the state diagram for search and approach. The robot is initially searching left. There are two new concepts that are illustrated in the diagram. There is a \emph{final state}\index{finite state machine!final state} labeled \p{found} and denoted by a double circle in the diagram. A finite state machine is finite in the sense that it contains a finite number of states and transitions. However, its behavior can be finite or infinite. The FSM in Fig.~\ref{fig.search-approach} demonstrates finite behavior because the robot will stop when it has found an object and approached it. This FSM also has infinite behavior: if an object is never found, the robot continues indefinitely to search left and right.
+
+The Persistent Braitenberg vehicle (Fig.~\ref{fig.persistent}) has infinite behavior because it continues to move without stopping. A toaster also demonstrates infinite behavior because you can keep toasting slices of bread forever (until you unplug the toaster or run out of bread).
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[node distance = 2.2cm and 5.5cm,align=left]
+\node[draw,circle,minimum size=12mm] (left) {\p{left}};
+\node[draw,circle,minimum size=12mm] (right) [right=of left] {\p{right}};
+\node[draw,circle,minimum size=12mm] (detected) [below=of left] {\p{appr}};
+\node[draw,circle,minimum size=12mm,yshift=-1mm] (near1) [below=of right] {\p{found}};
+\node[draw,circle,minimum size=14mm] (near) [below=of right] {};
+\draw[->,bend left=15] (left) to node[above] {\p{at $+45^\circ$} $\leadsto$ \p{turn right}} (right);
+\draw[->,bend left=15] (right) to node[below] {\p{at $-45^\circ$} $\leadsto$ \p{turn left}} (left);
+\draw[->] (left) to node[xshift=1mm,yshift=3mm] {\p{detected} $\leadsto$ \p{set \ motors forwards}} (detected);
+\draw[->,bend left=15] (right) to node[xshift=5mm] {\p{detected} $\leadsto$ \p{\ \ \ \ \ \ set motors forwards}} (detected);
+\draw[->] (detected) to node[below] {\p{near object} $\leadsto$ \p{set motors off}} (near);
+\draw[->] (-15mm,10mm) to (left);
+\node at (-3mm,12mm) {\textsf{\small true $\leadsto$ turn left}};
+\node[draw] at (3.5,-5.5) { \p{left = robot turning left to search}\\ \p{right = robot turning right to search}\\\p{appr = robot approaching object}\\\p{found = robot found object}};
+\end{tikzpicture}
+\caption{State diagram for search and approach}\label{fig.search-approach}
+\end{center}
+\end{figure}
+
+The second new concept is \emph{nondeterminism}\index{finite state machine!nondeterminism}. States \p{left} and \p{right} each have \emph{two} outgoing transitions, one for reaching the edge of the sector being searched and one for detecting an object. The meaning of nondeterminism is that any of the outgoing transitions may be taken. There are three possibilities:
+\begin{itemize}
+\item The object is detected but the search is not at an edge of the sector; in this case, the transition to \p{appr} is taken.
+\item The search is at an edge of the sector but an object is not detected; in this case, the transition from \p{left} to \p{right} or from \p{right} to \p{left} is taken.
+\item The search is at an edge of the sector exactly when an object is detected; in this case, an arbitrary transition is taken. That is, the robot might approach the object or it might change the direction of the search.
+\end{itemize}
+The nondeterministic behavior of the third case might cause the robot to fail to approach the object when it is first detected, if this event occurs at the same time as the event of reaching $\pm45^\circ$. However, after a short period the conditions will be checked again and it is likely that only one of the events will occur.
+
+\section{Implementation of finite state machines}\label{s.fsm-implementation}
+
+To implement behaviors with states, variables must be used. The Persistent vehicle (Sect.~\ref{s.reactive-state}) needs a timer to cause an event after a period of time has expired. As explained in Sect.~\ref{s.embedded}, a timer is a variable that is set to the desired period of time. The variable is decremented by the operating system and when it reaches zero an event occurs.
+
+Algorithm~\ref{alg.persistent} describes how the FSM of Fig.~\ref{fig.persistent} is implemented. The variable \p{current} contains the current state of the robot; at the conclusion of the processing of an event handler, the value of the variable is set to the target state of the transition. The values of \p{current} are named \p{fwd} and \p{back} for clarity, although in a computer they would be represented by numerical values.
+
+\begin{figure}
+\begin{alg}{Persistent}{persistent}
+&\idv{}integer timer&// In milliseconds\\
+&\idv{}states current \ass fwd&\\
+\hline
+\stl{}&left-motor-power \ass $100$&\\
+\stl{}&right-motor-power \ass $100$&\\
+\stl{}&loop&\\
+\stl{}&\idc{}when current $=$ fwd and object detected in front&\\
+\stl{}&\idc{}\idc{} left-motor-power \ass $-100$&\\
+\stl{}&\idc{}\idc{} right-motor-power \ass $-100$&\\
+\stl{}&\idc{}\idc{} timer \ass $1000$&\\
+\stl{}&\idc{}\idc{} current \ass back&\\
+\stl{}&&\\
+\stl{}&\idc{}when current $=$ back and timer $=0$&\\
+\stl{}&\idc{}\idc{} left-motor-power \ass $100$&\\
+\stl{}&\idc{}\idc{} right-motor-power \ass $100$&\\
+\stl{}&\idc{}\idc{} current \ass fwd&\\
+\end{alg}
+\end{figure}
+
+\begin{framed}
+\act{Persistent}{persistent}
+\begin{itemize}
+\item Implement the Persistent behavior.
+\end{itemize}
+\end{framed}
+
+\begin{framed}
+\act{Paranoid (alternates direction)}{paranoid2-state}
+\begin{itemize}
+\item Draw the state diagram for the Paranoid (alternates direction) Braitenberg vehicle:
+\begin{quote}
+\normalsize\noindent\textbf{Specification (Paranoid (alternates direction)):}\index{Braitenberg vehicle!paranoid}
+\begin{itemize}
+\item When an object is detected in front of the robot, the robot moves forwards. \item When an object is detected to the right of the robot, the robot turns right. 
+\item When an object is detected to the left of the robot, the robot turns left. 
+\item If the robot is turning (even if it no longer detects an object), it alternates the direction of its turn every second.
+\item When no object is detected and the robot is not turning, the robot stops. 
+\end{itemize}
+\end{quote}
+\item Implement this specification. In addition to a variable that stores the current state of the robot, use a variable with values \p{left} and \p{right} to store the direction that the robot turns. Set a timer with a one-second period. In the event handler for the timer, change the value of the direction variable to the opposite value and reset the timer.
+\end{itemize}
+\end{framed}
+
+Algorithm~\ref{alg.search-and-approach} is an outline of the implementation of the state diagram in Fig.~\ref{fig.search-approach}.
+
+\begin{figure}
+\begin{alg}{Search and approach}{search-and-approach}
+&\idv{}states current \ass{} left&\\
+\hline
+\stl{}&left-motor-power \ass $50$&// Turn left\\
+\stl{}&right-motor-power \ass $150$&\\
+\stl{}&loop&\\
+\stl{}&\idc{}when object detected&\\
+\stl{}&\idc{}\idc{}if current $=$ left&\\
+\stl{}&\idc{}\idc{}\idc{}left-motor-power \ass $100$&// Go forwards\\
+\stl{}&\idc{}\idc{}\idc{}right-motor-power \ass $100$&\\
+\stl{}&\idc{}\idc{}\idc{}current \ass{} appr&\\
+\stl{}&\idc{}\idc{}else if current $=$ right&\\
+\stl{}&\idc{}\idc{}\idc{}$\cdots$&\\
+\stl{}&\idc{}when at $+45^\circ$&\\
+\stl{}&\idc{}\idc{}if current $=$ left&\\
+\stl{}&\idc{}\idc{}\idc{}left-motor-power \ass $150$&// Turn right\\
+\stl{}&\idc{}\idc{}\idc{}right-motor-power \ass $50$&\\
+\stl{}&\idc{}\idc{}\idc{}current \ass{} right&\\
+\stl{}&\idc{}when at $-45^\circ$&\\
+\stl{}&\idc{}\idc{} $\cdots$&\\
+\stl{}&\idc{}when object is very near&\\
+\stl{}&\idc{}\idc{}if current $=$ appr&\\
+\stl{}&\idc{}\idc{}\idc{}$\cdots$&\\
+%\stl{}&\idc{}\idc{}\idc{}left-motor-power \ass $0$&// Stop\\
+%\stl{}&\idc{}\idc{}\idc{}right-motor-power \ass $0$&\\
+%\stl{}&\idc{}\idc{}\idc{}current \ass{} found&\\
+\end{alg}
+\end{figure}
+
+\begin{framed}
+\act{Search and approach}{search-and-approach}
+\begin{itemize}
+\item Fill in the missing lines in Algorithm~\ref{alg.search-and-approach}.
+\item Implement Algorithm~\ref{alg.search-and-approach}.
+\end{itemize}
+\end{framed}
+
+\section{Summary}
+
+Most robotics algorithms require that the robot maintain an internal representation of its current state. The conditions that the robot uses to decide when to change state and actions taken when changing from one state to another are described by finite state machines. State variables are used to implement state machines in programs.
+
+\section{Further reading}
+
+The classic textbook on automata was published in 1979 by John Hopcroft and Jeffrey D. Ullman; its latest edition is \cite{automata}. For a detailed explanation of \emph{arbitrary} choice among alternatives in nondeterminism (Sect.~\ref{s.search-and-approach}), see \cite[Sect.~2.4]{pcdp2}.
+
+\bibliographystyle{spmpsci}
+\bibliography{er}
