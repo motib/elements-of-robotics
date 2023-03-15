@@ -1,5 +1,51 @@
-% !TeX root = er.tex
-% Style file for Elements of Robotics
+\usepackage[a5paper,margin=2cm]{geometry}
+
+\usepackage{graphicx}
+
+% For pdfLaTeX
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage[textfont={it}]{caption}
+\captionsetup[figure]{name=Fig.}
+\captionsetup[table]{name=Tab.}
+
+\usepackage{makeidx}
+\usepackage{multicol}
+\usepackage[bottom]{footmisc}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{leftidx}         % Pre sub- and superscripts (kinematics chapter)
+\usepackage{url}
+\usepackage{framed}          % Frames around activities
+
+\makeindex
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\large\bfseries}
+  {\chaptertitlename\ \thechapter}{10pt}{\Large}
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}{\thesection}{1em}{}
+  \titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing{\chapter}{0pt}{0pt plus 2pt minus 2pt}{20pt plus 1.5pt minus 0.25pt}  
+
+
+% A bit more interline spacing
+\renewcommand{\baselinestretch}{1.1}
+% TOC contains chapters and sections
+\setcounter{tocdepth}{1}
+
+\newtheorem{example}{Exemple}[chapter]
+\newcommand\qedsymbol{\hbox{$\square$}}
+\newcommand*{\lego}{LEGO$^\textrm{\scriptsize\textregistered}$}
+\newcommand*{\astar}{A$\!^{*}$}
+\newcommand*{\p}[1]{\textsf{\small #1}}
+\newcommand*{\sub}[1]{\textit{\scriptsize #1}}
+\newcommand*{\ass}{$\leftarrow\;$}
+
+\usepackage{ertikz}
 
 % Counters
 \newcounter{actcounter}[chapter]  % Activity counter within chapter
@@ -10,11 +56,9 @@
                                   %   include chapter when printing
 \newcounter{sctr}                 % Statement counter
 
-% LEGO with registered trademark
-\newcommand*{\lego}{LEGO$^\textrm{\scriptsize\textregistered}$}
-
-% A* algorithm
-\newcommand*{\astar}{A$\!^{*}$}
+\newcommand*{\act}[2]{\refstepcounter{actcounter}\noindent%
+\textbf{Activity \theactcounter: #1}\index{activity!#1}%
+\label{act.#2}}
 
 % Space out array environment
 \newcommand*{\spacearray}{
@@ -33,15 +77,6 @@
 \newcommand*{\bp}{\leftidx{^b}\!{p}{}}
 \newcommand*{\aprimep}{\leftidx{^{a1}}\!{p}{}}
 
-% Font for small sans serif display of variables, etc.
-\newcommand*{\p}[1]{\textsf{\small #1}}
-\newcommand*{\sub}[1]{\textit{\scriptsize #1}}
-
-% Activities: #1 is the activity name, #2 is for label{act.#2}
-\newcommand*{\act}[2]{\refstepcounter{actcounter}\noindent%
-\textbf{Activity \theactcounter: #1}\index{activity!#1}%
-\label{act.#2}}
-
 % Indentation
 \newcommand*{\idv}{\hspace*{3em}}   % Variables
 \newcommand*{\idc}{\hspace*{1.5em}} % Continuation lines
@@ -49,9 +84,6 @@
 % Statement line number
 \newcommand*{\stl}{\hspace*{4pt}\footnotesize%
 \thesctr{}\stepcounter{sctr}:}
-
-% Assignment operator
-\newcommand*{\ass}{$\leftarrow\;$}
 
 % Environment for displaying algorithms
 \newenvironment{alg}[2]%

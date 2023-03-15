@@ -1,0 +1,72 @@
+% !TeX root = er.tex
+
+\author{Mordechai (Moti) Ben-Ari\\Francesco Mondada}
+\title{Éléments de robotique}
+\date{}
+\maketitle
+
+\vfill
+
+\begin{center}
+\copyright{} Moti Ben-Ari and Francesco Mondada, $2022$
+ \end{center}
+ 
+\begin{small}
+This work is licensed under the Creative Commons Attribution 4.0 International. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by/4.0/}.
+\end{small}
+
+
+\newpage
+\mbox{}
+\vfill
+\begin{center}
+\begin{tabular}{l}
+Pour Itay, Sahar and Nofar.\\
+Mordechai Ben-Ari\\
+\\
+Pour Luca, Nora, and Leonardo.\\
+Francesco Mondada
+\end{tabular}
+\end{center}
+\vfill
+\mbox{}
+\newpage
+
+\chapter*{Preface}
+
+La robotique est un domaine dynamique qui gagne en importance d'année en année. C'est également un sujet que les élèves apprécient à tous les niveaux, de la maternelle aux études supérieures. L'objectif de l'apprentissage de la robotique varie en fonction de la tranche d'âge. Pour les jeunes enfants, les robots sont des jouets éducatifs ; pour les collégiens et les lycéens, la robotique peut accroître la motivation des étudiants à étudier les STIM (sciences, technologie, ingénierie, mathématiques) ; au niveau de l'introduction à l'université, les étudiants peuvent apprendre comment la physique, les mathématiques et l'informatique qu'ils étudient peuvent être appliquées à des projets d'ingénierie pratiques ; enfin, les étudiants de premier cycle et les étudiants diplômés se préparent à des carrières en robotique.
+
+Ce livre s'adresse au milieu de la tranche d'âge : les étudiants des écoles secondaires et des premières années d'université. Nous nous concentrons sur les algorithmes robotiques et leurs principes mathématiques et physiques. Nous allons au-delà du jeu d'essais et d'erreurs, mais nous ne nous attendons pas à ce que l'étudiant soit capable de concevoir et de construire des robots et des algorithmes robotiques qui exécutent des tâches dans le monde réel. La présentation des algorithmes sans mathématiques et ingénierie avancées est nécessairement simplifiée, mais nous pensons que les concepts et algorithmes de la robotique peuvent être appris et appréciés à ce niveau, et peuvent servir de passerelle vers l'étude de la robotique aux niveaux avancés du premier et du deuxième cycle universitaire.
+
+Le bagage requis est une connaissance de la programmation, des mathématiques et de la physique au niveau des écoles secondaires ou de la première année d'université. En mathématiques : algèbre, trigonométrie, calcul, matrices et probabilités. L'annexe~\ref{ch.math} fournit des didacticiels pour certaines des mathématiques les plus avancées. En physique : temps, vitesse, accélération, force et friction.
+
+Il ne se passe pas un jour sans qu'apparaisse un nouveau robot destiné à des fins éducatives. Quelles que soient la forme et la fonction d'un robot, les principes et les algorithmes scientifiques et techniques restent les mêmes. C'est pourquoi ce livre n'est pas basé sur un robot spécifique. Au Chap.~\ref{ch.basic}, nous définissons un robot générique : un petit robot mobile autonome doté d'un entraînement différentiel et de capteurs capables de détecter la direction et la distance d'un objet, ainsi que de capteurs au sol pouvant détecter des marques sur une table ou un sol. Cette définition est suffisamment générale pour que les élèves soient en mesure d'implémenter la plupart des algorithmes sur n'importe quel robot éducatif. La qualité de l'implémentation peut varier en fonction des capacités de chaque plateforme, mais les étudiants seront en mesure d'apprendre les principes de la robotique et comment passer des algorithmes théoriques au comportement d'un robot réel.
+
+Pour des raisons similaires, nous avons choisi de ne pas décrire les algorithmes dans un langage de programmation spécifique. Non seulement les différentes plateformes supportent différents langages, mais les robots éducatifs utilisent souvent différentes approches de programmation, comme la programmation textuelle et la programmation visuelle utilisant des blocs ou des états. Nous présentons les algorithmes en pseudocode et laissons aux élèves le soin de mettre en œuvre ces descriptions de haut niveau dans le langage et l'environnement du robot qu'ils utilisent.
+
+Le livre contient un grand nombre d'\emph{activités}, dont la plupart vous demandent d'implémenter des algorithmes et d'explorer leur comportement. Le robot que vous utilisez n'a peut-être pas les capacités de réaliser toutes les activités, alors n'hésitez pas à les adapter à votre robot.
+
+Ce livre est né du développement de matériel pédagogique pour le robot éducatif Thymio (\url{https://www.thymio.org}). Le site Web du livre \url{http://elementsofrobotics.net} contient des mises en œuvre de la plupart des activités pour ce robot. Certains des algorithmes les plus avancés étant difficiles à mettre en œuvre sur des robots éducatifs, des programmes Python sont fournis. Si vous implémentez les activités pour d'autres robots éducatifs, faites-le nous savoir et nous publierons un lien sur le site Web du livre.
+
+Le chapitre~\ref{ch.basic} présente une vue d'ensemble du domaine de la robotique et précise le robot générique et le pseudocode utilisé dans les algorithmes. Les chapitres~\ref{ch.sensors}--\ref{ch.control} présentent les concepts fondamentaux des robots mobiles autonomes : capteurs, comportement réactif, machines à états finis, mouvement et odométrie, et contrôle. Les chapitres~\ref{ch.obstacle}--\ref{ch.kinematics} décrivent des algorithmes robotiques plus avancés : évitement d'obstacles, localisation, cartographie, logique floue, traitement d'images, réseaux neuronaux, apprentissage automatique, robotique en essaim et cinématique des manipulateurs robotiques. Un aperçu détaillé du contenu est donné dans la section ~\ref{s.overview}.
+
+\bigskip
+
+\noindent\textbf{Remerciements:}
+
+Ce livre est le fruit d'un travail sur le robot Thymio et le système logiciel Aseba initié par le groupe de recherche du second auteur au Laboratoire des Systèmes Robotiques de l'Ecole Polytechnique Fédérale de Lausanne. Nous tenons à remercier tous les étudiants, ingénieurs, enseignants et artistes de la communauté Thymio sans lesquels ce livre n'aurait pu être écrit.
+
+Le libre accès à ce livre a été soutenu par l'Ecole Polytechnique Fédérale de Lausanne et le Pôle de Recherche National (PRN) Robotique.
+
+Nous sommes redevables à Jennifer S. Kay, Fanny Riedo, Amaury Dame et Yves Piguet pour leurs commentaires qui nous ont permis de corriger des erreurs et de clarifier la présentation.
+
+Nous tenons à remercier le personnel de Springer, en particulier Helen Desmond et Beverley Ford, pour leur aide et leur soutien.
+
+\bigskip
+
+\begin{flushright}\noindent
+Rehovot\hfill {\it Moti Ben-Ari}\\
+Lausanne\hfill {\it Francesco Mondada}\\
+\end{flushright}
+ 
+\tableofcontents

@@ -1,0 +1,157 @@
+% !TeX root = er.tex
+
+% Style file for Elements of Robotics with TikZ definitions
+
+% TikZ package and libraries
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.multipart}
+
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz/]
+
+% Use stealth arrows
+\tikzset {
+  >=stealth
+}
+
+% TikZ pic for a robot - top view
+\tikzset {
+  robot/.pic ={
+    % Center of robot is marked by a dot
+    \fill (0,0) circle [radius=1pt];
+    % Draw the outline
+    % Use rounded corners only for front to avoid artifacts
+    \draw (-4mm,-7mm) to [rounded corners] (10mm,-7mm) to%
+      [rounded corners, bend right=45] (10mm,7mm) to (-4mm,7mm) to cycle;
+    % Draw the wheels
+    \fill (-3mm,-7mm) rectangle +(6mm, -1.5mm);
+    \fill (-3mm,7mm) rectangle +(6mm, 1.5mm);
+  },
+}
+
+% TikZ pic for a car with four wheels
+\tikzset {
+  car/.pic ={
+    % Draw the outline
+    % Use rounded corners only for front to avoid artifacts
+    \draw (-4mm,-7mm) to [rounded corners] (10mm,-7mm) to%
+      [rounded corners, bend right=45] (10mm,7mm) to (-4mm,7mm) to cycle;
+    % Draw the wheels
+    \fill (-3mm,-7mm) rectangle +(3mm, -1.5mm);
+    \fill (-3mm,7mm) rectangle +(3mm, 1.5mm);
+    \fill (4mm,-7mm) rectangle +(3mm, -1.5mm);
+    \fill (4mm,7mm) rectangle +(3mm, 1.5mm);
+  },
+}
+
+% TikZ pic for a robot - top view - with one ground sensor
+\tikzset {
+  robot1/.pic ={
+    % Center of robot is marked by a dot
+    \fill (0,0) circle [radius=1pt];
+    % Draw the outline
+    % Use rounded corners only for front to avoid artifacts
+    \draw (-4mm,-7mm) to [rounded corners] (10mm,-7mm) to%
+      [rounded corners, bend right=45] (10mm,7mm) to (-4mm,7mm) to cycle;
+    % Draw the wheels
+    \fill (-3mm,-7mm) rectangle +(6mm, -1.5mm);
+    \fill (-3mm,7mm) rectangle +(6mm, 1.5mm);
+    % Draw the ground sensors
+    \draw[fill,gray] (8mm, -8pt) rectangle +(8pt,16pt);
+  },
+}
+
+% TikZ pic for a robot - top view - with two ground sensors
+\tikzset {
+  robot2/.pic ={
+    % Center of robot is marked by a dot
+    \fill (0,0) circle [radius=1pt];
+    % Draw the outline
+    % Use rounded corners only for front to avoid artifacts
+    \draw (-4mm,-7mm) to [rounded corners] (10mm,-7mm) to%
+      [rounded corners, bend right=45] (10mm,7mm) to (-4mm,7mm) to cycle;
+    % Draw the wheels
+    \fill (-3mm,-7mm) rectangle +(6mm, -1.5mm);
+    \fill (-3mm,7mm) rectangle +(6mm, 1.5mm);
+    % Draw the ground sensors
+    \draw[fill,gray] (8mm, 1mm) rectangle +(8pt,12pt);
+    \draw[fill,gray] (8mm,-1mm) rectangle +(8pt,-12pt);
+  },
+}
+
+% TikZ pic for robot - side view
+\tikzset {
+  robot-side/.pic ={
+    % Body
+    \draw[rounded corners] (0,0) -- (0,2) -- (6, 2) -- (6,0) -- cycle;
+    % Wheels
+    \draw[fill,gray!80] (4.5,0) circle[radius=0.7];
+    \draw[raxis] (4.5,0) -- +(12pt,0);
+    \draw[raxis] (4.5,0) -- +(-12pt,0);
+    \draw[raxis] (4.5,0) -- +(0,12pt);
+    \draw[raxis] (4.5,0) -- +(0,-12pt);
+    % Support
+    \draw[fill,gray!30] (.8,0) arc(180:360:0.7);
+  },
+}
+
+% TikZ pic for environment for Dijkstra's algorithm and A* algorithm
+\tikzset {
+  astar/.pic ={
+    \draw[step=1cm,gray,thin] (0,0) grid (6,5);
+    \draw[fill,black] (2,0) rectangle +(1,2);
+    \draw[fill,black] (2,3) rectangle +(1,2);
+    \draw[fill,black] (4,2) rectangle +(2,1);
+    \node[ultra thick] at (.5,.5) {$S$};
+    \node[ultra thick] at (5.5,.5) {$G$};
+    \foreach \x in {0,1,2,3,4,5}
+       \node at (\x+.5,-.4) {$\x$};
+    \foreach \y in {0,1,2,3,4}
+       \node at (-.4,4.5-\y) {$\y$};
+  },
+}
+
+% TikZ pic for neural node
+%   Argument is the name of the node
+\tikzset {
+  pics/nnnode/.style args={#1}{
+    code={
+    % Draw a circle with the + and f
+    \node[draw,circle,inner sep=2pt,minimum size=20pt] (#1) {$+\;\;f$};
+    % Draw a vertical line
+    \draw (#1.north) -- (#1.south);
+    }
+  },
+  % Weight on arrow
+  w/.style={->,near end,xshift=-2mm,black,fill=white}
+}
+
+% TikZ pic for a bar for localization
+\tikzset{
+   pics/bar/.style args={#1/#2}{
+     code={
+      \node at (#1+.5,-.3) {\p{#1}};
+      \draw (#1+.1,0) -- ++(0,#2*3) -- ++(0.8,0) -- (#1+0.9,0);
+      \node at (#1+.5,#2*3+.2) {\p{#2}};
+     }
+   }
+}
+
+% TikZ pic for a bar for histogram
+\tikzset{
+   pics/barhist/.style args={#1/#2/#3/#4}{
+     code={
+      \node at (#1+.5,-.2) {\textsf{\scriptsize #4}};
+      \draw (#1+.1,0) -- ++(0,#3) -- ++(0.8,0) -- (#1+0.9,0);
+      \node at (#1+.5,#3+.2) {\p{#2}};
+     }
+   }
+}
+
+% Style for rotational axis on a wheel
+\tikzset {
+  raxis/.style={dash pattern=on 7pt off 2pt on 1pt off 2pt,thin}
+}

@@ -231,7 +231,7 @@ Although this is the shortest path, a real robot cannot follow this path because
 \end{itemize}
 \end{framed}
 
-\section{Path planning with the \astar{} algorithm}\label{s.astar}
+\section[]{Path planning with the \astar{} algorithm}\label{s.astar}
 \index{A*@\astar{} algorithm}
 
 Dijkstra's algorithm searches for the goal cell in all directions; this can be efficient in a complex environment, but not so when the path is simple, for example, a straight line to the goal cell. Look at the top right diagram in Fig.~\ref{fig.dijkstra}: near the upper right corner of the center obstacle there is a cell at distance $19$ from the start cell. After two more steps to the left, there will be a cell marked $21$ which has a path to the goal cell that is not blocked by an obstacle. Clearly, there is no reason to continue to explore the region at the left of the grid, but Dijkstra's algorithm continues to do so. It would be more efficient if the algorithm somehow knew that it was close to the goal cell.
@@ -352,7 +352,7 @@ Already from the middle left diagram, we see that it is not necessary to search 
 Comparing Figs.~\ref{fig.dijkstra} and~\ref{fig.a-star} we see that the \astar{} algorithm needed to visit only 71\% of the cells visited by Dijkstra's algorithm. Although the \astar{} algorithm must perform additional work to compute the heuristic function, the reduced number of cells visited makes the algorithm more efficient. Furthermore, this heuristic function depends only on the area searched and not on the obstacles; even if the set of obstacles is changed, the heuristic function does not need to be recomputed.
 
 \begin{framed}
-\act{\astar{} algorithm}{astar}
+\act{A* algorithm}{astar}
 \begin{itemize}
 \item Apply the \astar{} algorithm and Dijkstra's algorithm on a small map without obstacles: place the start cell in the center of the map and the goal in an arbitrary cell. Compare the results of the two algorithms. Explain your results. Does the result depend on the position of the goal cell?
 \item Define other heuristic functions and compare the results of the \astar{} algorithms on the examples in this chapter.
