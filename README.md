@@ -10,6 +10,8 @@ Published by Springer-Nature under the Open Access Program.
 You can download the book from
 [SpringerLink](https://link.springer.com/book/10.1007/978-3-319-62533-1).
 
+The French translation is a draft generated using the DeepL system. If you are a native speaker with knowledge of robotics, please consider volunteering to edit the draft!
+
 ### Contents
 
 **Robots and Their Applications**

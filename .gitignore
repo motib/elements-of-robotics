@@ -1,6 +1,7 @@
 ﻿en/tikz/*
 fr/tikz/*
 *.pdf
+!er-fr-*.pdf
 *.bat
 *.zip
 *~
