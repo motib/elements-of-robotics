@@ -1,0 +1,85 @@
+% !TeX root = er.tex
+
+\begin{center}
+\textbf{\Large Mordechai (Moti) Ben-Ari\\[12pt]Francesco Mondada\\[12pt]
+Tradução para o português: \\[12pt]
+Felipe Nascimento Martins}
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\textbf{\huge Elementos da Robótica}
+
+\bigskip
+\bigskip
+
+\large\today
+\end{center}
+
+\vfill
+
+\begin{center}
+\copyright{} Moti Ben-Ari e Francesco Mondada, $2022$
+ \end{center}
+ 
+\begin{small}
+Esta obra está licenciada sob a Creative Commons Attribution 4.0 International. Para ver uma cópia desta licença, visite \url{http://creativecommons.org/licenses/by/4.0/}.
+\end{small}
+
+
+\newpage
+\mbox{}
+\vfill
+\begin{center}
+\begin{tabular}{l}
+Para Itay, Sahar e Nofar.\\
+Mordechai Ben-Ari\\
+\\
+Para Luca, Nora e Leonardo.\\
+Francesco Mondada
+\end{tabular}
+\end{center}
+\vfill
+\mbox{}
+\newpage
+
+\chapter*{Prefácio}
+
+A robótica é um campo vibrante que cresce em importância de ano para ano. É também uma matéria que os estudantes gostam em todos os níveis, desde o jardim de infância até a pós-graduação. O objetivo de aprender robótica varia de acordo com a faixa etária. Para crianças pequenas, os robôs são um brinquedo educacional; para estudantes de escolas médias e altas, a robótica pode aumentar a motivação dos estudantes para estudar STEM (ciência, tecnologia, engenharia, matemática); no nível universitário introdutório, os estudantes podem aprender como a física, matemática e ciência da computação que estudam podem ser aplicadas a projetos de engenharia prática; finalmente, estudantes de graduação e pós-graduação de nível superior se preparam para carreiras na robótica.
+
+Este livro é voltado para a faixa etária média: estudantes de escolas secundárias e em seus primeiros anos de universidade. Focamos em algoritmos de robótica e seus princípios matemáticos e físicos. Vamos além do jogo de tentativa e erro, mas não esperamos que o estudante seja capaz de projetar e construir robôs e algoritmos robóticos que executam tarefas no mundo real. A apresentação dos algoritmos sem matemática e engenharia avançada é necessariamente simplificada, mas acreditamos que os conceitos e algoritmos da robótica podem ser aprendidos e apreciados neste nível, e podem servir como ponte para o estudo da robótica nos níveis avançados de graduação e pós-graduação.
+
+A formação necessária é o conhecimento de programação, matemática e física no nível do ensino médio ou no primeiro ano da universidade. Da matemática: álgebra, trigonometria, cálculo, matrizes e probabilidade. O Apêndice~\ref{ch.math} fornece tutoriais para algumas das matemáticas mais avançadas. Da Física: tempo, velocidade, aceleração, força e fricção.
+
+Dificilmente passa um dia sem o aparecimento de um novo robô destinado a fins educacionais. Qualquer que seja a forma e função de um robô, os princípios e algoritmos científicos e de engenharia permanecem os mesmos. Por esta razão, o livro não se baseia em nenhum robô específico. No Cap.~ref{ch.basic} definimos um robô genérico: um pequeno robô móvel autônomo com acionamento diferencial e sensores capazes de detectar a direção e distância de um objeto, bem como sensores terrestres que podem detectar marcações em uma mesa ou piso. Esta definição é suficientemente geral para que os estudantes possam implementar a maioria dos algoritmos em qualquer robô educacional. A qualidade da implementação pode variar de acordo com as capacidades de cada plataforma, mas os estudantes serão capazes de aprender princípios de robótica e como passar dos algoritmos teóricos para o comportamento de um robô real.
+
+Por razões similares, optamos por não descrever algoritmos em nenhuma linguagem de programação específica. Não apenas plataformas diferentes suportam linguagens diferentes, mas os robôs educacionais freqüentemente utilizam diferentes abordagens de programação, como programação textual e programação visual usando blocos ou estados. Apresentamos algoritmos em pseudocódigo e deixamos para os estudantes a implementação destas descrições de alto nível na linguagem e ambiente para o robô que estão usando.
+
+O livro contém um grande número de \emph{atividades}, a maioria das quais pede que se implementem algoritmos e se explore seu comportamento. O robô que você utiliza pode não ter a capacidade de realizar todas as atividades, portanto sinta-se à vontade para adaptá-las ao seu robô.
+
+Este livro surgiu do desenvolvimento de materiais didáticos para o robô educacional Thymio (\url{https://www.thymio.org}). O website do livro \url{http://elementsofrobotics.net} contém implementações da maioria das atividades para aquele robô. Alguns dos algoritmos mais avançados são difíceis de implementar em robôs educacionais, por isso os programas Python são fornecidos. Por favor, informe-nos se você implementar as atividades para outros robôs educacionais e nós colocaremos um link no site do livro.
+
+O capítulo~\ref{ch.basic} apresenta uma visão geral do campo da robótica e especifica o robô genérico e o pseudo-código usado nos algoritmos. Os capítulos~\ref{ch.sensors}--\ref{ch.control} apresentam os conceitos fundamentais dos robôs móveis autônomos: sensores, comportamento reativo, máquinas de estado finito, movimento e odometria, e controle. Os capítulos~\ref{ch.obstacle}--\ref{ch.kinematics} descrevem algoritmos mais avançados de robótica: evitação de obstáculos, localização, mapeamento, lógica difusa, processamento de imagens, redes neurais, aprendizagem de máquinas, robótica de enxame, e a cinemática dos manipuladores robóticos. Uma visão detalhada do conteúdo é dada em Sect.~\ref{s.overview}.
+
+\bigskip
+
+\noindent\textbf{Acknowledgments:}
+
+Este livro surgiu do trabalho sobre o robô Thymio e o sistema de software da Aseba iniciado pelo segundo grupo de pesquisa do autor no Robotic Systems Laboratory do Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne. Gostaríamos de agradecer a todos os estudantes, engenheiros, professores e artistas da comunidade Thymio sem cujos esforços este livro não poderia ter sido escrito.
+
+O livre acesso a este livro foi apoiado pelo Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne e o National Centre of Competence in Research (NCCR) Robotics.
+
+Estamos gratos a Jennifer S. Kay, Fanny Riedo, Amaury Dame e Yves Piguet por seus comentários, que nos permitiram corrigir erros e esclarecer a apresentação.
+
+Gostaríamos de agradecer ao pessoal da Springer, em particular Helen Desmond e Beverley Ford, por sua ajuda e apoio.
+
+\bigskip
+
+\begin{flushright}\noindent
+Rehovot\hfill {\it Moti Ben-Ari}\\
+Lausanne\hfill {\it Francesco Mondada}\\
+\end{flushright}
+ 
+\tableofcontents

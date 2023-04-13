@@ -1,0 +1,124 @@
+% !TeX root = er.tex
+
+% Used in Springer's style
+\setlength{\textwidth}{117mm}
+\setlength{\textheight}{191mm}
+\setlength{\topmargin}{0cm}
+\setlength\oddsidemargin   {63pt}
+\setlength\evensidemargin  {63pt}
+\setlength\marginparwidth{90pt}
+\setlength\headsep   {12pt}
+
+% Change LaTeX defaults for figures
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\setcounter{topnumber}{1}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{3}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+
+% Language
+\usepackage[brazil]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage[textfont={it}]{caption}
+\captionsetup[figure]{name=Fig.}
+\captionsetup[table]{name=Tab.}
+
+\usepackage{verbatim}
+\usepackage{multicol}
+\usepackage[bottom]{footmisc}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{leftidx}         % Pre sub- and superscripts (kinematics chapter)
+\usepackage{url}
+\usepackage{framed}          % Frames around activities
+\usepackage{graphicx}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\large\bfseries}
+  {\chaptertitlename\ \thechapter}{10pt}{\Large}
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}{\thesection}{1em}{}
+  \titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing{\chapter}{0pt}{0pt plus 2pt minus 2pt}{20pt plus 1.5pt minus 0.25pt}  
+
+
+% A bit more interline spacing
+\renewcommand{\baselinestretch}{1.1}
+% TOC contains chapters and sections
+\setcounter{tocdepth}{1}
+
+\newtheorem{example}{Exemple}[chapter]
+\newcommand\qedsymbol{\hbox{$\square$}}
+\newcommand*{\lego}{LEGO$^\textrm{\scriptsize\textregistered}$}
+\newcommand*{\astar}{A$\!^{*}$}
+\newcommand*{\p}[1]{\textsf{\small #1}}
+\newcommand*{\sub}[1]{\textit{\scriptsize #1}}
+\newcommand*{\ass}{$\leftarrow\;$}
+
+\usepackage{ertikz}
+
+% Counters
+\newcounter{actcounter}[chapter]  % Activity counter within chapter
+\renewcommand*{\theactcounter}{\thechapter.\arabic{actcounter}}
+                                  %   include chapter when printing
+\newcounter{algcounter}[chapter]  % Algorithm counter within chapter
+\renewcommand*{\thealgcounter}{\thechapter.\arabic{algcounter}}
+                                  %   include chapter when printing
+\newcounter{sctr}                 % Statement counter
+
+\newcommand*{\act}[2]{\refstepcounter{actcounter}\noindent%
+\textbf{Activity \theactcounter: #1}\index{activity!#1}%
+\label{act.#2}}
+
+% Space out array environment
+\newcommand*{\spacearray}{
+\renewcommand{\arraystretch}{1.6}
+\setlength{\arraycolsep}{4pt}
+}
+
+% Short commands for \leftidx pre superscripts in kinematics chapter
+\newcommand*{\ax}{\leftidx{^a}\!{x}{}}
+\newcommand*{\ay}{\leftidx{^a}\!{y}{}}
+\newcommand*{\aprimex}{\leftidx{^{a1}}\!{x}{}}
+\newcommand*{\aprimey}{\leftidx{^{a1}}\!{y}{}}
+\newcommand*{\bx}{\leftidx{^b}\!{x}{}}
+\newcommand*{\by}{\leftidx{^b}\!{y}{}}
+\newcommand*{\ap}{\leftidx{^a}\!{p}{}}
+\newcommand*{\bp}{\leftidx{^b}\!{p}{}}
+\newcommand*{\aprimep}{\leftidx{^{a1}}\!{p}{}}
+
+% Indentation
+\newcommand*{\idv}{\hspace*{3em}}   % Variables
+\newcommand*{\idc}{\hspace*{1.5em}} % Continuation lines
+
+% Statement line number
+\newcommand*{\stl}{\hspace*{4pt}\footnotesize%
+\thesctr{}\stepcounter{sctr}:}
+
+% Environment for displaying algorithms
+\newenvironment{alg}[2]%
+{
+\refstepcounter{algcounter}        % Increment algorithm counter
+\label{alg.#2}
+\setcounter{sctr}{1}               % Reset statement counter
+\renewcommand*{\arraystretch}{1.2} % Increase row spacing
+\begin{center}
+\index{algorithm!#1}   % Index algorithm
+\begin{sffamily}                   % Font
+  % Line number right-justified; statement, comment left-justified
+\begin{tabular}{|r@{\hspace{.8ex}}l@{\hspace{1ex}}l|}\hline
+  % Algorithm number and name centered in wide box
+\multicolumn{3}{|p{.9\textwidth}|}%
+{\centering\textbf{Algorithm \thealgcounter: #1}}\\\hline
+}
+{
+\hline
+\end{tabular}
+\end{sffamily}
+\end{center}
+}

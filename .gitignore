@@ -1,5 +1,6 @@
 ﻿en/tikz/*
 fr/tikz/*
+pt/tikz/*
 *.pdf
 !er-fr-*.pdf
 *.bat
@@ -10,7 +11,7 @@ fr/tikz/*
 *.auxlock
 *.bbl
 *.blg
-*.synctex.gz
+*.synctex*
 *.toc
 *.ilg
 *.ind
