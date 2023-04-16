@@ -45,7 +45,6 @@ Agora formalizamos a especificação de um sistema de controle de loop fechado p
 O modelo na Fig.~ref{fig.control-model} também é chamado de \emph{feedback control system}, porque o valor de saída $y$ é alimentado pelo algoritmo de controle e usado para calcular o valor de controle. A saída é comparada com o valor de referência para computar $e=r-y$, o \emph{error}. O algoritmo de controle usa o erro para gerar o sinal de controle $u$, que é a entrada para o robô.
 
 \subsection{O período de um algoritmo de controle}
-\index{control!algorithm!period of}
 
 Algoritmos de controle são executados periodicamente (Algoritmo~\ref{alg.control-loop}). O software do robô inicializa uma variável \emph{timer} para a duração necessária do período de execução do algoritmo, por exemplo, a cada $20$ ms. O computador embutido tem um \emph{relógio de hardware} que ``fixa'' em intervalos fixos, causando uma interrupção. A interrupção é tratada pelo sistema operacional que decreta o valor da variável temporizador. Quando o valor desta variável chega a zero, o timer expira e um evento é levantado no software causando a execução do algoritmo de controle.
 
@@ -92,7 +91,7 @@ Os algoritmos são apresentados no contexto de um robô que deve se aproximar de
 
 
 \section{Controle on-off}\label{s.on-off}
-\index{control!algorithm!on-off}
+
 
 O primeiro algoritmo de controle é chamado de algoritmo \emph{on-off} ou \emph{bang-bang} (Algoritmo~\ref{alg.onoff}). Definimos uma constante \p{referência} que é a distância na frente do objeto no qual o robô deve parar. A variável \p{medida} é a distância real medida pelo sensor de proximidade. O \p{erro} é a diferença entre os dois:
 \begin{center}
@@ -252,7 +251,6 @@ Em geral, o robô se estabilizará a uma distância fixa da distância de refer�
 \end{framed}
 
 \section{Controlador proporcional-integral (PI)}\label{s.pi}
-\index{control!algorithm!proportional-integral}
 
 Um \emph{controlador proporcional-integral} pode alcançar a distância de referência mesmo na presença de atrito ou um objeto em movimento, levando em conta o erro acumulado ao longo do tempo. Enquanto que o controlador P leva em conta apenas o erro atual:
 \[

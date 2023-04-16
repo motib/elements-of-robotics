@@ -93,7 +93,6 @@ Infelizmente, o Algorithm~\ref{alg.wall-following-simple} nem sempre funciona co
 \end{figure}
 
 \subsection{Parede seguindo com direção}
-\index{wall following!direction@with direction}
 
 O problema com o Algorithm~\ref{alg.wall-following-simple} é que ele é um algoritmo local que só olha para seu ambiente imediato e não leva em conta o fato de que o algoritmo de navegação de nível superior sabe aproximadamente a direção que o robô deve tomar para alcançar o objetivo. A figura~\ref{fig.wall-following-direction} mostra o comportamento de um robô que "sabe" que o objetivo está em algum lugar ao norte, então o robô se move a uma direção de $0^\circ$ em relação ao norte. O algoritmo de seguir a parede só é utilizado se o robô não puder se mover para o norte.
 
@@ -165,7 +164,6 @@ Infelizmente, o algoritmo pode falhar quando confrontado com um obstáculo em fo
 \end{framed}
 
 \subsection{O algoritmo Pledge}
-\index{wall following!Pledge algorithm}
 
 O algoritmo Pledge modifica a linha~8 da parede seguindo o algoritmo para:
 \begin{quote}
@@ -260,7 +258,6 @@ A navegação sem localização contínua pode ser implementada através da leit
 \end{figure}
 
 \section{Formigas em busca de uma fonte de alimento}\label{s.ants}
-\index{path finding!ants}
 
 Voltemos agora ao algoritmo de alto nível de encontrar um caminho. Se houver uma linha e um mecanismo de localização como um código, a abordagem da seção anterior pode ser usada. Entretanto, mesmo que uma linha não exista, um robô pode ser capaz de \emph{criar} sua própria linha. O aspecto interessante deste método é que o robô não precisa saber sua localização no ambiente, por exemplo, usando um GPS; ao invés disso, ele usa pontos de referência no próprio ambiente para navegação. O algoritmo será apresentado dentro do contexto do mundo real das formigas em busca de alimentos:
 
@@ -365,7 +362,7 @@ A figura~\ref{fig.ant-nest-food} mostra o ninho de formigas no canto inferior es
 %\end{minipage}
 %\end{figure}
 
-O comportamento semelhante ao de uma formiga pode ser implementado por um robô. Como na Fig.~\ref{fig.ant-nest-food}, há uma fonte de alimento e um ninho. A fonte de alimento será representada por uma mancha escura que pode ser facilmente detectada por um sensor terrestre no robô. Os sensores de proximidade do robô são usados para detectar as paredes da área. Atividade~\ref{act.locate-nest} sugere dois métodos de representação do ninho que dependem dos sensores adicionais que seu robô possui.
+O comportamento semelhante ao de uma formiga pode ser implementado por um robô.\label{s.ant-like-algo} Como na Fig.~\ref{fig.ant-nest-food}, há uma fonte de alimento e um ninho. A fonte de alimento será representada por uma mancha escura que pode ser facilmente detectada por um sensor terrestre no robô. Os sensores de proximidade do robô são usados para detectar as paredes da área. Atividade~\ref{act.locate-nest} sugere dois métodos de representação do ninho que dependem dos sensores adicionais que seu robô possui.
 
 \begin{framed}
 \act{Localização do ninho}{locate-nest}
@@ -376,7 +373,7 @@ O comportamento semelhante ao de uma formiga pode ser implementado por um robô.
 \end{itemize}
 \end{framed}
 
-Simular as feromonas cobrindo a área com uma folha de papel branco e prendendo um marcador preto ao robô para que ele desenhe uma linha onde quer que ele se mova. Um sensor de terra detecta as marcas na área. A figura~\ref{fig.ant-result} mostra as linhas resultantes do comportamento de um robô executando o algoritmo. A atividade~\ref{act.ant-result} pede que você explore a capacidade do robô de detectar áreas que têm uma alta densidade de linhas.
+Simular as feromonas cobrindo a área com uma folha de papel branco e prendendo um marcador preto ao robô para que ele desenhe uma linha onde quer que ele se mova. Um sensor de terra detecta as marcas na área. A figura~\ref{fig.ant-result} mostra as linhas resultantes do comportamento de um robô executando o algoritmo. A atividade~\ref{act.high-density} pede que você explore a capacidade do robô de detectar áreas que têm uma alta densidade de linhas.
 
 \begin{figure}
 \begin{center}

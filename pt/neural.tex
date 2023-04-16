@@ -1,0 +1,876 @@
+% !TeX root = er.tex
+
+\chapter{Neural Networks}\label{ch.neural}
+
+Chapter~\ref{ch.reactive} described reactive behaviors inspired by the work of Valentino Braitenberg. The control of simple Braitenberg vehicles is very similar to the control of a living organism by its biological \emph{neural network}. This term refers to the nervous system of a living organism, including its brain and the nerves that transmit signals through the body. Computerized models of neural networks are an active topic of research in artificial intelligence. \emph{Artificial neural networks (ANNs)} enable complex behavior to be implemented using a large number of relatively simple abstract components that are modeled on neurons, the components of biological neural networks. This chapter presents the use of ANNs to control the behavior of robots.
+
+Following a brief overview of the biological nervous system in Sect.~\ref{s.bio-nn}, Sect.~\ref{s.ann} defines the ANN model and Sect.~\ref{s.braitenberg-ann} shows how it can be used to implement the behavior of a Braitenberg vehicle. Section~\ref{s.ann-topology} presents different network topologies. The most important characteristic of ANNs is their capability for learning which enables them to adapt their behavior. Section~\ref{s.ann-learning} presents an overview of learning in ANNs using the Hebbian rule.
+
+\section{The biological neural system}\label{s.bio-nn}
+
+The nervous system of living organisms consists of cells called \emph{neurons} that process and transmit information within the body. Each neuron performs a simple operation, but the combination of these operations leads to complex behavior. Most neurons are concentrated in the brain, but others form the nerves that transmit signals to and from the brain. In \emph{vertebrates} like ourselves, many neurons are concentrated in the spinal cord which efficiently transmit signals throughout the body. There are an immense number of neurons in a living being: the human brain has about $100$ billion neurons while even a mouse brain has about $71$ million neurons \cite{herculano2009human}. 
+
+Figure~\ref{fig.neuron} shows the structure of a neuron. It has a main body with a \emph{nucleus} and a long fiber called an \emph{axon} that allows one neuron to connect with another. The body of a neuron has projections called \emph{dendrites}. Axons from other neurons connect to the dendrites through \emph{synapses}. Neurons function through biochemical processes that are well understood, but we can abstract these processes into \emph{pulses} that travel from one neuron to another. Input pulses are received through the synapses into the dendrites and from them to the body of the neuron, which processes the pulses and in turn transmits an output pulse through the axon. The processing in the body of a neuron can be abstracted as a function from the input pulses to an output pulse, and the synapses regulate the transmission of the signals. Synapses are adaptive and are the primary element that makes memory and learning possible.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.8\textwidth,keepaspectratio]{neuron}
+\end{center}
+\caption{Structure of a neuron. https://commons.wikimedia.org/wiki/File:Neuron.svg by Dhp1080 [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0) or GFDL (https://en.wikipedia.org/wiki/en:GNU\_Free\_Documentation\_License)], via Wikimedia Commons.
+}\label{fig.neuron}
+\end{figure}
+
+\section{The artificial neural network model}\label{s.ann}
+
+An artificial neuron is a mathematical model of a biological neuron (Figs.~\ref{fig.artificial-neuron-1}--\ref{fig.artificial-neuron-2}; see Table~\ref{tab.ann-symbols} for a list of the symbols appearing in ANN diagrams). The body of the neuron is a node that performs two functions: it computes the sum of the weighted input signals and it applies an output function to the sum. The input signals are multiplied by weights before the sum and output functions are applied; this models the synapse. The output function is usually nonlinear; examples are: (1) converting the neuron's output to a set of discrete values (turn a light \p{on} or \p{off}); (2) limiting the range of the output values (the motor power can be between $-100$ and $100$; (3) normalizing the range of output values (the volume of a sound is between $0$ (mute) and $1$ (maximum).
+
+\begin{figure}[t]
+% Artificial neurons
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}[node distance=1.2cm and 2.2cm, on grid]
+\pic { nnnode={nn} };
+\node (output) [right=of nn] {};
+\node (input) [left=of nn] {};
+\node [below left=of nn] {};
+\draw[->] (nn.east) -- (output.west) node[xshift=5pt] {$y_1$};
+\draw[->] (input.east) node [xshift=-6pt] {$x_1$} -- node[w]  { $w_1$ } (nn.west);
+\draw (input) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+\end{tikzpicture}
+\caption{ANN: um neurônio com uma entrada}\label{fig.artificial-neuron-1}
+\end{minipage}
+\hspace{\fill}
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}[node distance=1.2cm and 2.2cm, on grid]
+\pic { nnnode={nn} };
+\node (output) [right=of nn] {};
+\node (input1) [above left=of nn] {};
+\node (input2) [below left=of nn] {};
+\draw[->] (nn.east) -- (output.west) node[xshift=5pt] {$y_1$};
+\draw[->] (input1.east) node [xshift=-6pt] {$x_1$} -- node[w]  { $w_1$ } (nn.north west);
+\draw[->] (input2.east) node [xshift=-6pt] {$x_2$} -- node[w]  { $w_2$ } (nn.south west);
+\draw (input1) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+\draw (input2) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+\end{tikzpicture}
+\caption{ANN: um neurônio com duas entradas}\label{fig.artificial-neuron-2}
+\end{minipage}
+\end{figure}
+
+%\begin{figure}[t]
+%% Artificial neurons
+%\subfigures
+%\begin{minipage}{\textwidth}
+%\leftfigure{
+%\begin{tikzpicture}[node distance=1.2cm and 2.2cm, on grid]
+%\pic { nnnode={nn} };
+%\node (output) [right=of nn] {};
+%\node (input) [left=of nn] {};
+%\node [below left=of nn] {};
+%\draw[->] (nn.east) -- (output.west) node[xshift=5pt] {$y_1$};
+%\draw[->] (input.east) node [xshift=-6pt] {$x_1$} -- node[w]  { $w_1$ } (nn.west);
+%\draw (input) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%\end{tikzpicture}
+%}
+%\hspace{\fill}
+%\rightfigure{
+%\begin{tikzpicture}[node distance=1.2cm and 2.2cm, on grid]
+%\pic { nnnode={nn} };
+%\node (output) [right=of nn] {};
+%\node (input1) [above left=of nn] {};
+%\node (input2) [below left=of nn] {};
+%\draw[->] (nn.east) -- (output.west) node[xshift=5pt] {$y_1$};
+%\draw[->] (input1.east) node [xshift=-6pt] {$x_1$} -- node[w]  { $w_1$ } (nn.north west);
+%\draw[->] (input2.east) node [xshift=-6pt] {$x_2$} -- node[w]  { $w_2$ } (nn.south west);
+%\draw (input1) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%\draw (input2) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%\end{tikzpicture}
+%}
+%\leftcaption{ANN: one neuron with one input}\label{fig.artificial-neuron-1}
+%\rightcaption{ANN: one neuron with two inputs}\label{fig.artificial-neuron-2}
+%\end{minipage}
+%\end{figure}
+
+\begin{table}
+\caption{Symbols used in ANN diagrams}
+\label{tab.ann-symbols}
+\begin{tabular}{p{2cm}p{4cm}}
+\hline\noalign{\smallskip}
+Symbol & Meaning \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+$f$ & Neuron output function\\
+$+$ & Sum of the inputs\\
+$x_i$ & Inputs\\
+$y_i$ & Outputs\\
+$w_{i}$ & Weights for the inputs\\
+$1$ & Constant input of value $1$\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+\end{table}
+
+Artificial neurons are analog models, that is, the inputs, outputs, weights and functions can be floating point numbers. Here we start with an unrealistic activity that demonstrates how artificial neurons work within the familiar context of digital logic gates.
+
+Figure~\ref{fig.not-gate} shows an artificial neuron with two inputs, $x_1$ and $1$, and one output $y$. The meaning of the input $1$ is that the input is not connected to an external sensor, but instead returns a constant value of $1$. The input value of $x_1$ is assumed to be $0$ or $1$. The function $f$ is:
+\[
+\begin{array}{ll}
+f(x) = 0 & \;\;\;\textrm{if} \;\; x < 0\\
+f(x) = 1 & \;\;\;\textrm{if} \;\; x \geq 0\,.
+\end{array}
+\]
+Show that with the given weights the neuron implements the logic gate for \p{not}.
+
+\begin{framed}
+\act{Artificial neurons for logic gates}{logic-gates}
+\begin{itemize}
+\item The artificial neuron in Fig.~\ref{fig.and-or-gate} has an additional input $x_2$. Assign weights $w_0$, $w_1$, $w_2$ so that $y$ is $1$ only if the values of $x_1$ or $x_2$ (or both) are $1$. This implements the logic gate for  \p{or}.
+\item Assign weights $w_0$, $w_1$, $w_2$ so that $y$ is $1$ only if the values of $x_1$ and $x_2$ are both $1$. This implements the logic gate for \p{and}.
+\item Implement the artificial neurons for logic gates on your robot. Use two sensors, one for $x_1$ and one for $x_2$. Use the output $y$ (mapped by $f$, if necessary) so that an output of $0$ gives one behavior and an output of $1$ another behavior, such as turning a light on or off, or starting and stopping the robot.
+\end{itemize}
+\end{framed}
+
+\begin{figure}
+% Logic gates
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}%
+[node distance=1.5cm and 2cm, nn/.style={circle,draw,minimum size=16pt}]
+% Not
+% Inputs
+\node (i1) {};
+\node (i2) [below=of i1] {};
+\node [below=of i2] {};  % Dummy node to align on neuron
+\foreach \i in {i1,i2}
+  \draw (\i) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Neuron
+\pic [right=of i2] { nnnode={neuron} };
+% Output
+\node (output) [node distance=1.5cm and 1cm,right=of neuron] {};
+\draw[->] (neuron) -- (output) node {$y$};
+% Arrows to neuron
+\draw[->] (i1) node [xshift=-5pt] {$1$} -- node[fill=white] {$10$} (neuron);
+\draw[->] (i2) node [xshift=-6pt] {$x_1$} -- node[fill=white] {$-20$} (neuron);
+\end{tikzpicture}
+\caption{Neurônio artificial para o portão \textsf{not} do teto}\label{fig.not-gate}
+\end{minipage}
+\hspace{\fill}
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}%
+[node distance=1.5cm and 2cm, nn/.style={circle,draw,minimum size=16pt}]
+% And and Or
+% Inputs
+\node(i1) {};
+\node (i2) [below=of i1] {};
+\node (i3) [below=of i2] {};
+\foreach \i in {i1,i2,i3}
+  \draw (\i) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Neuron
+\pic [right=of i2] { nnnode={neuron} };
+% Output
+\node (output) [node distance=1.5cm and 1cm,right=of neuron] {};
+\draw[->] (neuron) -- (output) node {$y$};
+% Arrows to neuron
+\draw[->] (i1) node [xshift=-6pt] {$1$} -- node[fill=white] {$w_0$} (neuron);
+\draw[->] (i2) node [xshift=-6pt] {$x_1$} -- node[fill=white] {$w_1$} (neuron);
+\draw[->] (i3) node [xshift=-6pt] {$x_2$} -- node[fill=white] {$w_2$} (neuron);
+\end{tikzpicture}
+\caption{Neurônio artificial para os portões \textsf{and} e \textsf{or}}\label{fig.and-or-gate}
+\end{minipage}
+\end{figure}
+
+%\begin{figure}
+%% Logic gates
+%\subfigures
+%\begin{minipage}{\textwidth}
+%\leftfigure{
+%\begin{tikzpicture}%
+%[node distance=1.5cm and 2cm, nn/.style={circle,draw,minimum size=16pt}]
+%% Not
+%% Inputs
+%\node (i1) {};
+%\node (i2) [below=of i1] {};
+%\node [below=of i2] {};  % Dummy node to align on neuron
+%\foreach \i in {i1,i2}
+%  \draw (\i) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%% Neuron
+%\pic [right=of i2] { nnnode={neuron} };
+%% Output
+%\node (output) [node distance=1.5cm and 1cm,right=of neuron] {};
+%\draw[->] (neuron) -- (output) node {$y$};
+%% Arrows to neuron
+%\draw[->] (i1) node [xshift=-5pt] {$1$} -- node[fill=white] {$10$} (neuron);
+%\draw[->] (i2) node [xshift=-6pt] {$x_1$} -- node[fill=white] {$-20$} (neuron);
+%\end{tikzpicture}
+%}
+%\hspace{\fill}
+%\rightfigure{
+%\begin{tikzpicture}%
+%[node distance=1.5cm and 2cm, nn/.style={circle,draw,minimum size=16pt}]
+%% And and Or
+%% Inputs
+%\node(i1) {};
+%\node (i2) [below=of i1] {};
+%\node (i3) [below=of i2] {};
+%\foreach \i in {i1,i2,i3}
+%  \draw (\i) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%% Neuron
+%\pic [right=of i2] { nnnode={neuron} };
+%% Output
+%\node (output) [node distance=1.5cm and 1cm,right=of neuron] {};
+%\draw[->] (neuron) -- (output) node {$y$};
+%% Arrows to neuron
+%\draw[->] (i1) node [xshift=-6pt] {$1$} -- node[fill=white] {$w_0$} (neuron);
+%\draw[->] (i2) node [xshift=-6pt] {$x_1$} -- node[fill=white] {$w_1$} (neuron);
+%\draw[->] (i3) node [xshift=-6pt] {$x_2$} -- node[fill=white] {$w_2$} (neuron);
+%\end{tikzpicture}
+%}
+%\leftcaption{Artificial neuron for the \textsf{not} gate}\label{fig.not-gate}
+%\rightcaption{Artificial neuron for the \textsf{and} and \textsf{or} gates}\label{fig.and-or-gate}
+%\end{minipage}
+%\end{figure}
+
+\noindent{}The following activity explores analog processing in an artificial neuron.
+
+\begin{framed}
+\act{Analog artificial neurons}{analog neuron}
+\begin{itemize}
+\item Implement the artificial neuron shown in Fig.~\ref{fig.artificial-neuron-1} so that it demonstrates the following behavior. The input to the neuron will be the reading of a proximity sensor at the front of the robot. The output will be one or both of the following: (1) the intensity of a light on the robot or the volume of the sound from a speaker on the robot; (2) the motor power applied to both the left and right motors so that the robot retreats from an object detected by the sensor.
+\item The output value will be proportional to the input value: the closer the object, the greater the intensity (or volume); the closer the object, the faster the robot retreats from the object.
+\item Modify the implementation so that there are two inputs from two proximity sensors (Fig.~\ref{fig.artificial-neuron-2}). Give different values to the two weights $w_1$, $w_2$ and show that the sensor connected to the input with the larger weight has more effect on the output.
+\end{itemize}
+\end{framed}
+
+
+\section{Implementing a Braintenberg vehicle with an ANN}\label{s.braitenberg-ann}
+
+Figure \ref{fig.nn-avoidance} shows a robot inspired by a Braitenberg vehicle whose behavior is implemented using a simple neural network. We describe the ANN in detail and then give several activities that ask you to design and implement the algorithm.
+
+\begin{quote}
+\normalsize
+\noindent\textbf{Specification (obstacle avoidance):}\\
+The robot has three forward-facing sensors.
+\begin{itemize}
+\item The robot moves forwards unless it detects an obstacle.
+\item If the obstacle is detected by the center sensor, the robot moves slowly backwards.
+\item If the obstacle is detected by the left sensor, the robot turns right.
+\item If the obstacle is detected by the right sensor, the robot turns left.
+\end{itemize}
+\end{quote}
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+% Draw big robot
+\draw (-2.2cm,-3.5cm) to [rounded corners] (5cm,-3.5cm) to%
+[rounded corners, bend right=45] (5cm,3.5cm) to (-2.2cm,3.5cm) to cycle;
+\fill (-1.2cm,-3.5cm) rectangle +(2.5cm, -.4cm);
+\fill (-1.2cm,3.5cm) rectangle +(2.5cm, .4cm);
+% Draw two sum nodes and arrows to wheels
+\node[draw,circle split] at (0,14mm) (left) {$f$ \nodepart{lower} $+$};
+\node[draw,circle split] at (0,-14mm) (right) {$+$ \nodepart{lower} $f$};
+\draw[->,thick] (left) -- node[fill=white] {$y_1$} (0,34mm);
+\draw[->,thick] (right) -- node[fill=white] {$y_2$} (0,-34mm);
+% Left sensor and arrows
+\draw[red] (5, 3) arc[start angle=135, end angle=315, radius=.2cm];
+\node at (5.2,2.9) {$x_1$};
+\draw[->,thick,red] (4.95,2.8) -- node[w] {$w_{\textit{\scriptsize pos}}$} (18pt,36pt);
+\draw[->,thick,red] (5,2.7) -- node[w,near start,xshift=6pt] {$-w_{\textit{\scriptsize neg}}$} (right.north east);
+% Center sensor and arrows
+\draw[green!60!black] (6, .2) arc[start angle=90, end angle=270, radius=.2cm];
+\node at (6.2,0) {$x_2$};
+\draw[->,thick,green!60!black] (5.8,.1) -- node[w] {$-w_{\textit{\scriptsize back}}$} (16pt,32pt);
+\draw[->,thick,green!60!black] (5.8,-.1) -- node[w] {$-w_{\textit{\scriptsize back}}$} (16pt,-32pt);
+% Right sensor and arrows
+\draw[blue] (5.3, -2.8) arc[start angle=45, end angle=225, radius=.2cm];
+\node at (5.2,-2.95) {$x_3$};
+\draw[->,thick,blue] (5,-2.8) -- node[w,near start,xshift=6pt] {{$-w_{\textit{\scriptsize neg}}$}} (left.south east);
+\draw[->,thick,blue] (4.95,-2.9) -- node[w] {$w_{\textit{\scriptsize pos}}$} (18pt,-36pt);
+% Constant weight
+\node[fill,circle] (power) at (-2.0,0) {};
+\node at (-1.7,0) {$1$};
+\draw[->,thick] (power.north east) -- node[fill=white] {$w_{\textit{\scriptsize fwd}}$} (-17pt,34pt);
+\draw[->,thick] (power.south east) -- node[fill=white] {$w_{\textit{\scriptsize fwd}}$} (-17pt,-34pt);
+\end{tikzpicture}
+\end{center}
+\caption{Neural network for obstacle avoidance}\label{fig.nn-avoidance}
+\end{figure}
+
+\noindent{}Figure~\ref{fig.nn-avoidance} shows the two neurons whose outputs control the power sent to the motors of the wheels of the robot. Table~\ref{tab.obstacle-avoidance} lists the symbols used in the figure.
+
+\begin{table}
+\caption{Symbols in Fig.~\ref{fig.nn-avoidance} in addition to those in Table~\ref{tab.ann-symbols}}
+\label{tab.obstacle-avoidance}
+\begin{tabular}{p{2cm}p{5.5cm}}
+\hline\noalign{\smallskip}
+Symbol & Meaning \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+$w_{\textit{\scriptsize fwd}}$ & Weight for forward movement\\
+$w_{\textit{\scriptsize back}}$ & Weight for backward movement\\
+$w_{\textit{\scriptsize pos}}$ & Weight for positive wheel rotation\\
+$w_{\textit{\scriptsize neg}}$ & Weight for negative wheel rotation\\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+\end{table}
+
+Each neuron has four inputs. The function $f$ must be nonlinear in order to limit the maximum forward and backward speeds. The large dot at the back of the robot denotes a constant input of $1$ that is weighted by $w_{\textit{\scriptsize fwd}}$. This ensures that in the absence of signals from the sensors, the robot will move forwards. When implementing the ANN you need to find a weight so that the output motor powers are reasonable in the absence of input from the sensors. The weight should also ensure that the constant input is similar to inputs from the sensors.
+
+The $x_1, x_2, x_3$ values come from the sensors that return zero when there is no object and an increasing positive value when approaching an object. The center sensor is connected to both neurons with a negative weight $-w_{\textit{\scriptsize back}}$ so that if an obstacle is detected the robot will move backwards. This weight should be set to a value that causes the robot to move backwards slowly.
+
+The left and right sensors are connected to the neurons with a positive weight for the neuron controlling the near wheel and a negative weight for the neuron controlling the far wheel. This ensures that robot turns away from the obstacle.
+
+The following activity asks you to think about the relative values of the weights.
+
+\begin{framed}
+\act{ANN for obstacle avoidance: design}{avoidance-design}
+\begin{itemize}
+\item What relation must hold between $w_{\textit{\scriptsize fwd}}$ and $w_{\textit{\scriptsize back}}$?
+\item What relation must hold between $w_{\textit{\scriptsize fwd}}$ and $w_{\textit{\scriptsize pos}}$ and between $w_{\textit{\scriptsize fwd}}$ and $w_{\textit{\scriptsize neg}}$?
+\item What relation must hold between $w_{\textit{\scriptsize back}}$ and $w_{\textit{\scriptsize pos}}$ and between $w_{\textit{\scriptsize back}}$ and $w_{\textit{\scriptsize neg}}$?
+\item What relation must hold between $w_{\textit{\scriptsize pos}}$ and$w_{\textit{\scriptsize neg}}$?
+\item What happens if the obstacle is detected by both the left and center sensors?
+\end{itemize}
+\end{framed}
+
+In the following activities, you will have to experiment with the weights and the functions to achieve the desired behavior. Your program should use a data structure like an array so that it is easy to change the values of the weights.
+
+\begin{framed}
+\act{ANN for obstacle avoidance: implementation}{avoidance-implementation}
+\begin{itemize}
+\item Write a program for obstacle avoidance using the ANN in Fig.~ \ref{fig.nn-avoidance}.
+\end{itemize}
+\end{framed}
+
+\begin{framed}
+\act{ANN for obstacle attraction}{object-attraction}
+\begin{itemize}
+\item Write a program to implement obstacle attraction using an ANN:
+\begin{itemize}
+\item The robot moves forwards.
+\item If the center sensor detects that the robot is \emph{very close} to the obstacle, it stops.
+\item If an obstacle is detected by the left sensor, the robot turns left.
+\item If an obstacle is detected by the right sensor, the robot turns right.
+\end{itemize}
+\end{itemize}
+\end{framed}
+
+
+\section{Artificial neural networks: topologies}\label{s.ann-topology}
+
+
+The example in the previous section is based on an artificial neural network composed of a single layer of two neurons, each with several inputs and a single output. This is a very simple topology for an artificial neural network; many other topologies can implement more complex algorithms (Fig.~\ref{fig.nn-deep}). Currently, ANNs with thousands or even millions of neurons arranged in many layers are used to implement \emph{deep learning}. In this section we present an overview of some ANN topologies.
+
+\begin{figure}
+\begin{center}
+% Deep network
+\begin{tikzpicture}%
+[node distance=1.5cm and 1.5cm, nn/.style={circle,draw,minimum size=16pt}]
+% Inputs
+\node (i1) {};
+\node (i2) [below=of i1] {};
+\node (i3) [below=of i2] {};
+\foreach \i/\up in {i1/5pt,i2/4pt,i3/4pt}
+  \draw (\i) [yshift=-\up] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Nodes
+\foreach \old/\new in {
+  i1/n1, i2/n2, i3/n3, n1/n4, n2/n5, n3/n6,
+  n4/n7, n5/n8, n6/n9, n7/n10, n8/n11, n9/n12}
+    \node (\new) [nn] [right=of \old] {};
+% Outputs
+\node (o1) [right=of n10] {};
+\node (o2) [right=of n11] {};
+\node (o3) [right=of n12] {};
+% Arrows from input and to output
+\foreach \source/\target in {i1/n1, i2/n2, i3/n3, n10/o1, n11/o2, n12/o3}
+  \draw[->] (\source) -- (\target);
+% Arrows from first set of nodes
+\foreach \source in {n1, n2, n3} {
+  \foreach \target in {n4, n5, n6} {
+    \draw[->] (\source) -- (\target);
+  }
+}
+% Ellipsis
+\foreach \source/\target in {n4/n7, n5/n8, n6/n9}
+  \path (\source) -- node {$\cdots$} (\target);
+% Arrows to second set of nodes
+\foreach \source in {n7, n8, n9} {
+  \foreach \target in {n10, n11, n12} {
+    \draw[->] (\source) -- (\target);
+  }
+}
+\end{tikzpicture}
+\caption{Neural network for deep learning}\label{fig.nn-deep}
+\end{center}
+\end{figure}
+
+
+\subsection{Multilayer topology}
+
+\begin{figure}
+\begin{minipage}{.5\textwidth}
+% Multilayer ANN
+\begin{tikzpicture}%
+[scale=.7,node distance=1cm and 1.5cm, nn/.style={circle,draw,minimum size=16pt}]
+% Inputs
+\node (i1) {};
+\node (i2) [below=of i1] {};
+\node (i3) [below=of i2] {};
+\node (i4) [below=of i3] {};
+\foreach \i/\up in {i1/5pt,i2/4pt,i3/4pt,i4/4pt}
+  \draw (\i) [yshift=-\up] arc[start angle=-90, end angle=90, radius=4pt] {};
+ Nodes
+\foreach \old/\new in {i1/n1, i2/n2, i3/n3, i4/n4, n2/n5, n3/n6}
+    \node (\new) [nn] [right=of \old] {};
+% Outputs
+\node (o1) [right=of n5] {};
+\node (o2) [right=of n6] {};
+% Arrows from input
+\foreach \source in {i1, i2, i3, i4} {
+  \foreach \target in {n1, n2, n3, n4} {
+    \draw[->] (\source) -- (\target);
+  }
+}
+% Arrows from nodes to nodes
+\foreach \source in {n1, n2, n3, n4} {
+  \foreach \target in {n5, n6} {
+    \draw[->] (\source) -- (\target);
+  }
+}
+% Arrows to output
+\draw[->] (n5) -- (o1);
+\draw[->] (n6) -- (o2);
+\end{tikzpicture}
+\caption{Multilayer ANN}\label{fig.multi-ann}
+\end{minipage}
+\hspace{\fill}
+% ANN with memory
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}%
+[baseline=-40mm,node distance=1cm and 1.5cm, nn/.style={circle,draw,minimum size=16pt}]
+% Inputs
+\node (i1) {};
+\node (i2) [below=of i1,yshift=-2pt] {};
+\node (i3) [below=of i2,yshift=-2pt] {};
+\foreach \i/\up in {i1/5pt,i2/4pt,i3/4pt}
+  \draw (\i) [yshift=-\up,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Nodes
+\node (n1) [nn] [right=of i1,yshift=-13mm] {};
+\node (n2) [nn] [right=of i2,yshift=-13mm] {};
+% Outputs
+\node (o1) [right=of n1] {};
+\node (o2) [right=of n2] {};
+% Left-to-right arrows
+\foreach \source in {i1, i2, i3} {
+  \foreach \target in {n1, n2} {
+    \draw[->] (\source) -- (\target);
+  }
+}
+% Diagonal arrows and self-loops
+\draw[->] (n1) -- (o1);
+\draw[->] (n2) -- (o2);
+\path[<-] (n1) edge[loop above, min distance=15mm, out=120, in=40] (n1);
+\path[->] (n2) edge[loop below, min distance=15mm, out=-40, in=-120] (n2);
+\end{tikzpicture}
+\caption{ANN com memória}\label{fig.ann-memory}
+\end{minipage}
+\end{figure}
+
+%\begin{figure}
+%\subfigures
+%\begin{minipage}{\textwidth}
+%% Multilayer ANN
+%\leftfigure{
+%\begin{tikzpicture}%
+%[scale=.7,node distance=1cm and 1.5cm, nn/.style={circle,draw,minimum size=16pt}]
+%% Inputs
+%\node (i1) {};
+%\node (i2) [below=of i1] {};
+%\node (i3) [below=of i2] {};
+%\node (i4) [below=of i3] {};
+%\foreach \i/\up in {i1/5pt,i2/4pt,i3/4pt,i4/4pt}
+%  \draw (\i) [yshift=-\up] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Nodes
+%\foreach \old/\new in {i1/n1, i2/n2, i3/n3, i4/n4, n2/n5, n3/n6}
+%    \node (\new) [nn] [right=of \old] {};
+%% Outputs
+%\node (o1) [right=of n5] {};
+%\node (o2) [right=of n6] {};
+%% Arrows from input
+%\foreach \source in {i1, i2, i3, i4} {
+%  \foreach \target in {n1, n2, n3, n4} {
+%    \draw[->] (\source) -- (\target);
+%  }
+%}
+%% Arrows from nodes to nodes
+%\foreach \source in {n1, n2, n3, n4} {
+%  \foreach \target in {n5, n6} {
+%    \draw[->] (\source) -- (\target);
+%  }
+%}
+%% Arrows to output
+%\draw[->] (n5) -- (o1);
+%\draw[->] (n6) -- (o2);
+%\end{tikzpicture}
+%}
+%\hspace{\fill}
+%% ANN with memory
+%\rightfigure{
+%\begin{tikzpicture}%
+%[baseline=-40mm,node distance=1cm and 1.5cm, nn/.style={circle,draw,minimum size=16pt}]
+%% Inputs
+%\node (i1) {};
+%\node (i2) [below=of i1,yshift=-2pt] {};
+%\node (i3) [below=of i2,yshift=-2pt] {};
+%\foreach \i/\up in {i1/5pt,i2/4pt,i3/4pt}
+%  \draw (\i) [yshift=-\up,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+%% Nodes
+%\node (n1) [nn] [right=of i1,yshift=-13mm] {};
+%\node (n2) [nn] [right=of i2,yshift=-13mm] {};
+%% Outputs
+%\node (o1) [right=of n1] {};
+%\node (o2) [right=of n2] {};
+%% Left-to-right arrows
+%\foreach \source in {i1, i2, i3} {
+%  \foreach \target in {n1, n2} {
+%    \draw[->] (\source) -- (\target);
+%  }
+%}
+%% Diagonal arrows and self-loops
+%\draw[->] (n1) -- (o1);
+%\draw[->] (n2) -- (o2);
+%\path[<-] (n1) edge[loop above, min distance=15mm, out=120, in=40] (n1);
+%\path[->] (n2) edge[loop below, min distance=15mm, out=-40, in=-120] (n2);
+%\end{tikzpicture}
+%}
+%\leftcaption{Multilayer ANN}\label{fig.multi-ann}
+%\rightcaption{ANN with memory}\label{fig.ann-memory}
+%\end{minipage}
+%\end{figure}
+
+Figure~\ref{fig.multi-ann} shows an ANN with several layers of neurons. The additional layers can implement more complex computations than a single layer. For example, with a single layer it is not possible to have the robot move forward when only one sensor detects an obstacle and move backwards when several sensors detect an obstacle. The reason is that the function in a single layer linking the sensors and the motors is monotonic, that is, it can cause the motor to go faster when the sensor input increases or slower when the sensor input increases, but not both. The layer of neurons connected to the output is called the \textit{output layer} while the internal layers are called the \emph{hidden layers}.
+
+
+\begin{framed}
+\act{Multilayer ANNs}{multilayer-understanding}
+\begin{itemize}
+\item The goal of this activity is to understand how multilayer ANNs can perform computations that a single-layer ANN cannot. For the activity, assume that the inputs $x_i$ are in the range $-2.0$ to $2.0$, the weights $w_i$ are in the range $-1.0$ to $1.0$, and the functions $f$ limit the output values to the range $-1.0$ to $1.0$.
+\item For the ANN consisting of a single neuron (Fig.~\ref{fig.artificial-neuron-1}) with $w_1=-0.5$, compute $y_1$ for inputs in increments of $0.2$: $x_1=-2.0, -1.8, \ldots, 0.0, \ldots, 1.8, 2.0$. Plot the results in a graph.
+\item Repeat the computation for several values of $w_1$. What can you say about the relationship between the output and the input?
+\item Consider the two-layer ANN shown in Fig.~\ref{fig.two-layer-ann} with weights:
+\[
+ w_{11}=1,\, w_{12}=0.5,\, w_{21}=1,\, w_{22}=-1\,. 
+\]
+Compute the values and draw graphs of the outputs of the neurons of the hidden layer (the left neurons) and the output layer (the right neuron). Can you obtain the same output from an ANN with only one layer?
+\end{itemize}
+\end{framed}
+\begin{framed}
+
+\act{Multilayer ANN for obstacle avoidance}{multilayer-avoidance}
+\begin{itemize}
+\item Design an ANN that implements the following behavior of a robot: There are two front sensors. When an object is detected in front of one of the sensors, the robot turns to avoid the object, but when an object is detected by both sensors, the robot moves backwards.
+\end{itemize}
+\end{framed}
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm and 2.5cm, on grid]
+\pic { nnnode={nn1} };
+\pic [right=of nn1] { nnnode={nn2} };
+\pic [below=of nn1] { nnnode={nn3} };
+\node (output) [right=of nn2] {};
+\node (input) [left=of nn1] {};
+\draw (input) [yshift=-4pt,xshift=-1pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+\draw[->] (input.east) -- node[w] { $w_{11}$ } (nn1.west);
+\draw[->] (nn1.east) -- node[w] { $w_{21}$ } (nn2.west);
+\draw[->] (nn2.east) -- (output.west);
+\draw[->] (input.east) -- node[w,yshift=3pt] { $w_{12}$ } (nn3.west);
+\draw[->] (nn3.east) -- node[w,yshift=-3pt] { $w_{22}$ } (nn2.south west);
+\end{tikzpicture}
+\caption{Two-layer ANN}\label{fig.two-layer-ann}
+\end{center}
+\end{figure}
+
+\subsection{Memory}\label{s.ann-memory}
+
+An artificial neural network can have \emph{recurrent connections} from the output of a neuron to the input of a neuron in the same layer (including itself). Recurrent connections can be used to implement memory. Consider the Braitenberg vehicle for obstacle avoidance (Fig.~\ref{fig.nn-avoidance}). It only turns when obstacles are detected by the sensors. When they are no longer detected, the robot does not continue to turn. By adding recurrent connections we can introduce a memory effect that causes the robot to continue turning. Suppose that each of the sensors causes an input of $0.75$ to the neurons and that causes the output to be saturated to $1.0$ by the non-linear output function. If the sensors no longer detect the obstacle, the inputs become $0$, but the recurrent connection adds an input of $1.0$ so the output remains $1.0$.
+
+\begin{framed}
+\act{ANN with memory}{memory}
+\begin{itemize}
+\item Consider the network in Fig.~\ref{fig.ann-memory} with an output function that saturates to $0$ and $1$. The inputs and most weights are also between $0$ and $1$. What happens if the weight of the recurrent connections in the figure is higher than $1$? What happens if it is between $0$ and $1$?
+\item Modify the implementation of the network in Fig.~\ref{fig.nn-avoidance} to add recurrent connections on the two output neurons. What is their effect in the obstacle-avoidance behavior of the robot?
+\end{itemize}
+\end{framed}
+
+\subsection{Spatial filter}
+
+A camera is a sensing device constructed from a large number of adjacent sensors (one for each pixel). The values of the sensors can be the inputs to an ANN with a large number of neurons in the first layer (Fig.~\ref{fig.ann-spatial-filtering}). Nearby pixels will be input to adjacent neurons. The network can be used to extract local features such as differences of intensity between adjacent pixels in an image, and this local property can be used for tasks like identifying edges in the image. The number of layers may be one or more. This topology of neurons is called a \emph{spatial filter} because it can be used as a filter before a layer that implements an algorithm for obstacle avoidance.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}%
+[node distance=1.5cm and 2cm, nn/.style={circle,draw,minimum size=16pt}]
+% Inputs
+\node (i1) {};
+\node (i2) [below=of i1] {};
+\node (i3) [below=of i2] {};
+\node (i4) [below=of i3] {};
+\node (i5) [below=of i4] {};
+\foreach \i in {i1,i2,i3,i4,i5}
+  \draw (\i) [yshift=-4pt] arc[start angle=-90, end angle=90, radius=4pt] {};
+% Nodes
+\foreach \old/\new in {i1/n1, i2/n2, i3/n3, i4/n4, i5/n5}
+    \node (\new) [nn] [right=of \old] {};
+% Outputs
+\foreach \old/\new in {n1/o1, n2/o2, n3/o3, n4/o4, n5/o5}
+    \node (\new) [node distance=1.5cm and 1cm,right=of \old] {};
+% Arrows to output
+\foreach \source/\target in {n1/o1/, n2/o2, n3/o3, n4/o4/, n5/o5}
+    \draw[->] (\source) -- (\target);
+% Arrows from input (right)
+\foreach \source/\target/\weight in {
+      i1/n1/$+4$, i2/n2/$+4$, i3/n3/$+4$, i4/n4/$+4$, i5/n5/$+4$}
+    \draw[->] (\source) -- node[near start,fill=white,inner sep=1pt] {\weight} (\target);
+% Arrows from input (up, down)
+\foreach \source/\target/\weight in {
+  i1/n2/$-2$, i2/n1/$-4$, i2/n3/$-2$, i3/n2/$-2$, i3/n4/$-2$,
+  i4/n3/$-2$, i5/n4/$-2$, i4/n5/$-4$}
+    \draw[->] (\source) -- node[near end,fill=white,inner sep=1pt] {\weight} (\target);
+\end{tikzpicture}
+\caption{ANN for spatial filtering}\label{fig.ann-spatial-filtering}
+\end{center}
+\end{figure}
+
+\medskip
+
+\noindent\textbf{Example} The ANN in Fig.~\ref{fig.ann-spatial-filtering} can be used to distinguish between narrow and wide objects. For example, both a leg of a chair and a wall are detected as objects, but the former is an obstacle that can be avoided by a sequence of turns whereas a wall cannot be avoided so the robot must turn around or follow the wall.
+
+Suppose that the leg of the chair is detected by the middle sensor with a value of $60$, but since the leg is narrow the other sensors return the value $0$. The output values of the ANN (from top to bottom) are:
+\begin{eqnarray*}
+(0\times 4) \,+ \, (0\times -4) &=& 0\\
+(0\times -2) \,+ \, (0\times 4) \,+ \, (60\times -2)&=&-120\\
+(0\times -2) \,+ \, (60\times 4) \,+ \,  (0\times -2)&=&+240\\
+(60\times -2) \,+ \, (0\times 4) \,+ \, (0\times -2)&=&-120\\
+(0\times 4) \,+ \, (0\times -4) &=&0\,.
+\end{eqnarray*}
+When the robot approaches a wall all the sensors will return more or less the same values, say, $45, 50, 40, 55, 50$. The output values of the ANN are:
+\begin{eqnarray*}
+(45\times 4)  \,+ \, (50\times -4)&=&-20\\
+(45\times -2) \,+ \, (50\times 4) \,+ \, (40\times -2)&=&+30\\
+(50\times -2) \,+ \, (40\times 4) \,+ \, (55\times -2)&=&-50\\
+(40\times -2) \,+ \, (55\times 4) \,+ \, (50\times -2)&=&+40\\
+(55\times -4) \,+ \, (50\times 4)&=&-20\,.
+\end{eqnarray*}
+Even though $48$, the average value returned by the sensors detecting the wall, is about the same as the value $60$ returned when detecting the leg of the chair, the outputs of the ANNs are clearly distinguishable. The first set of values has a high peak value surrounded by neighbors with large negative values, while second set is a relatively flat set of values in the range $-50$ to $40$. The layer of neurons can confidently identify whether the object is narrow or wide.
+
+\begin{framed}
+\act{ANN for spatial filtering}{spatial}
+\begin{itemize}
+\item Implement the ANN for spatial filtering in Fig.~\ref{fig.ann-spatial-filtering}.
+\item The inputs to the ANN are the readings of five proximity sensors facing forwards. If only one sensor detects an object, the robot turns to face the object. If the center sensor is the one that detects the object, the robot moves forwards. 
+\item Implement three behaviors of the robot when it detects a wall defined as all five sensors detecting an object:
+\begin{itemize}
+\item The robot stops.
+\item The robot moves forwards.
+\item The robot moves backwards.
+\end{itemize}
+Remember that there are no \p{if}-statements in an artificial neural network; you can only add additional neurons or change the weights associated with the inputs of the neurons. Look again at Activity~\ref{act.multilayer-avoidance} which used two levels of neurons to implement a similar behavior.
+\item The implementation will involve adding two additional neurons whose inputs are the outputs of the first layer. The output of the first neuron will set the power setting of the left motor and the output of the second neuron will set the power setting of the right motor.
+\item What happens if an object is detected by two adjacent sensors?
+\end{itemize}
+\end{framed}
+
+\section{Learning}\label{s.ann-learning}
+
+Setting the weights manually is difficult even for very small networks such as those presented in the previous sections. In biological organisms synapses have a plasticity that enables \emph{learning}. The power of artificial neural networks comes from their ability to learn, unlike ordinary algorithms that have to be specified to the last detail. There are many techniques for learning in ANNs; we describe one of the simpler techniques in this section and show how it can be used in the neural network for obstacle avoidance.
+
+\subsection{Categories of learning algorithms}
+
+There are three main categories of learning algorithms:
+
+\begin{itemize}
+\item \textbf{Supervised learning} is applicable when we know what output is expected for a set of inputs. The error between the desired and the actual outputs is used to correct the weights in order to reduce the error. Why is it necessary to train a network if we already know how it should behave? One reason is that the network is required to provide outputs in situations for which it was not trained. If the weights are adjusted so that the network behaves correctly on known inputs, it is reasonable to assume that its behavior will be more or less correct on other inputs. A second reason for training a network is to simplify the learning process: rather than directly relate the outputs $\{y_i\}$ to specific values of the inputs $\{x_i\}$, it is easier to place the network in several different situations and to tell it which outputs are expected in each situation.
+
+\item In \textbf{reinforcement learning} we do not specify the exact output value in each situation; instead, we simply tell the network if the output it computes is good or not. Reinforcement is appropriate when we can easily distinguish correct behavior from incorrect behavior, but we don't really care what the exact output is for each situation. In the next section, we present reinforcement learning for obstacle avoidance by a robot; for this task it is sufficient that the robot avoid the obstacle and we don't care what motor settings are output by the network as long as the behavior is correct.
+
+\item \textbf{Unsupervised learning} is learning without external feedback, where the network adapts to a large number of inputs. Unsupervised learning is not appropriate for achieving specified goals; instead, it is used in classification problems where the network is presented with raw data and attempts to find trends within the data. This approach to learning is the topic of Chap.~\ref{ch.machine}.
+\end{itemize}
+
+\subsection{The Hebbian rule for learning in ANNs}\label{s.hebbian-rule}
+
+The \emph{Hebbian rule} is a simple learning technique for ANNs. It is a form of reinforcement learning that modifies the weights of the connections between the neurons. When the network is doing something good we reinforce this good answer: if the output value of two connected neurons is similar, we increase the weight of the connection linking them, while if they are different, we decrease the weight. If the robot is doing something wrong, we can either decrease the weights of similar connected neurons or do nothing.
+
+The change in the weight of the connection between neuron $k$ and neuron $j$ is described by the equation:
+\[
+\Delta w_{kj}\,=\,\alpha \, y_{k} \, x_{j}\,,\label{eq.hebbian}
+\]
+where $w_{kj}$ is the weight linking the neurons $k$ and $j$, $\Delta w_{kj}$ is the change of $w_{kj}$, $y_{k}$ is the output of neuron $k$ and $x_{j}$ the input of neuron $j$, and $\alpha$ is a constant that defines the speed of learning. 
+
+The Hebbian rule is applicable under two conditions:
+\begin{itemize}
+\item The robot is exploring its environment, encountering various situations, each with its own inputs for which the network computes a set of outputs.
+\item The robot receives information on which behaviors are good and which are not.
+\end{itemize}
+The evaluation of the quality of the robot's behavior can come from a human observer manually giving feedback; alternatively, an automatic system can be used to evaluate the behavior. For example, in order to teach the robot to avoid obstacles, an external camera can be used to observe the robot and to evaluate its behavior. The behavior is classified as bad when the robot is approaching an obstacle and as good when the robot is moving away from all the obstacles. It is important to understand that what is evaluated is not the \emph{state} of the robot (close to or far from an obstacle), but rather the \emph{behavior} of the robot (approaching or avoiding an obstacle). The reason is that the connections of the neural network generate behavior based on the state as measured by the sensors.
+
+\subsubsection*{Learning to avoid an obstacle}
+
+Suppose that we want to teach a robot to avoid an obstacle. One way would be to let the robot move randomly in the environment, and then touch one key when it successfully avoids the obstacle and another when it crashes into the obstacle. The problem with this approach is that it will probably take a very long time for the robot to exhibit behavior that can be definitely characterized as positive (avoiding the obstacle) or negative (crashing it into the obstacle).
+
+Alternatively, we can present the robot with several known situations and the required behavior: (1) detecting an obstacle on the left and turning right is good; (2) detecting an obstacle on the right and turning left is good; (3) detecting an obstacle in front and moving backwards is good; (4) detecting an obstacle in front and moving forwards is bad.
+
+This looks like supervised learning but it is not, because the feedback to the robot is used only to reinforce the weights linked to good behavior. Supervised learning would consist in quantifying the error between the desired and actual outputs (to the motors in this case), and using this error to adjust the weights to compute exact outputs. Feedback in reinforcement learning is binary: the behavior is good or not.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+% Draw big robot
+\draw (-2.2cm,-3.5cm) to [rounded corners] (5cm,-3.5cm) to%
+[rounded corners, bend right=45] (5cm,3.5cm) to (-2.2cm,3.5cm) to cycle;
+\fill (-1.2cm,-3.5cm) rectangle +(2.5cm, -.4cm);
+\fill (-1.2cm,3.5cm) rectangle +(2.5cm, .4cm);
+% Draw two sum nodes and arrows to wheels
+\node[draw,circle] at (0,14mm) (left) {$+$};
+\node[draw,circle] at (0,-14mm) (right) {$+$};
+\draw[->,thick] (left) -- node[fill=white] {$y_1$} (0,34mm);
+\draw[->,thick] (right) -- node[fill=white] {$y_2$} (0,-34mm);
+% Left sensor and arrows
+\draw[red] (5, 3) arc[start angle=135, end angle=315, radius=.2cm];
+\node at (5.2,2.9) {$x_1$};
+\draw[->,thick,red] (4.95,2.8) -- node[w] {$w_{1l}$} (left.north east);
+\draw[->,thick,red] (5,2.7) -- node[w,near start,xshift=6pt] {$w_{1r}$} (right.north east);
+% Center sensor and arrows
+\draw[green!60!black] (6, .2) arc[start angle=90, end angle=270, radius=.2cm];
+\node at (6.2,0) {$x_2$};
+\draw[->,thick,green!60!black] (5.8,.1) -- node[w] {$w_{2l}$} (left.east);
+\draw[->,thick,green!60!black] (5.8,-.1) -- node[w] {$w_{2r}$} (right.east);
+% Right sensor and arrows
+\draw[blue] (5.3, -2.8) arc[start angle=45, end angle=225, radius=.2cm];
+\node at (5.2,-2.95) {$x_3$};
+\draw[->,thick,blue] (5,-2.8) -- node[w,near start,xshift=6pt] {{$w_{3l}$}} (left.south east);
+\draw[->,thick,blue] (4.95,-2.9) -- node[w] {$w_{3r}$} (right.south east);
+% Left rear sensor and arrows
+\draw (-1.9, 12mm) arc[start angle=-90, end angle=90, radius=.2cm];
+\node at (-1.98,14mm) {$x_4$};
+\draw[->] (-1.7,14mm) -- node[fill=white] {$w_{4l}$} (left.west);
+\draw[->] (-1.7,13.5mm) -- node[fill=white,near start] {$w_{4r}$} (right.west);
+% Right rear sensor and arrows
+\draw (-1.9, -16mm) arc[start angle=-90, end angle=90, radius=.2cm];
+\node at (-1.98,-14mm) {$x_5$};
+\draw[->,thick] (-1.7,-13.5mm) -- node[fill=white,near start] {$w_{5l}$} (left.west);
+\draw[->,thick] (-1.7,-14mm) -- node[fill=white] {$w_{5r}$} (right.west);
+\end{tikzpicture}
+\end{center}
+\caption{Neural network for demonstrating Hebbian learning}\label{fig.hebbian-avoidance}
+\end{figure}
+
+\subsubsection*{The algorithm for obstacle avoidance}
+
+Let us now demonstrate the Hebbian rule for learning on the problem of obstacle avoidance. Fig.~\ref{fig.hebbian-avoidance} is similar to Fig.~\ref{fig.nn-avoidance} except that proximity sensors have been added to the rear of the robot. We have also changed the notation for the weights to make them more appropriate for expressing the Hebbian rule; in particular, the negative signs have been absorbed into the weights.
+
+The obstacle-avoidance algorithm is implemented using several concurrent processes and will be displayed as a set of three algorithms. Algorithm~\ref{alg.hebb-background} implements an ANN which reads the inputs from the sensors and computes the outputs to the motors. The numbers of inputs and outputs are taken from Fig.~\ref{fig.hebbian-avoidance}. Algorithm~\ref{alg.hebb-feedback} receives evaluations of the robot's behavior from a human. Algorithm~\ref{alg.hebb-rule} performs the computations of the Hebbian rule for learning.
+
+In Algorithm~\ref{alg.hebb-background} a timer is set to a period such as $100$ milliseconds. The timer is decremented by the operating system (not shown) and when it expires, the outputs $y_1$ and $y_2$ are computed by Eq.~\ref{eqn.hebbian} below. These outputs are then used to set the power of the left and right motors, and, finally, the timer is reset.
+
+\begin{figure}
+\begin{alg}{ANN for obstacle avoidance}{hebb-background}
+&\idv{}integer period \ass $\cdots$& // Timer period (ms)\\
+&\idv{}integer timer \ass period&\\
+&\idv{}float array[5] \ \ \ \ \ $\vec{x}$& \\
+&\idv{}float array[2] \ \ \ \ \ $\vec{y}$& \\
+&\idv{}float array[2,5] \ \ $\vec{W}$&\\
+\hline
+\stl{}&when timer expires&\\
+\stl{}&\idc{}$\vec{x}$ \ass sensor values&\\
+\stl{}&\idc{}$\vec{y}$ \ass $\vec{W}\;\vec{x}$&\\
+\stl{}&\idc{}left-motor-power \ass $\vec{y}$[1]&\\
+\stl{}&\idc{}right-motor-power \ass $\vec{y}$[2]&\\
+\stl{}&\idc{}timer \ass period&\\
+\end{alg}
+\end{figure}
+
+There are five sensors that are read into the five input variables:
+\begin{center}
+\begin{tabular}{lcl}
+$x_1$ & $\leftarrow$ & \p{front left sensor}\\
+$x_2$ & $\leftarrow$ & \p{front center sensor}\\
+$x_3$ & $\leftarrow$ & \p{front right sensor}\\
+$x_4$ & $\leftarrow$ & \p{rear left sensor}\\
+$x_5$ & $\leftarrow$ & \p{rear right sensor}
+\end{tabular}
+\end{center}
+
+We assume that the values of the sensors are between $0$ (obstacle not detected) and $100$ (obstacle very close), and that the values of the motor powers are between $-100$ (full backwards power) and $100$ (full forwards power). If the computation results in saturation, the values are truncated to the end points of the range, that is, a value less than $-100$ becomes $-100$ and a value greater than $100$ becomes $100$.\footnote{Algorithm~\ref{alg.hebb-background} declared all the variables as \textsf{\footnotesize float} because the weights are floating point numbers. If the sensor inputs and motor outputs are integers, type conversion will be necessary.} Recall that a robot with differential drive turns right by setting $y_1$ (the power of the left motor) to $100$ and $y_2$ (the power of the right motor) to $-100$, and similarly for a left turn.
+
+To simplify the presentation of Algorithm~\ref{alg.hebb-background} we use vector notation where the inputs are given as a single column vector:
+\[
+\vec{x} = \left[ \begin{array}{c} x_1\\x_2\\x_3\\x_4\\x_5 \end{array} \right].
+\]
+Referring again to Fig.~\ref{fig.hebbian-avoidance}, the computation of the outputs is given by:
+\begin{eqnarray}
+y_1 & \leftarrow & w_{1l}x_1 + w_{2l}x_2 + w_{3l}x_3 + w_{4l}x_4 + w_{5l}x_5\label{eqn.yl}\\
+y_2 & \leftarrow & w_{1r}x_1 + w_{2r}x_2 + w_{3r}x_3 + w_{4r}x_4 + w_{5r}x_5\label{eqn.yr}\,.
+\end{eqnarray}
+Expressed in vector notation this is:
+\begin{equation}\label{eqn.hebbian}
+\vec{y} =
+\left[ \begin{array}{c} y_2\\y_2 \end{array} \right] =
+\left[
+  \begin{array}{ccccc}
+    w_{1l} & w_{2l} & w_{3l} & w_{4l} & w_{5l} \\
+    w_{1r} & w_{2r} & w_{3r} & w_{4r} & w_{5r} \\
+\end{array}
+\right]
+\left[ \begin{array}{c} x_1\\x_2\\x_3\\x_4\\x_5 \end{array} \right] =
+\vec{W}\;\vec{x}\,.
+\end{equation}
+
+To cause the algorithm to learn, feedback is used to modify the weights $\vec{W}$ (Algorithms~\ref{alg.hebb-feedback}, \ref{alg.hebb-rule}). Let us assume that there are four buttons on the robot or on a remote control, one for each direction forwards, backwards, left and right. Whenever we note that the robot is in a situation that requires a certain behavior, we touch the corresponding button. For example, if the left sensor detects an obstacle, the robot should turn right. To implement this, there is a process for each button. These processes are shown together in Algorithm~\ref{alg.hebb-feedback}, where the forwards slashes \verb+/+ separate corresponding events and actions.
+
+\begin{alg}{Feedback on the robot's behavior}{hebb-feedback}
+\hline
+\stl{}&when button \{forward / backward / left / right\} touched &\\
+\stl{}&\idc{}$y_{1}$ \ass \{$100$ / $-100$ / $-100$ / $100$\}&\\
+\stl{}&\idc{}$y_{2}$ \ass \{$100$ / $-100$ / $100$ / $-100$\}&\\
+\end{alg}
+
+The next phase of the algorithm is to update the connection weights according to the Hebbian rule (Algorithm~\ref{alg.hebb-rule}).
+
+\begin{alg}{Applying the Hebbian rule}{hebb-rule}
+\hline
+\stl{}&\idc{}$\vec{x}$ \ass sensor values&\\
+\stl{}&\idc{}for $j$ in $\{1,2,3,4,5\}$&\\
+\stl{}&\idc{}\idc{}$w_{jl}$ \ass $w_{jl} + \alpha\, y_1\, x_j$&\\
+\stl{}&\idc{}\idc{}$w_{jr}$ \ass $w_{jr} + \alpha\, y_2\, x_j$&\\
+\end{alg}
+
+\medskip
+
+\noindent\textbf{Example} Assume that initially the weights are all zero. By  Eqs.~\ref{eqn.yl}--\ref{eqn.yr} the outputs are zero and the robot will not move.
+
+Suppose now that an obstacle is placed in front of the left sensor so that $x_1=100$ while $x_2=x_3=x_4=x_5=0$. Without feedback nothing will happen since the weights are still zero. If we touch the right button (informing the robot that the correct behavior is to turn right), the outputs are set to $y_1=100, y_2=-100$ to turn right, which in turn leads to the following changes in the weights (assuming a learning factor $\alpha=0.0001$):
+\begin{eqnarray*}
+w_{1l} & \leftarrow & 0 + (0.0001 \times 100 \times 100) = 10\\
+w_{1r} & \leftarrow & 0 + (0.0001 \times -100 \times 100) = -10\,.
+\end{eqnarray*}
+The next time that an obstacle is detected by the left sensor, the outputs will be non-zero:
+\begin{eqnarray*}
+y_1 & \leftarrow & (10\times 100) + 0 + 0 + 0 + 0 = 1000\\
+y_2 & \leftarrow & (-10\times 100) + 0 + 0 + 0 + 0 = -1000\,.\\
+\end{eqnarray*}
+After truncating to $100$ and $-100$ these outputs will cause the robot to turn right.
+
+The learning factor $\alpha$ determines the magnitude of the effect of $y_k\, x_j$ on the values of $w_{kj}$. Higher values of the factor cause larger effects and hence faster learning. Although one could think that a faster learning is always better, if the learning is too fast it can cause unwanted changes such as forgetting previous good situations or strongly emphasizing mistakes. The learning factor must be adjusted to achieve optimal learning.
+
+\begin{framed}
+\act{Hebbian learning for obstacle avoidance}{learn-avoid}
+\begin{itemize}
+\item Implement Algorithms~\ref{alg.hebb-background}--\ref{alg.hebb-rule} and teach your robot to avoid obstacles.
+\item Modify the program so that it \emph{learns} to move forwards when it does not detect an obstacle.
+\end{itemize}
+\end{framed}
+
+\section{Summary}
+
+Autonomous robots must function in environments characterized by a high degree of uncertainty. For that reason it is difficult to specify precise algorithms for robot behavior. Artificial neural networks can implement the required behavior in an uncertain environment by learning, that is, by modifying and improving the algorithm as the robot encounters additional situations. The structure of ANNs makes learning technically simple: An ANN is composed of a large number of small, simple components called neurons and learning is achieved by modifying the weights assigned to the connections between the neurons.
+
+Learning can be supervised, reinforcement or unsupervised. Reinforcement learning is appropriate for learning robotic behavior because it requires the designer to specify only if an observed behavior is good or bad without quantifying the behavior. The Hebbian rule modifies the weights connecting neurons by multiplying the output of one neuron by the input of the neuron it is connected to. The result is multiplied by a learning factor that determines the size of the change in the weight and thus the rate of learning.
+
+\section{Further reading}
+
+Haykin \cite{haykin} and Rojas \cite{rojas} are comprehensive textbooks on neural networks. David Kriesel wrote an online tutorial \cite{kriesel} that can be freely downloaded.

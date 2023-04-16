@@ -6,8 +6,7 @@ Estamos agora prontos para escrever nossos primeiros algoritmos para robôs. Est
 
 Os comportamentos reativos são aqueles dos veículos \emph{Braitenberg} que são apropriados para introduzir a robótica porque o comportamento complexo surge a partir de algoritmos simples. As seções~\ref{s.braitenberg}--ref{s.turning} descrevem veículos Braitenberg que demonstram comportamento reativo; no capítulo ~ref{ch.fmg} apresentamos veículos Braitenberg que têm comportamento não reativo com estados. A seção~\ref{s.line} apresenta vários algoritmos para o comportamento reativo clássico dos seguidores de linha. O seguimento de linha é uma tarefa interessante porque os algoritmos são sensíveis às características dos sensores e das linhas. A calibração é necessária para determinar os limites ideais para o movimento rápido e robusto do robô. A seção~\ref{s.abstract-vehicles} dá uma breve visão geral da formulação original dos veículos de Braitenberg em uma abordagem biológica com sensores conectados diretamente aos motores, e não através de um computador. Mais tarde no livro (Sect.~\ref{s.braitenberg-ann}) discutimos a implementação de veículos Braitenberg usando redes neurais.
 
-
-\section{Veículos Braitenberg}
+\section{Veículos Braitenberg}\label{s.braitenberg}
 
 Valentino Braitenberg foi um neurocientista que descreveu o projeto de veículos virtuais que apresentavam um comportamento surpreendentemente complexo. Os pesquisadores do MIT Media Lab desenvolveram implementações de hardware dos veículos da \emph{tijolos programáveis} que foram os precursores do \lego. Mindstorms robotics kits.\footnote{O relatório do MIT usa o termo "criaturas Braitenberg", mas mantemos o termo original.} Este capítulo descreve uma implementação da maioria dos veículos Braitenberg a partir do relatório do MIT. O hardware do MIT usou sensores de luz e de toque, enquanto nosso robô genérico se baseia em sensores de proximidade horizontais.
 
