@@ -71,7 +71,7 @@ Algoritmos de controle são executados periodicamente (Algoritmo~\ref{alg.contro
 
 O período do algoritmo é um parâmetro importante no projeto de um sistema de controle. Se o período for muito curto, recursos computacionais valiosos serão desperdiçados e o computador pode ficar sobrecarregado ao ponto de os comandos para o robô chegarem tarde demais. Se o período for muito longo, o robô não responderá a tempo para corrigir erros em seu movimento.
 
-\medskip
+\smallskip
 
 \noindent\textbf{Exemplo} Considere um robô se aproximando de um objeto que está a $10$ cm de distância a $2$ cm/s. Um período de controle de $1$ ms desperdiçaria recursos computacionais porque o robô moverá apenas $0,002$ cm ($0,02$ mm) durante o ciclo de $1$ ms do algoritmo de controle. Mudanças na potência do motor em distâncias tão pequenas não afetarão a capacidade do robô de cumprir sua tarefa. No extremo oposto, um período de controle de $2$ s é ainda pior: o robô moverá $4$ cm durante este período e provavelmente colidirá com o objeto. Um período de controle de aproximadamente $0,25$ s ($250$ ms) durante o qual o robô se move $0,5$ cm parece um valor razoável para começar, pois $0,5$ cm é uma distância que é significativa em termos de aproximação de um objeto. Você pode experimentar períodos em torno deste valor para determinar o período ideal: um que alcance um comportamento satisfatório com um período o mais longo possível para reduzir o custo do cálculo.
 
@@ -169,7 +169,7 @@ Algoritmo~\ref{alg.proportional} é o \emph{algoritmo de controle proporcional} 
 \end{alg}
 \end{figure}
 
-\medskip
+\smallskip
 
 \noindent\textbf{Exemplo} Suponha que a distância de referência é $100$ cm e o ganho é $-0,8$. Quando o robô está a $150$ cm do objeto, o erro é $100-150=-50$ e o algoritmo de controle ajustará a potência para $-0,8\cdot -50=40$. A tabela~\ref{tab.p-controller} mostra os erros e as configurações de potência para três distâncias. Se o robô ultrapassar a distância de referência de $100$ cm e uma distância de $60$ cm for medida, a potência será ajustada para $-32$ fazendo com que o robô se mova para trás.
 

@@ -1,25 +1,25 @@
 % !TeX root = er.tex
 
-\chapter{Machine Learning}\label{ch.machine}
+\chapter{Aprendizagem da máquina}\label{ch.machine}
 
-Consider a robot that recognizes and grasps yellow objects (Fig.~\ref{fig.sortballs}). It can use a color camera to identify yellow objects, but the objects will appear different in different environments, such as in sunlight, in a dark room, or in a showroom. Furthermore, it is hard to precisely define what ``yellow'' means: what is the boundary between yellow and lemon-yellow or between yellow and orange? Rather than write detailed instructions for the robot, we would prefer that the robot learn color recognition as it is performing the task, so that it  could adapt to the environment where the task takes place. Specifically, we want to design a \emph{classification algorithm} that can be \emph{trained} to perform the task without supplying all the details in advance.
+Considere um robô que reconhece e agarra objetos amarelos (Fig.~ref{fig.sortballs}). Ele pode usar uma câmera colorida para identificar objetos amarelos, mas os objetos aparecerão diferentes em ambientes diferentes, como na luz do sol, em uma sala escura ou em um showroom. Além disso, é difícil definir com precisão o que significa "amarelo": qual é o limite entre amarelo e amarelo limão-amarelo ou entre amarelo e laranja? Em vez de escrever instruções detalhadas para o robô, preferimos que o robô aprenda a reconhecer as cores enquanto executa a tarefa, para que ele possa se adaptar ao ambiente onde a tarefa acontece. Especificamente, queremos projetar um algoritmo de {classificação} que possa ser {treinado} para executar a tarefa sem fornecer todos os detalhes com antecedência.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{sorting-robot.jpg}
 \end{center}
-\caption{Robotic arm sorting colored balls}\label{fig.sortballs}
+\caption{Bolas coloridas para classificação de braços robóticos}\label{fig.sortballs}
 \end{figure}
 
-Classifications algorithms are a central topic in \emph{machine learning}, a field of computer science and statistics that develops computations to recognize patterns and to predict outcomes without explicit programming. These algorithms extract \emph{rules} from the raw data acquired by the system during a training period. The rules are subsequently used to classify a new object and then to take the appropriate action according to the class of the object. For the color-recognition task, we train the robot by presenting it with objects of different colors and telling the robot which objects are yellow and which are not. The machine learning algorithm generates a rule for color classification. When presented with new objects, it uses the rule to decide which objects are yellow and which are not.
+Os algoritmos de classificação são um tópico central em \emph{machine learning}, um campo da ciência da computação e estatística que desenvolve computações para reconhecer padrões e prever resultados sem programação explícita. Estes algoritmos extraem \emph{rules} dos dados brutos adquiridos pelo sistema durante um período de treinamento. As regras são posteriormente utilizadas para classificar um novo objeto e, em seguida, para tomar a ação apropriada de acordo com a classe do objeto. Para a tarefa de reconhecimento de cores, treinamos o robô apresentando objetos de cores diferentes e dizendo ao robô quais objetos são amarelos e quais não são. O algoritmo de aprendizagem da máquina gera uma regra para a classificação de cores. Quando é apresentado com novos objetos, ele usa a regra para decidir quais objetos são amarelos e quais não são.
 
-The previous chapter presented artificial neural networks which perform a form of machine learning based upon \emph{reinforcement}. In this chapter, we discuss statistical techniques based upon \emph{supervised learning}: during the training period we tell the robot the precise answers, such as whether an object is yellow or not. Section~\ref{s.sorting-onesensor} introduces the statistical techniques by developing an algorithm for distinguishing between objects of two colors. We present a technique for machine learning called \emph{linear discriminant analysis (LDA)}. Sections~\ref{s.lda}--\ref{s.gen-lda} present LDA in the same context of distinguishing between two colors. LDA is based on the assumption that the data has specific statistical properties; if these do not hold, \emph{perceptrons} can be used for classification as described in Sect.~\ref{s.perceptrons}.
+O capítulo anterior apresentou redes neurais artificiais que realizam uma forma de aprendizagem da máquina baseada em \emph{reinforcement}. Neste capítulo, discutimos técnicas estatísticas baseadas em \emph{supervised learning}: durante o período de treinamento, dizemos ao robô as respostas precisas, tais como se um objeto é amarelo ou não. A seção~\ref{s.sorting-onesensor} introduz as técnicas estatísticas desenvolvendo um algoritmo para distinguir entre objetos de duas cores. Apresentamos uma técnica para aprendizagem da máquina chamada \emph{linear discriminant analysis (LDA)}. As seções~~ref{s.lda}--ref{s.gen-lda} apresentam a LDA no mesmo contexto de distinção entre duas cores. A LDA é baseada na suposição de que os dados têm propriedades estatísticas específicas; se estas não se mantiverem, \emph{perceptrons} pode ser usada para classificação, como descrito na seção Sect.~ref{s.perceptrons}.
 
-This chapter assumes that you are familiar with the concepts of \emph{mean}, \emph{variance} and \emph{covariance}. Tutorials on these concepts appear in Appendices~\ref{a.mean}--\ref{a.covariance}.
+Este capítulo assume que você está familiarizado com os conceitos de \emph{mean}, \emph{variance} e \emph{covariance}. Tutoriais sobre estes conceitos aparecem em Apêndices~\ref{a.mean}--\ref{a.covariance}.
 
-\section{Distinguishing between two colors}\label{s.sorting-onesensor}
+\section{Distinguindo entre duas cores}\label{s.sorting-onesensor}
 
-We start with the problem of distinguishing yellow balls from non-yellow balls. To simplify the task, we modify the problem to one of distinguishing dark gray areas from light gray areas that are printed on paper taped to the floor (Fig.~\ref{fig.closegrays1}). The robot uses two ground sensors that sample the reflected light as the robot moves over the two areas.
+Começamos com o problema de distinguir as bolas amarelas das não amarelas. Para simplificar a tarefa, modificamos o problema para um de distinguir as áreas cinza escuro das áreas cinza claro que são impressas em papel colado ao chão (Fig.~\ref{fig.closegrays1}). O robô usa dois sensores terrestres que recolhem amostras da luz refletida à medida que o robô se move sobre as duas áreas.
 
 \begin{figure}
 \begin{center}
@@ -31,71 +31,71 @@ We start with the problem of distinguishing yellow balls from non-yellow balls. 
 \draw[fill,color=black!20] (4,0) rectangle +(3.5,2);
 \end{tikzpicture}
 \end{center}
-\caption{Distinguishing two shades of gray}\label{fig.closegrays1}
+\caption{Distinguindo duas tonalidades de cinza}\label{fig.closegrays1}
 \end{figure}
 
-Figure~\ref{fig.closegrays2} shows a plot of the values returned by sampling the two sensors.\footnote{The data used in this chapter are real data taken from an experiment with the Thymio robot.} The robot takes about $70$ seconds to move from left to right, sampling the reflected light once per second. It is easy to see that the data shows significant variation, which is probably due to noise in the sensors and uneven printing. Even more problematic is the variability in the results returned by the two sensors. How can the robot learn to distinguish between the shades of gray given the variability in the samples and the sensors? We want to automatically create a rule to distinguish between the two shades of gray.
+A figura~\ref{fig.closegrays2} mostra um gráfico dos valores retornados pela amostragem dos dois sensores.\footnote{Os dados utilizados neste capítulo são dados reais extraídos de uma experiência com o robô Thymio.} O robô leva cerca de $70$ segundos para mover-se da esquerda para a direita, colhendo a luz refletida uma vez por segundo. É fácil ver que os dados mostram uma variação significativa, que provavelmente se deve ao ruído nos sensores e à impressão irregular. Ainda mais problemática é a variabilidade nos resultados retornados pelos dois sensores. Como o robô pode aprender a distinguir entre as tonalidades de cinza dada a variabilidade nas amostras e nos sensores? Queremos criar automaticamente uma regra para distinguir entre as duas tonalidades de cinza.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{gray-fig.pdf}
 \end{center}
-\caption{Plots of reflected light vs. time for the left sensor (top) and the right sensor (bottom)}\label{fig.closegrays2}
+\caption{Lotes de luz refletida vs. tempo para o sensor esquerdo (superior) e o sensor direito (inferior)}\label{fig.closegrays2}
 \end{figure}
 
-\subsection{A discriminant based on the means}
+\subsection{Um discriminante com base nos meios}
 
-By examining the plots in Fig.~\ref{fig.closegrays2}, it is easy to see which samples are from the dark gray area and which are from the light gray area. For the left sensor, the values of the light gray area are in the range $500$--$550$, while the values of the dark gray area are in the range $410$--$460$. For the right sensor, the ranges are $460$--$480$ and $380$--$400$. For the left sensor, a threshold of $480$ would clearly distinguish between light and dark gray, while for the right sensor a threshold of $440$ would clearly distinguish between light and dark gray. But how can these optimal values be chosen automatically and how can we reconcile the thresholds of the two sensors?
+Ao examinar as parcelas na Fig.~\ref{fig.closegrays2}, é fácil ver quais amostras são da área cinza escuro e quais são da área cinza claro. Para o sensor esquerdo, os valores da área cinza claro estão na faixa de $500$--$550$, enquanto os valores da área cinza escuro estão na faixa de $410$--$460$. Para o sensor direito, os valores estão na faixa de $460$--$480$ e $380$--$400$. Para o sensor esquerdo, um limiar de $480$ distinguiria claramente entre cinza claro e cinza escuro, enquanto para o sensor direito, um limiar de $440$ distinguiria claramente entre cinza claro e cinza escuro. Mas como estes valores ótimos podem ser escolhidos automaticamente e como podemos reconciliar os limites dos dois sensores?
 
-Let us first focus on the left sensor. We are looking for a \textit{discriminant}, a value that distinguishes samples from the two colors. Consider the values $\mathit{max}_\sub{dark}$, the maximum value returned by sampling dark gray, and $\mathit{min}_{\sub{light}}$, the minimum value returned by sampling light gray. Under the reasonable assumption that $\mathit{max}_\sub{dark} < \mathit{min}_\sub{light}$, any value $x$ such that $\mathit{max}_\sub{dark} < x < \mathit{min}_\sub{light}$ can distinguish between the two shades of gray. The midpoint between the two values would seem to offer the most robust discriminant.
+Vamos primeiro nos concentrar no sensor esquerdo. Estamos procurando um \emph{discriminante}, um valor que distinga as amostras das duas cores. Considere os valores $\mathit{max}_\sub{dark}$, o valor máximo retornado pela amostragem cinza escuro, e $\mathit{min}_\sub{light}$, o valor mínimo retornado pela amostragem cinza claro. Sob a suposição razoável de que  $\mathit{max}_\sub{dark} <\mathit{min}_\sub{light}$, qualquer valor $x$ tal que $\mathit{max}_\sub{dark} < x <\mathit{min}_\sub{light}$ consegue distinguir entre os dois tons de cinza. O ponto médio entre os dois valores parece oferecer o discriminante mais robusto.
 
-From Fig.~\ref{fig.closegrays2} we see that $\mathit{max}_\sub{dark}\approx 460$ occurs at about $10$ s and $\mathit{min}_{\sub{light}}\approx 500$ occurs at about $60$ s, so we choose their average $480$ as the discriminant. While this is correct for this particular data set, in general it is not a good idea to use the maximum and minimum values because they could be \emph{outliers}: extreme values resulting from unusual circumstances, such as a hole in the paper which would incorrectly return a very high value in the dark gray area.
+Da Fig.~\ref{fig.closegrays2} vemos que $\mathit{max}_\sub{dark}\approx 460$ ocorre a cerca de $10$ s e $\mathit{min}_{\sub{light}}\approx 500$ ocorre a cerca de $60$ s, por isso escolhemos sua média de $480$ como o discriminante. Embora isto seja correto para este conjunto de dados em particular, em geral não é uma boa idéia usar os valores máximos e mínimos porque eles poderiam ser {outliers}: valores extremos resultantes de circunstâncias incomuns, tais como um buraco no papel que retornaria incorretamente um valor muito alto na área cinza escura.
 
-A better solution is to use \emph{all} the data and the simplest function of all the data is the \emph{mean} of the values. Let $\mu_{\sub{dark}}$ denote the mean of the dark gray samples and $\mu_{\sub{light}}$ the mean of the light gray samples. A good discriminant $\Delta$ is the midpoint between the two means:
+Uma solução melhor é usar \emph{all} os dados e a função mais simples de todos os dados é o \emph{mean} dos valores. Deixe que $\mu_{\sub{dark}}$ denotem a média das amostras cinzas escuras e $\mu_{\sub{light}}$ a média das amostras cinzas claras. Um bom discriminante $\Delta$ é o ponto médio entre os dois meios:
+
 \begin{displaymath}
 \Delta = \frac{\mu_{\sub{dark}} + \mu_{\sub{light}}}{2}\,.%\label{eq.discriminant}
 \end{displaymath}
-For the data in Fig.~\ref{fig.closegrays2} the means for the left sensor and the discriminant are:\footnote{In this chapter, values will be rounded to the nearest integer.}
+Para os dados na Fig.~\ref{fig.closegrays2} os meios para o sensor esquerdo e o discriminante são:\footnote{Neste capítulo, os valores serão arredondados para o número inteiro mais próximo.}
 \[
 \mu_{\sub{dark}}^{\sub{left}} = 431,\;\;
 \mu_{\sub{light}}^{\sub{left}} = 519,\;\;
 \Delta^{\sub{left}} = \frac{431+519}{2} = 475\,.
 \]
-A similar computation gives the discriminant for the right sensor:
+Um cálculo semelhante dá o discriminante para o sensor correto:
 \[
 \Delta^{\sub{right}} = 425\,.
 \]
+Para obter um reconhecimento ideal, queremos um algoritmo capaz de decidir automaticamente qual dos dois discriminantes é melhor. Este é um passo preliminar para o método descrito em Sect.~\ref{s.lda}, onde um discriminante é computado através da combinação dos dados de ambos os sensores.
 
-In order to obtain optimal recognition, we want an algorithm that is able to automatically decide which of the two discriminants is better. This is a preliminary stepping stone to the method described in Sect.~\ref{s.lda}, where a discriminant is computed by combining data from both sensors.
-
-Intuitively, the greater the difference between the means of the light and dark areas:
+Intuitivamente, quanto maior a diferença entre os meios das áreas claras e escuras:
 \[
 \left|\,\mu_{\sub{dark}}^{\sub{left}} - \mu_{\sub{light}}^{\sub{left}}\,\right|,\;\;\left|\,\mu_{\sub{dark}}^{\sub{right}} - \mu_{\sub{light}}^{\sub{right}}\,\right|\,,
 \]
-the easier it will be to place a discriminant between the two classes. The difference between the means of the left sensor ($88$) is a bit greater than the difference between the means of the right sensor ($84$). This leads us to choose the discriminant ($475$) computed from the means of the left sensor. However, from the plot in Fig.~\ref{fig.closegraysmus} it appears that this might not be the best choice because of the large variation in the samples of the left sensor.
+mais fácil será colocar uma discriminação entre as duas classes. A diferença entre os meios do sensor esquerdo ($88$) é um pouco maior do que a diferença entre os meios do sensor direito ($84$). Isto nos leva a escolher o discriminante ($475$) computado a partir dos meios do sensor esquerdo. Entretanto, a partir do gráfico na Fig.~\ref{fig.closegraysmus}, parece que esta pode não ser a melhor escolha devido à grande variação nas amostras do sensor esquerdo.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{gray-fig-mus.pdf}
 \end{center}
-\caption{Figure~\ref{fig.closegrays2} with means (short dashes), variances (brackets), discriminants (long dashes)}\label{fig.closegraysmus}
+\caption{Figura~\ref{fig.closegrays2} com meios (traços curtos), variações (parênteses), discriminantes (traços longos)}\label{fig.closegraysmus}
 \end{figure}
 
-\subsection{A discriminant based on the means and variances}
+\subsection{Um discriminante com base nos meios e desvios}
 
-A better discriminant can be obtained if we consider not only the difference of the means but also the spread of the sample values around the mean. This is called the \emph{variance} of the samples. The variance $s^2$ of a set of values $\{x_1,x_2,\ldots,x_{n-1},x_n\}$ is:\footnote{Appendix~\ref{a.mean} explains why $n-1$ is used instead of $n$.}
+Um melhor discriminante pode ser obtido se considerarmos não apenas a diferença dos meios, mas também a dispersão dos valores da amostra em torno da média. Isto é chamado de \emph{variância} das amostras. A variância $s^2$ de um conjunto de valores $\{x_1,x_2,\ldots,x_{n-1},x_n\}$ é:\footnote{Apêndice~\ref{a.mean} explica por que $n-1$ é usado em vez de $n$.}
 \[
 s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i-\mu)^2\,,
 \]
-where $\mu$ is the mean of the values in the set.
+onde $\mu$ é a média dos valores do conjunto.
 
-The variance computes the average of the distances of each sample from the mean of the samples. The distances are squared because a sample can be greater than or less than the mean, but we want a positive distance that shows how far the sample is from the mean.
+A variância calcula a média das distâncias de cada amostra em relação à média das amostras. As distâncias são quadradas porque uma amostra pode ser maior ou menor que a média, mas queremos uma distância positiva que mostre quão longe a amostra está da média.
 
-The brackets in Fig.~\ref{fig.closegraysmus} show the four variances for the sets of samples of the light and dark areas for the left and right sensors.\footnote{Fig.~\ref{fig.closegraysmus} actually shows the square root of the variance called the standard deviation.} The difference between the left means is somewhat greater than the difference between the right means:
+Os parênteses na Fig.~\ref{fig.closegraysmus} mostram as quatro variações para os conjuntos de amostras das áreas claras e escuras para os sensores esquerdo e direito.\footnote{Fig.~\ref{fig.closegraysmus} mostra na verdade a raiz quadrada da variação chamada desvio padrão.} A diferença entre o meio esquerdo é um pouco maior do que a diferença entre o meio direito:
 \[
 \rule[-2ex]{0pt}{6ex}\left|\,\mu_{\sub{dark}}^{\sub{left}}-\mu_{\sub{light}}^{\sub{left}}\,\right| > \rule[-2ex]{0pt}{6ex}\left|\,\mu_{\sub{dark}}^{\sub{right}}-\mu_{\sub{light}}^{\sub{right}}\,\right|\,,
 \]
-but the variances of the right sensor are much smaller than the corresponding variances of the left sensor:
+mas as variâncias do sensor direito são muito menores do que as correspondentes variâncias do sensor esquerdo:
 \[
 \rule[-2ex]{0pt}{6ex}\left(s_{\sub{dark}}^{\sub{right}}\right)^2
 \ll
@@ -104,28 +104,28 @@ but the variances of the right sensor are much smaller than the corresponding va
 \ll
 \rule[-3ex]{0pt}{6ex}\left(s_{\sub{light}}^{\sub{left}}\right)^2\,.
 \]
-The use of the variances enables better classification of the two sets, since a sensor with less variance is more stable and this facilitates classification.
+O uso das variâncias permite uma melhor classificação dos dois conjuntos, já que um sensor com menos variância é mais estável e isso facilita a classificação.
 
-A good discriminant can be obtained by combining information from the means and the variances. The quality of a discriminant $J_k$, for $k=\mathit{left},\mathit{right}$, is given by:
+Uma boa discriminação pode ser obtida através da combinação de informações dos meios e das variâncias. A qualidade de um discriminante $J_k$, por $k=\mathit{esquerda},\mathit{direita}$, é dada por:
 \begin{equation}
 J_k = \frac{\left(\mu_{\sub{dark}}^k - \mu_{\sub{light}}^k\right)^2}{\left(s_{\sub{dark}}^k\right)^2 + \left(s_{\sub{light}}^k\right)^2}\,.\label{eq.j}
 \end{equation}
-To maximize $J$, the numerator---the distance between the means---should be large, and the denominator---the variances of the samples---should be small.
+Para maximizar $J$, o numerador - a distância entre os meios - deve ser grande, e o denominador - as variações das amostras - deve ser pequeno.
 
-Table~\ref{table.mu-s-j} displays the computations for the data set from Fig.~\ref{fig.closegraysmus}. The quality criterion $J$ for the right sensor is much larger than the one for the left sensor. It follows that the midpoint between the means of the right sensor:
+A tabela~\ref{table.mu-s-j} exibe os cálculos para o conjunto de dados da Fig.~\ref{fig.closegraysmus}. O critério de qualidade $J$ para o sensor direito é muito maior do que o do sensor esquerdo. Segue-se que o ponto médio entre os meios do sensor direito:
 \[
 \Delta^{\sub{right}}=\frac{383+467}{2}=425
 \]
-is a better discriminant than the midpoint of the means of the left sensor that would be chosen by considering only the differences of the means $|\mu_{\sub{dark}}-\mu_{\sub{light}}|$, which is slightly larger for the left sensor than for the right sensor.
+é melhor discriminante do que o ponto médio dos meios do sensor esquerdo que seria escolhido considerando apenas as diferenças dos meios $|\mu_{\sub{dark}}-\mu_{\sub{light}}|$, que é um pouco maior para o sensor esquerdo do que para o sensor direito.
 
 \begin{table}
-\caption{The difference of the means and the quality criteria $J$}
+\caption{A diferença entre os meios e os critérios de qualidade $J$}
 \label{table.mu-s-j}
 \begin{tabular}{p{2.5cm}p{3cm}p{3cm}p{3cm}p{3cm}}
 \hline\noalign{\smallskip}
-& \multicolumn{2}{r@{\hspace{1em}}}{left} & \multicolumn{2}{r@{\hspace{1em}}}{right} \\
+& \multicolumn{2}{r@{\hspace{1em}}}{esquerda} & \multicolumn{2}{r@{\hspace{1em}}}{à direita} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
-& \multicolumn{1}{r}{dark} & \multicolumn{1}{r}{light} & \multicolumn{1}{@{\hspace{3em}}r}{dark} & \multicolumn{1}{r}{light}\\
+& \multicolumn{1}{r}{escuro} & \multicolumn{1}{r}{luz} & \multicolumn{1}{@{\hspace{3em}}r}{escuro} & \multicolumn{1}{r}{luz}\\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 $\mu$ & \multicolumn{1}{r}{$431$} & \multicolumn{1}{r}{$519$} & \multicolumn{1}{r}{$383$} & \multicolumn{1}{r}{$467$}\\
 $s^2$ & \multicolumn{1}{r}{$121$} & \multicolumn{1}{r}{$225$} & \multicolumn{1}{r}{$16$} & \multicolumn{1}{r}{$49$}\\
@@ -135,14 +135,14 @@ $J$ & \multicolumn{2}{r}{$22$} & \multicolumn{2}{r}{$104$}\\
 \end{tabular}
 \end{table}
 
-\subsection{Algorithm for learning to distinguish colors}
+\subsection{Algoritmo para aprender a distinguir cores}
 
-These computations are done by the robot itself, so the choice of the better discriminant and the better sensor is automatic. The details of the computation are given in Algorithms~\ref{alg.learning1}--\ref{alg.recognition1}.\footnote{Boldface variables represent vectors or matrices.}
+Estes cálculos são feitos pelo próprio robô, portanto a escolha do melhor discriminante e do melhor sensor é automática. Os detalhes do cálculo são dados em Algoritmos~\ref{alg.learning1}--\ref{alg.recognition1}.\footnote{As variáveis de face ousada representam vetores ou matrizes.}
 
-There are two classes $C_1$, $C_2$ and two sensors. During the learning phase, the robot samples areas of the two gray levels independently and then computes the criterion of quality $J$. The sampling and computation are done for each sensor, either one after another or simultaneously. After the learning phase, the robot uses midpoint of the means with the best $J$ value for recognition of gray levels.
+Há duas classes $C_1$, $C_2$ e dois sensores. Durante a fase de aprendizagem, o robô amostra áreas dos dois níveis de cinza independentemente e depois calcula o critério de qualidade $J$. A amostragem e o cálculo são feitos para cada sensor, seja um após o outro ou simultaneamente. Após a fase de aprendizagem, o robô utiliza o ponto médio do meio com o melhor valor de $J$ para o reconhecimento dos níveis de cinza.
 
 \begin{figure}
-\begin{alg}{Distinguishing classes (learning phase)}{learning1}
+\begin{alg}{Aulas de distinção (fase de aprendizagem)}{learning1}
 &\idv{}float $\vec{X_1}, \vec{X_2}$&// Sets of samples\\
 &\idv{}float $\mu_1,\mu_2$& // Means of $C_1,C_2$\\
 &\idv{}float $s_1,s_2$& // Variances of $C_1,C_2$\\
@@ -163,7 +163,7 @@ There are two classes $C_1$, $C_2$ and two sensors. During the learning phase, t
 \end{figure}
 
 \begin{figure}
-\begin{alg}{Distinguishing classes (recognition phase)}{recognition1}
+\begin{alg}{Classes distintivas (fase de reconhecimento)}{recognition1}
 &\idv{}float $\mu$ \ass input $\mu[k]$ from the learning phase&\\
 &\idv{}float x&\\
 \hline
@@ -177,109 +177,108 @@ There are two classes $C_1$, $C_2$ and two sensors. During the learning phase, t
 \end{figure}
 
 \begin{framed}
-\act{Robotic chameleon}{chameleon}
+\act{Camaleão robótico}{chameleon}
 \begin{itemize}
-\item Construct an environment as shown in Fig.~\ref{fig.closegrays1}. Print two pieces of paper with different uniform gray levels and tape them to the floor.
-\item Write a program that causes the robot to move at a constant speed over the area of one color and sample the reflected light periodically. Repeat for the other color.
-\item Plot the data, compute the means and the discriminant.
-\item Implement a program that classifies the measurements of the sensor. When the robot classifies a measurement it displays which color is recognized like a chameleon (or gives other feedback if changing color cannot be done).
-\item Apply the same method with a second sensor and compare the separability of the classes using the criterion $J$.
-\item Repeat the exercise with two very close levels of gray. What do you observe?
+\item Construir um ambiente como mostrado na Fig.~\ref{fig.closegrays1}. Imprimir dois pedaços de papel com diferentes níveis de cinza uniforme e colá-los ao chão.
+\item Escreva um programa que faz com que o robô se mova a uma velocidade constante sobre a área de uma cor e prove a luz refletida periodicamente. Repita para a outra cor.
+\item Plotar os dados, calcular os meios e o discriminante.
+\item Implementar um programa que classifique as medidas do sensor. Quando o robô classifica uma medida, ele exibe qual cor é reconhecida como um camaleão (ou dá outro feedback se a mudança de cor não puder ser feita).
+\item Aplicar o mesmo método com um segundo sensor e comparar a separabilidade das classes usando o critério $J$.
+\item Repetir o exercício com dois níveis de cinza muito próximos. O que você observa?
 \end{itemize}
 \end{framed}
 
-\section{Linear discriminant analysis}\label{s.lda}
+\section{Análise linear discriminante}\label{s.lda}
 
+Na seção anterior classificamos amostras de dois níveis de cinza com base nas medidas de um sensor em dois; o sensor foi escolhido automaticamente com base em um critério de qualidade. Esta abordagem é simples, mas não é ótima. Em vez de escolher um discriminante com base em um sensor, podemos obter um melhor reconhecimento combinando amostras de ambos os sensores. Um método é chamado \emph{linear discriminant analysis (LDA)} e é baseado no trabalho pioneiro realizado em 1936 pelo estatístico Ronald A. Fisher.
 
-In the previous section we classified samples of two levels of gray based on the measurements of one sensor out of two; the sensor was chosen automatically based on a quality criterion. This approach is simple but not optimal. Instead of choosing a discriminant based on one sensor, we can achieve better recognition by combining samples from both sensors. One method is called \emph{linear discriminant analysis (LDA)} and is based upon pioneering work in 1936 by the statistician Ronald A. Fisher.
+\subsection{Motivação}
 
-\subsection{Motivation}
+Para entender as vantagens de combinar amostras de dois sensores, suponha que precisemos classificar objetos de duas cores: \emph{violeta elétrica (ev)} e \emph{cadmium red (cr)}. O violeta elétrico é composto em grande parte de azul com um pouco de vermelho, enquanto o vermelho cádmio é composto em grande parte de vermelho com um pouco de azul. Dois sensores são usados: um mede o nível de vermelho e o outro mede o nível de azul. Para um conjunto de amostras, podemos calcular seus meios $\mu_j^k$ e as variações $(s_j^k)^2$, for $j=\mathit{ev}, \mathit{cr}$, $k=\mathit{blue}, \mathit{red}$.
 
-To understand the advantages of combining samples from two sensors, suppose that we need to classify objects of two colors: \emph{electric violet (ev)} and \emph{cadmium red (cr)}. Electric violet is composed largely of blue with a bit of red, while cadmium red is composed largely of red with a bit of blue. Two sensors are used: one measures the level of red and the other measures the level of blue. For a set of samples, we can compute their means $\mu_j^k$ and variances $(s_j^k)^2$, for $j=\mathit{ev}, \mathit{cr}$, $k=\mathit{blue}, \mathit{red}$.
-
-The left plot in Fig.~\ref{fig.LDAprincipe} shows samples of the electric violet objects contained within a dashed ellipse at the upper left and samples of the cadmium red objects contained within a dashed ellipse at the lower right. The centers of the ellipses are the means because the samples are symmetrically distributed with respect to the ellipses. The $y$-coordinate of $\mu_{ev}$ is the mean of the samples of the electric violet objects by the blue sensor and its $x$-coordinate is the mean of the samples of these objects by the red sensor. The means of the sensors when sampling the cadmium red objects are similarly displayed. It is easy to see  that the electric violet objects have more blue (they are higher up the $y$-axis), while the cadmium red objects have more red (they are further out on the $x$-axis).
+O gráfico da esquerda na Fig.~\ref{fig.LDAprincipe} mostra amostras dos objetos violeta elétricos contidos dentro de uma elipse tracejada na parte superior esquerda e amostras dos objetos vermelho cádmio contidos dentro de uma elipse tracejada na parte inferior direita. Os centros das elipses são o meio porque as amostras são distribuídas simetricamente em relação às elipses. A coordenada de $y$ de $\mu_{ev}$ é a média das amostras dos objetos violeta elétricos pelo sensor azul e sua coordenada de $x$ é a média das amostras destes objetos pelo sensor vermelho. Os meios dos sensores quando da amostragem dos objetos vermelhos de cádmio são exibidos de forma semelhante. É fácil ver que os objetos elétricos violeta têm mais azul (eles estão mais acima do eixo $y$-eixo), enquanto os objetos vermelho cádmio têm mais vermelho (eles estão mais acima do eixo $x$-eixo).
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{LDA-principe-colors2.pdf}
 \end{center}
-\caption{An optimal linear discriminant for distinguishing two colors}\label{fig.LDAprincipe}
+\caption{Um ótimo discriminante linear para distinguir duas cores}\label{fig.LDAprincipe}
 \end{figure}
 
-From the diagram we see that there is a larger difference between the means for the blue sensor than between the means for the red sensor. At first glance, it appears that using the blue sensor only would give a better discriminant. However, this is not true: the dashed lines show that the red-only discriminant completely distinguishes between electric violet and cadmium red, while the blue-only discriminant falsely classifies some electric violet samples as cadmium red (some samples are below the line) and falsely classifies some cadmium red samples as electric violet (some samples are above the line).
+Pelo diagrama vemos que há uma diferença maior entre os meios para o sensor azul do que entre os meios para o sensor vermelho. À primeira vista, parece que usar apenas o sensor azul daria uma melhor discriminação. Entretanto, isto não é verdade: as linhas tracejadas mostram que o discriminante apenas vermelho distingue completamente entre violeta elétrico e vermelho cádmio, enquanto o discriminante apenas azul classifica falsamente algumas amostras de violeta elétrico como vermelho cádmio (algumas amostras estão abaixo da linha) e falsamente classifica algumas amostras de vermelho cádmio como violeta elétrico (algumas amostras estão acima da linha).
 
-The reason for this unintuitive result is that the blue sensor returns values that are widely spread out (have a large variance), while the red sensor returns values that are narrowly spread out (have a small variance), and we saw in Sect.~\ref{s.sorting-onesensor} that classification is better if the variance is small. The right plot in Fig.~\ref{fig.LDAprincipe} shows that by constructing a discriminant from both sensors it is possible to better separate the electric violet objects from the cadmium red objects. The discriminant is still linear (a straight line) but its slope is no longer parallel to one of the axes. This line is computed using the variances as well as the means. The method is called linear discriminant analysis because the discriminant is linear.
+A razão para este resultado não intuitivo é que o sensor azul retorna valores que estão amplamente espalhados (têm uma grande variação), enquanto que o sensor vermelho retorna valores que estão estreitamente espalhados (têm uma pequena variação), e vimos na Sect.~\ref{s.sorting-onesensor} que a classificação é melhor se a variação for pequena. O gráfico correto na Fig.~\ref{fig.LDAprincipe} mostra que ao construir um discriminante de ambos os sensores é possível separar melhor os objetos violeta elétricos dos objetos vermelho cádmio. O discriminante ainda é linear (uma linha reta), mas sua inclinação não é mais paralela a um dos eixos. Esta linha é calculada usando as variações, bem como os meios. O método é chamado de análise discriminante linear porque o discriminante é linear.
 
+\subsection{O discriminante linear}
 
-\subsection{The linear discriminant}
-Figure~\ref{fig.LDAprincipe} is an $x$-$y$ plot of data sampled from two sensors. Each value is plotted at the point whose $x$-coordinate is the value returned by the red sensor and whose $y$-coordinate is the value returned by the blue sensor. Similarly, Fig.~\ref{fig.gray-x-y} is an $x$-$y$ plot of the data from Figs.~\ref{fig.closegrays2}--\ref{fig.closegraysmus} that were collected as the robot moved over two gray areas.  In those graphs, the sensor values were plotted as function of time, but time has no role in classification except to link samples that were measured at the same time by the two sensors.
+Figura~\ref{fig.LDAprincipe} é um gráfico de $x$-$y$ de dados amostrados de dois sensores. Cada valor é traçado no ponto cujo $x$-coordenado é o valor retornado pelo sensor vermelho e cujo $y$-coordenado é o valor retornado pelo sensor azul. Da mesma forma, Fig.~\ref{fig.gray-x-y} é um gráfico de $x$-$y$ dos dados de Figs.~\ref{fig.closegrays2}--\ref{fig.closegraysmus} que foram coletados enquanto o robô se movia sobre duas áreas cinzas.  Nesses gráficos, os valores dos sensores foram plotados em função do tempo, mas o tempo não tem nenhum papel na classificação, exceto para ligar amostras que foram medidas ao mesmo tempo pelos dois sensores.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{gray-level-base.pdf}
 \end{center}
-\caption{$x$-$y$ plot of gray levels with single-sensor discriminants and an optimal discriminant}\label{fig.gray-x-y}.
+\caption{$x$-$y$ trama de níveis de cinza com discriminantes de sensor único e um ótimo discriminante}\label{fig.gray-x-y}.
 \end{figure}
 
-In Fig.~\ref{fig.gray-x-y}, classification based only on the left sensor corresponds to the vertical dashed line, while classification based only on the right sensor corresponds to the horizontal dashed line. Both the horizontal and vertical separation lines are not optimal. Suppose that classification based on the left sensor (the vertical line) is used and consider a sample for which the left sensor returns $470$ and the right sensor returns $460$. The sample will be classified as dark gray even though the classification as light gray is better. Intuitively, it is clear that the solid diagonal line in the graph is a far more accurate discriminant than either of the two discriminants based on a single sensor.
+Na Fig.~\ref{fig.gray-x-y}, a classificação baseada somente no sensor esquerdo corresponde à linha tracejada vertical, enquanto a classificação baseada somente no sensor direito corresponde à linha tracejada horizontal. Tanto a linha de separação horizontal como a vertical não são ótimas. Suponha que a classificação baseada no sensor esquerdo (a linha vertical) seja usada e considere uma amostra para a qual o sensor esquerdo retorna $470$ e o sensor direito retorna $460$. A amostra será classificada como cinza escuro, embora a classificação como cinza claro seja melhor. Intuitivamente, é claro que a linha diagonal sólida no gráfico é uma discriminação muito mais precisa do que qualquer um dos dois discriminantes baseados em um único sensor.
 
-How can such a linear discriminant be defined mathematically so that it can be discovered automatically?\footnote{The following presentation is abstract and will be easier to understand if read together with the numerical example in Sect.~\ref{s.num-lda}.} The general equation for a line in the plane is $y=mx+a$, where $m$ is the slope and $a$ is the intersect of the line and the $y$-axis when $x=0$. Another equation for a line is:
+Como pode ser definido matematicamente um tal discriminante linear para que possa ser descoberto automaticamente?\footnote{A apresentação a seguir é abstrata e será mais fácil de entender se lida em conjunto com o exemplo numérico em Sect.~\ref{s.num-lda}.} A equação geral para uma linha no avião é $y=mx+a$, onde $m$ é a inclinação e $a$ é o interseção da linha e o eixo $y$ quando $x=0$. Outra equação para uma linha é:
 \begin{equation}
 w_1x_1 + w_2x_2 = c\,,\label{eq.diseq}
 \end{equation}
-where $x_1$ is the horizontal axis for the left sensor values, $x_2$ is the vertical axis for the right sensor values. $c$ is a constant and $w_1,w_2$ are coefficients of the variables.
+onde $x_1$ é o eixo horizontal para os valores do sensor esquerdo, $x_2$ é o eixo vertical para os valores do sensor direito. $c$ é uma constante e $w_1,w_2$ são os coeficientes das variáveis.
 
-It is convenient to represent the coefficients as a column vector:
+É conveniente representar os coeficientes como um vetor de coluna:
 \[
 \vec{w} = \left[ \begin{array}{c} w_1\\w_2 \end{array} \right]\,.
 \]
-In this representation the vector $\vec{w}$ is normal to the discriminant line and therefore defines its slope, while the constant $c$ enables the discriminant to be any line of that slope, that is, any one of the infinite number of parallel lines with a given slope. Once the slope of $\vec{w}$ is determined, $c$ is obtained by entering a given point ($x_1$,$x_2$) into Eq.~\ref{eq.diseq}.
+Nesta representação o vetor $\vec{w}$ é normal para a linha discriminante e portanto define sua inclinação, enquanto a constante $c$ permite que o discriminante seja qualquer linha dessa inclinação, ou seja, qualquer uma das infinitas linhas paralelas com uma determinada inclinação. Uma vez determinada a inclinação de $\vec{w}$, $c$ é obtido entrando um dado ponto ($x_1$,$x_2$) em Eq.~\ref{eq.diseq}.
 
-Linear discriminant analysis automatically defines the vector $\vec{w}$ and constant $c$ that generates an optimal discriminant line between the data sets of the two classes. The first step is to choose a point on the discriminant line. Through that point there are an infinite number of lines and we have to choose the line whose slope gives the optimal discriminant. Finally, the value $c$ can be computed from the slope and the chosen point. The following subsections describe each of these steps in detail.
+A análise linear discriminante define automaticamente o vetor $\vec{w}$ e a constante $c$ que gera uma linha discriminante ótima entre os conjuntos de dados das duas classes. O primeiro passo é escolher um ponto na linha discriminante. Através desse ponto há um número infinito de linhas e temos que escolher a linha cuja inclinação dá o ótimo discriminante. Finalmente, o valor $c$ pode ser computado a partir da inclinação e do ponto escolhido. As subseções seguintes descrevem cada uma destas etapas em detalhes.
 
-\subsection{Choosing a point for the linear discriminant}
+\subsection{Escolhendo um ponto para o discriminante linear}
 
-How can we choose a point? LDA is based upon the \emph{assumption} that the values of both classes have the same distribution. Informally, when looking at an $x$-$y$ plot, both sets of points should have similar size and shape. Although the distributions will almost certainly not be exactly the same (say a Gaussian distribution) because they result from measurements in the real world, since both sensors are subject to the same types of variability (sensor noise, uneven floor surface) it is likely that they will be similar.
+Como podemos escolher um ponto? A LDA se baseia no {consumo} de que os valores de ambas as classes têm a mesma distribuição. Informalmente, ao olhar para uma parcela de $x$-$y$, ambos os conjuntos de pontos devem ter tamanho e forma similares. Embora as distribuições quase certamente não serão exatamente as mesmas (digamos uma distribuição Gaussiana) porque resultam de medições no mundo real, já que ambos os sensores estão sujeitos aos mesmos tipos de variabilidade (ruído do sensor, superfície irregular do piso), é provável que sejam semelhantes.
 
-If the two distributions are similar, the means of the samples of each sensor will be more-or-less in the same place with respect to the distributions. The average of the means for each sensor will be equidistant from corresponding points in the data sets. The discriminant is chosen to be some line that passes through the point $M$ (Fig.~\ref{fig.gray-x-y}) whose coordinates are:
+Se as duas distribuições forem semelhantes, os meios das amostras de cada sensor serão mais ou menos semelhantes no mesmo lugar com relação às distribuições. A média dos meios para cada sensor será equidistante dos pontos correspondentes nos conjuntos de dados. O discriminante é escolhido para ser alguma linha que passa pelo ponto $M$ (Fig.~\ref{fig.gray-x-y}) cujas coordenadas são:
 \[
 \left(\,
 \frac{\mu_{\sub{light}}^{\sub{left }}+\mu_{\sub{dark}}^{\sub{left }}}{2},\:\frac{\mu_{\sub{light}}^{\sub{right}}+\mu_{\sub{dark}}^{\sub{right}}}{2}
 \,\right)\,.
 \]
 
-\subsection{Choosing a slope for the linear discriminant}
+\subsection{Escolhendo um declive para o discriminante linear}
 
-Once we have chosen the point $M$ on the discriminant line, the next step is to choose the slope of the line. From Fig.~\ref{fig.gray-x-y}, we see that there are infinitely many lines through the point $M$ that would distinguish between the two sets of samples. Which is the best line based on the statistical properties of our data?
+Uma vez escolhido o ponto $M$ na linha discriminante, o próximo passo é escolher o declive da linha. Da Fig.~\ref{fig.gray-x-y}, vemos que existem infinitas linhas através do ponto $M$ que distinguiria entre os dois conjuntos de amostras. Qual é a melhor linha com base nas propriedades estatísticas de nossos dados?
 
-In Sect.~\ref{s.sorting-onesensor} we looked for a way to decide between two discriminants, where each discriminant was a line parallel to the $y$-axis at the midpoint between the means of the values returned by a sensor (Fig.~\ref{fig.closegraysmus}). The decision was based on the quality criterion $J_k$ (Eq.~\ref{eq.j}, repeated here for convenience):
+Na seção Sect.~\ref{s.sorting-onesensor} procuramos uma maneira de decidir entre dois discriminantes, onde cada discriminante era uma linha paralela ao eixo $y$ no ponto médio entre os meios dos valores retornados por um sensor (Fig.~\ref{fig.closegraysmus}). A decisão foi baseada no critério de qualidade $J_k$ (Eq.~\ref{eq.j}, repetido aqui por conveniência):
 \begin{equation}
 J_k = \frac{\left(\mu_{\sub{dark}}^k - \mu_{\sub{light}}^k\right)^2}{\left(s_{\sub{dark}}^k\right)^2 + \left(s_{\sub{light}}^k\right)^2}\,,\label{eq.j-repeat}
 \end{equation}
-where $k=\textit{left},\textit{right}$. The discriminant with the larger value of $J_k$ was chosen. To maximize $J_k$, the numerator---the distance between the means---should be large, and the denominator---the variances of the samples---should be small.
+onde $k=\textit{left},\textit{right}$. O discriminante com o valor maior de $J_k$ foi escolhido. Para maximizar $J_k$, o numerador - a distância entre os meios - deve ser grande, e o denominador - as variações das amostras - deve ser pequeno.
 
-Now, we no longer want to compute a quality criterion based on the values returned by each sensor separately, but instead to compute a criterion from all the values returned by both sensors. Figure~\ref{fig.lda-proj} shows an $x$-$y$ plot of the values of two sensors, where the values of the two classes are represented by red squares and blue circles. Clearly, there is significant overlap along the $x$ or $y$ axes separately and it is impossible to find lines parallel to the axes that can distinguish between the groups. However, if we project the groups of measurements onto the line defined by a vector:
+Agora, não queremos mais calcular um critério de qualidade baseado nos valores retornados por cada sensor separadamente, mas sim calcular um critério a partir de todos os valores retornados por ambos os sensores. A figura~\ref{fig.lda-proj} mostra um gráfico de $x$-$y$ dos valores de dois sensores, onde os valores das duas classes são representados por quadrados vermelhos e círculos azuis. Claramente, há uma sobreposição significativa ao longo dos eixos de $x$ ou $y$ separadamente e é impossível encontrar linhas paralelas aos eixos que possam distinguir entre os grupos. No entanto, se projetarmos os grupos de medidas sobre a linha definida por um vetor:
 \[
 \vec{w} = \left[\begin{array}{c}w_1\\w_2\end{array}\right]\,,
 \]
-the two groups can be distinguished by the separator line defined by Eq.~\ref{eq.diseq}:
+os dois grupos podem ser distinguidos pela linha separadora definida por Eq.~\ref{eq.diseq}:
 \[
 w_1x_1 + w_2x_2 = c\,,
 \]
-where $c$ is defined by a point on the project line situated between the red and blue points. In analogy with Eq.~\ref{eq.j-repeat}, we need to define a quality criterion $J(\vec{w})$, such that larger values of $J(\vec{w})$ give better discriminant lines. Then, we need to find the value of $\vec{w}$ that maximizes $J(\vec{w})$ by differentiating this function, setting the derivative to zero and solving for $\vec{w}$.
+onde $c$ é definido por um ponto na linha do projeto situado entre os pontos vermelho e azul. Em analogia com o Eq.~ref{eq.j-repeat}, precisamos definir um critério de qualidade $J(\vec{w})$, de modo que valores maiores de $J(\vec{w})$ dêem melhores linhas discriminantes. Então, precisamos encontrar o valor de $J(vec{w}$ que maximize $J(vec{w})$, diferenciando esta função, fixando a derivada em zero e resolvendo por $J(vec{w}$.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{LDA-principe-proj3.pdf}
 \end{center}
-\caption{Projection of the samples of two classes onto a line defined by $\vec{w}$}\label{fig.lda-proj}
+\caption{Projeção das amostras de duas classes em uma linha definida por $\vec{w}$}\label{fig.lda-proj}
 \end{figure}
 
-The definition of $J(\vec{w})$ is based on the means and variances of the two classes but is too complex for this book. We give without proof that the value of $\vec{w}$ that maximizes $J(\vec{w})$ is:
+A definição de $J(\vec{w})$ é baseada nos meios e variações das duas classes, mas é muito complexa para este livro. Damos sem prova de que o valor de $J(vec{w}$ que maximiza $J(vec{w})$ é:
 \begin{equation}
 \vec{w} = \vec{S}^{-1}\,(\vec{\mu_{\sub{light}}}-\vec{\mu_{\sub{dark}}})\,,\label{eq.wLDA}
 \end{equation}
-where:
+onde:
 \[
 \renewcommand{\arraystretch}{1.8}
 \vec{\mu_{\sub{light}}}=\left[
@@ -290,7 +289,7 @@ where:
 \begin{array}{c}\mu_{\sub{dark}}^{\sub{left}}\\
 \mu_{\sub{dark}}^{\sub{right}}\end{array}\right]
 \]
-are the mean vectors of the two classes and $\vec{S}^{-1}$ is the inverse of the average of the covariance matrices of the two classes:\footnote{See Appendix~\ref{a.covariance} for the definition of covariance and Sect.~\ref{s.num-lda} for a numerical example that will clarify the computations.}
+são os vetores médios das duas classes e $\vec{S}^{-1}$ é o inverso da média das matrizes de covariância das duas classes:\footnote{Ver Apêndice~\ref{a.covariance} para a definição de covariância e Sect.~\ref{s.num-lda} para um exemplo numérico que esclarecerá os cálculos.}
 \[
 \renewcommand{\arraystretch}{2.5}
 \vec{S} = \frac{1}{2}\left(
@@ -308,14 +307,14 @@ s^2\left(\vec{x^{\sub{left}}_\sub{dark}}\right)&
 s^2\left(\vec{x^{\sub{right}}_\sub{dark}}\right)
 \end{array}\right]\right).
 \]
-Compared with the single-sensor $J_k$, the means are two-dimensional vectors because we have one mean for each of the sensors. The sum of variances becomes the covariance matrix, which takes into account both the individual variances of the two sensors and the covariances that express how the two sensors are related.
+Em comparação com o sensor único $J_k$, os meios são vetores bidimensionais porque temos um meio para cada um dos sensores. A soma das variâncias torna-se a matriz de covariância, que leva em conta tanto as variâncias individuais dos dois sensores quanto as covariâncias que expressam como os dois sensores estão relacionados.
 
-When the values of $M$ and $\vec{w}$ have been computed, all that remains is to compute the constant $c$ to fully define the discriminant line. This completes the learning phase of the LDA algorithm. In the recognition phase, the robot uses the line defined by $\vec{w}$ and $c$ for classifying new samples.
+Quando os valores de $M$ e $\vec{w}$ tiverem sido computados, tudo o que resta é calcular a constante $c$ para definir completamente a linha discriminante. Isto completa a fase de aprendizagem do algoritmo LDA. Na fase de reconhecimento, o robô usa a linha definida por $\vec{w}$ e $c$ para classificar as novas amostras.
 
-The computation is formalized in Algorithms~\ref{alg.learning2}--\ref{alg.recognition2}, where we want to distinguish between two classes $C_1, C_2$ using two sensors. Compare this algorithm with Algorithm~\ref{alg.learning1}: the two sets of samples $\vec{X_1},\vec{X_2}$ and the means $\vec{\mu_1},\vec{\mu_2}$ and variances $\vec{s_1},\vec{s_2}$ are vectors with two elements, one element for each of the sensors.
+O cálculo é formalizado em Algoritmos~\ref{alg.learning2}--\ref{alg.recognition2}, onde queremos distinguir entre duas classes $C_1, C_2$ usando dois sensores. Comparar este algoritmo com o Algoritmo~\\f{alg.learning1}: os dois conjuntos de amostras $\vec{X_1},\vec{X_2}$ e os meios $\vec{\mu_1},\vec{\mu_2}$ e as variações $\vec{s_1},\vec{s_2}$ são vetores com dois elementos, um elemento para cada um dos sensores.
 
 \begin{figure}
-\begin{alg}{Linear discriminant analysis (learning phase)}{learning2}
+\begin{alg}{Análise linear discriminante (fase de aprendizagem)}{learning2}
 &\idv{}float array[n$_1$,2] $\vec{X_1}$&// Sets of samples of first area\\
 &\idv{}float array[n$_2$,2] $\vec{X_2}$&// Sets of samples of second area\\
 &\idv{}float array[2] $\vec{\mu_1},\vec{\mu_2}$& // Means of $C_1,C_2$\\
@@ -340,7 +339,7 @@ The computation is formalized in Algorithms~\ref{alg.learning2}--\ref{alg.recogn
 \end{figure}
 
 \begin{figure}
-\begin{alg}{Linear discriminant analysis (recognition phase)}{recognition2}
+\begin{alg}{Análise linear discriminante (fase de reconhecimento)}{recognition2}
 &\idv{}float $\vec{w}$ \ass input from the learning phase&\\
 &\idv{}float $c$ \ass input from the learning phase&\\
 &\idv{}float $\vec{x}$&\\
@@ -354,25 +353,24 @@ The computation is formalized in Algorithms~\ref{alg.learning2}--\ref{alg.recogn
 \end{alg}
 \end{figure}
 
-\subsection{Computation of a linear discriminant: numerical example}\label{s.num-lda}
+\subsection{Computação de um discriminante linear: exemplo numérico}\label{s.num-lda}
 
-
-Figure~\ref{fig.gray-close} is a plot of the samples from two ground sensors measured as a robot moves over two very similar gray areas, one that is $83.6\%$ black and the other $85\%$ black. The levels are so close that the human eye cannot distinguish between them. Can the linear discriminant computed by Algorithm~\ref{alg.learning2} do better?
+Figura~\ref{fig.gray-close} é um gráfico das amostras de dois sensores terrestres medidos como um robô se move sobre duas áreas cinzas muito semelhantes, uma que é de $83,6\%$ preta e a outra de $85\%$ preta. Os níveis são tão próximos que o olho humano não consegue distinguir entre eles. Pode a discriminação linear computada por Algorithm~\ref{alg.learning2} fazer melhor?
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{close-gray.pdf}
 \end{center}
-\caption{Similar gray areas (black dots from the darker area, red x'es from the lighter area)}\label{fig.gray-close}
+\caption{Áreas cinzas similares (pontos pretos da área mais escura, x'es vermelhos da área mais clara)}\label{fig.gray-close}
 \end{figure}
 
-Class $C_1$ is the light gray area and class $C_2$ is the dark gray area. The elements of the sets of vectors $\vec{X_1}[n_1],\vec{X_2}[n_2]$ are vectors:
+A classe $C_1$ é a área cinza claro e a classe $C_2$ é a área cinza escuro. Os elementos dos conjuntos de vetores $\vec{X_1}[n_1],\vec{X_2}[n_2]$ são vetores:
 \[
 \vec{x}=\left[ \begin{array}{c} x^{\sub{left}} \\ x^{\sub{right}} \end{array} \right]
 \]
-of samples measured by the left and right sensors, where $n_1=192$ and $n_2=205$.
+de amostras medidas pelos sensores esquerdo e direito, onde $n_1=192$ e $n_2=205$.
 
-First we compute the means of the data of Fig.~\ref{fig.gray-close}:
+Primeiro calculamos os meios dos dados da Fig.~\ref{fig.gray-close}:
 \begin{displaymath}
 \begin{array}{ccccc}
 \vec{\mu_1} &=& {\displaystyle\frac{1}{192}} \left( \left[ \begin{array}{c} 389\\324 \end{array}\right] + \left[ \begin{array}{c} 390\\323 \end{array}\right] + ... + \left[ \begin{array}{c} 389\\373 \end{array}\right] \right)&\approx&\left[ \begin{array}{c} 400\\339 \end{array}\right]\\
@@ -380,16 +378,16 @@ First we compute the means of the data of Fig.~\ref{fig.gray-close}:
 \vec{\mu_2} &=& {\displaystyle\frac{1}{205}} \left( \left[ \begin{array}{c} 358\\297 \end{array}\right] + \left[ \begin{array}{c} 358\\296 \end{array}\right] + ... + \left[ \begin{array}{c} 352\\327 \end{array}\right] \right)&\approx&\left[ \begin{array}{c} 357\\312 \end{array}\right]\,.
 \end{array}
 \end{displaymath}
-More samples were taken from the second area ($205$) than from the first area ($192$), but that is not important for computing the means. As expected, the means $\vec{\mu_1}$ of the samples from the light gray area are slightly higher (more reflected light) than the means $\vec{\mu_2}$ of the samples from the dark gray areas. However, the left sensor consistently measures higher values than the right sensor. Figure~\ref{fig.gray-close-mu-lin} shows the data from Fig.~\ref{fig.gray-close} with thin dashed lines indicating the means. There are two lines for each area: the horizontal line for the right sensor and the vertical line for the left sensor.
+Foram retiradas mais amostras da segunda área ($205$) do que da primeira área ($192$), mas isso não é importante para o cálculo dos meios. Como esperado, os meios $\vec{\mu_1}$ das amostras da área cinza claro são ligeiramente mais altos (mais luz refletida) do que os meios $\vec{\mu_2}$ das amostras das áreas cinza escuro. Entretanto, o sensor esquerdo mede consistentemente valores mais altos do que o sensor direito. A Figura ~\ref{fig.gray-close-mu-lin} mostra os dados da Figura ~\ref{fig.gray-close} com linhas finas tracejadas indicando os meios. Há duas linhas para cada área: a linha horizontal para o sensor direito e a linha vertical para o sensor esquerdo.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{close-gray-mu-lin.pdf}
 \end{center}
-\caption{Means for each class (thin dashed lines), LDA discriminant line (solid line), discriminant line that fully distinguishes the classes (thick dashed line)}\label{fig.gray-close-mu-lin}
+\caption{Meios para cada classe (linhas finas tracejadas), linha discriminante LDA (linha sólida), linha discriminante que distingue totalmente as classes (linha tracejada grossa)}\label{fig.gray-close-mu-lin}
 \end{figure}
 
-The covariance matrix is composed from the variances of the two individual sensors and their covariance. For $i=1,2$:
+A matriz de covariância é composta a partir das variações dos dois sensores individuais e sua covariância. Para $i=1,2$:
 \[
 \vec{S}_i = \left[
 \renewcommand{\arraystretch}{2}
@@ -401,88 +399,87 @@ s^2\left(X_i^{\sub{right}}\right)
 \end{array}
 \right]\,.
 \]
-For the data from Fig.~\ref{fig.gray-close}, the variances of the samples of the light gray area are:
+Para os dados da Fig.~ref{fig.gray-close}, as variações das amostras da área cinza claro são:
 \begin{eqnarray*}
 s^2(X_1^{\sub{left}}) &=& \frac{1}{191} \left((389 - 400)^2 + (390 - 400)^2 + \cdots + (389 - 400)^2 \right) \approx 187 \\
 s^2(X_1^{\sub{right}}) &=& \frac{1}{191} \left((324 - 339)^2 + (323 - 339)^2 + ... + (373 - 339)^2 \right) \approx 286\,.
 \end{eqnarray*}
 
-Eq.~\ref{eq.cov} from Appendix~\ref{a.covariance} is used to compute the covariance. Since covariance is symmetric, the value need be computed only once.
+O Eq.~\ref{eq.cov} do Anexo~\ref{a.covariance} é usado para calcular a covariância. Uma vez que a covariância é simétrica, o valor precisa ser computado apenas uma vez.
 \begin{eqnarray*}
 \textit{cov}(X_1^{\sub{left}}, X_1^{\sub{right}}) &=& \frac{1}{191} \left((389 - 400)(324 - 339) + ... + (389 - 400)(373 - 339) \right)\\
 &\approx& -118\,.
 \end{eqnarray*}
-Putting the results together and performing a similar computation for $X_2$ gives the covariance matrices:
+Colocando os resultados juntos e fazendo um cálculo semelhante por $X_2$ dá as matrizes de covariância:
 \[
 \vec{S}_1 = \left[ \begin{array}{c} 187\\-118\end{array} \begin{array}{c} -118\\286 \end{array}\right]
 \hspace{10mm}
 \vec{S}_2 = \left[ \begin{array}{c} 161\\44\end{array} \begin{array}{c} 44\\147 \end{array}\right]\,.
 \]
-
-The next step is to compute the mean of the covariance matrices:
+O próximo passo é calcular a média das matrizes de covariância:
 \[
 \mu_{\vec{S}} = 
 \frac{1}{2}\left(\left[ \begin{array}{c} 187\\-118\end{array} \begin{array}{c} -118\\286 \end{array}\right]+
 \left[ \begin{array}{c} 161\\44\end{array} \begin{array}{c} 44\\147 \end{array}\right]\right) = 
 \left[ \begin{array}{c} 174\\-37\end{array} \begin{array}{c} -38\\216 \end{array}\right]\,,
 \]
-and to find its inverse:\footnote{See Appendix~\ref{a.matrices}.}
+e para encontrar seu inverso:\footnote{Ver Anexo~\ref{a.matrices}.}
 \[
 \vec{S}^{-1} = \left[ \begin{array}{c} 0.006\\0.001\end{array} \begin{array}{c} 0.001\\0.005 \end{array}\right]\,.
 \]
-We can now use Eq.~\ref{eq.wLDA} to compute $\vec{w}$:
+Agora podemos usar o Eq.~\ref{eq.wLDA} para calcular $\vec{w}$:
 \[
 \vec{w} = \left[ \begin{array}{c} 0.006\\0.001\end{array} \begin{array}{c} 0.001\\0.005 \end{array}\right] \cdot \left( \left[ \begin{array}{c} 400\\339 \end{array}\right] - \left[ \begin{array}{c} 357\\313 \end{array} \right] \right) = \left[ \begin{array}{c} 0.28\\0.17 \end{array} \right]\,.
 \]
-The vector $\vec{w}$ gives the direction of the projection line which is perpendicular to discriminant line. We now use Eq.~\ref{eq.diseq}, repeated here:
+O vetor $\vec{w}$ dá a direção da linha de projeção que é perpendicular à linha discriminante. Usamos agora o Eq.~\ref{eq.diseq}, repetido aqui:
 \[
 w_1x_1 + w_2x_2 = c
 \]
-to compute the constant $c$, assuming we know the coordinate $(x_1,x_2)$ of some point. But we specified that the midpoint between the means must be on the discriminant line. Its coordinates are:
+para calcular a constante $c$, assumindo que conhecemos a coordenada $(x_1,x_2)$ de algum ponto. Mas especificamos que o ponto médio entre os meios deve estar na linha discriminante. Suas coordenadas são:
 \[
 \vec{\mu} = \frac{1}{2}(\vec{\mu_1} + \vec{\mu_2}) = \frac{1}{2}\left( \left[ \begin{array}{c} 400\\339 \end{array}\right] + \left[ \begin{array}{c} 357\\313 \end{array}\right] \right) \approx \left[ \begin{array}{c} 379\\326 \end{array}\right]\,.
 \]
-Therefore:
+Portanto:
 \[
 c = 0.28 \cdot 379 + 0.17\cdot 326 \approx 162\,,
 \]
-and the equation of the discriminant line is:
+e a equação da linha discriminante é:
 \[
 0.28 x_1 + 0.17 x_2 = 162\,.
 \]
-The discriminant line is shown as a solid line in Fig.~\ref{fig.gray-close-mu-lin}. Given a new sample $(a,b)$, compare the value of $0.28a + 0.17b$ to $162$: If it is larger, the sample is classified as belonging to class $C_1$ and if it is is smaller, the sample is classified as belong to class $C_2$. 
+A linha discriminante é mostrada como uma linha sólida na Fig.~\ref{fig.gray-close-mu-lin}. Dada uma nova amostra $(a,b)$, compare o valor de $0,28a + 0,17b$ a $162$: Se for maior, a amostra é classificada como pertencente à classe $C_1$ e se for menor, a amostra é classificada como pertencente à classe $C_2$. 
 
-\subsection{Comparing the quality of the discriminants}
+\subsection{Comparando a qualidade dos discriminantes}
 
-If we compare the linear discriminant found above with the two simple discriminants based upon the means of a single sensor, we see a clear improvement. Because of the overlap between the classes in a single direction, the simple discriminant for the right sensor correctly classifies only $84.1\%$ of the samples, while the simple discriminant for the left sensor is somewhat better, classifying $93.7\%$ of samples correctly. The linear discriminant found using LDA is better, correctly classifying $97.5\%$ of the samples.
+Se compararmos o discriminante linear encontrado acima com os dois discriminantes simples baseados nos meios de um único sensor, vemos uma clara melhoria. Devido à sobreposição entre as classes em uma única direção, o simples discriminante para o sensor direito classifica corretamente apenas $84,1\%$ das amostras, enquanto o simples discriminante para o sensor esquerdo é um pouco melhor, classificando $93,7\%$ das amostras corretamente. O discriminante linear encontrado usando LDA é melhor, classificando corretamente $97,5\%$ das amostras.
 
-It might be surprising that there are discriminant lines that can correctly classify \emph{all} of the samples! One such discriminant is shown by the thick dashed line in Fig.~\ref{fig.gray-close-mu-lin}. Why didn't LDA find this discriminant? LDA assumes both classes have a similar distribution (spread of values) around the mean and the LDA discriminant is optimal under this assumption. For our data, some points in the second class are far from the mean and thus the distributions of the two classes are slightly different. It is hard to say if these samples are outliers, perhaps caused by problem when printing the gray areas on paper. In that case, it is certainly possible that subsequent sampling of the two areas would result in distributions that are similar to each other, leading to the correct classification by the LDA discriminant.
+Pode ser surpreendente que existam linhas discriminantes que possam classificar corretamente \emph{todas} as amostras! Uma dessas linhas discriminantes é mostrada pela grossa linha tracejada na Fig.~\ref{fig.gray-close-mu-lin}. Por que a LDA não encontrou este discriminante? A LDA assume que ambas as classes têm uma distribuição similar (dispersão de valores) em torno da média e o discriminante LDA é ótimo sob esta suposição. Para nossos dados, alguns pontos da segunda classe estão longe da média e, portanto, as distribuições das duas classes são ligeiramente diferentes. É difícil dizer se estas amostras são aberrantes, talvez causadas por problemas ao imprimir as áreas cinzentas no papel. Nesse caso, é certamente possível que uma amostragem posterior das duas áreas resulte em distribuições semelhantes entre si, levando à classificação correta pelo discriminante LDA.
 
-\subsection{Activities for LDA}
+\subsection{Atividades para LDA}
 
-Activities for LDA are collected in this section.
+As atividades para a LDA são coletadas nesta seção.
 
 \begin{framed}
-\act{Robotic chameleon with LDA}{LDAchameleon}
+\act{Camaleão robótico com LDA}{LDAchameleon}
 \begin{itemize}
-\item Construct an environment as shown in Fig.~\ref{fig.closegrays1} but with two gray levels very similar to each other.
-\item Write a program that causes the robot to move at a constant speed over the area of one color and sample the reflected light periodically. Repeat for the other color.
-\item Plot the data.
-\item Compute the averages, the covariance matrices and the discriminant. 
-\item Implement a program that classifies measurements of the sensor. When the robot classifies a measurement it displays which color is recognized (or gives other feedback if changing color cannot be done).
+\item Construir um ambiente como mostrado na Fig.~\ref{fig.closegrays1} mas com dois níveis de cinza muito parecidos um com o outro.
+\item Escreva um programa que faz com que o robô se mova a uma velocidade constante sobre a área de uma cor e prove a luz refletida periodicamente. Repita para a outra cor.
+\item Plotar os dados.
+\item Calcule as médias, as matrizes de covariância e o discriminante. 
+\item Implementar um programa que classifique as medidas do sensor. Quando o robô classifica uma medida, ele exibe qual cor é reconhecida (ou dá outro feedback se a mudança de cor não puder ser feita).
 \end{itemize}
 \end{framed}
 
 \begin{framed}
-\act{Obstacle avoidance with two sensors}{LDAobstacle}
+\act{Evitar obstáculos com dois sensores}{LDAobstacle}
 \begin{itemize}
-\item Figure~\ref{fig.train-data-avoid} shows a robot approaching a wall. The upper part of the diagram shows various situations where the robot detects the wall with its right sensors; therefore, it should turn left to move around the wall. Similarly, in the lower part of the diagram the robot should turn right.
-\item Write a program that stores the sensor values from both the right and left sensors when a button is pressed. The program also stores the identity of which button was pressed; this represents the class we are looking for when doing obstacle avoidance.
-\item Train the robot: Place the robot next to a wall and run the program. Touch the left button if the robot should turn left or the right button if the robot should turn right. Repeat many times.
-\item Plot the samples from the two sensors on an $x$-$y$ graph and group them by class: turn right or left to avoid of the wall. You should obtain a graph similar to the one in Fig.~\ref{fig.machlearnavoid}.
-\item Draw a discriminant line separating the two classes.
-\item How successful is your discriminant line? What percentage of the samples can it successfully classify?
-\item Compute the optimal discriminant using LDA. How successful is it? Do the assumptions of LDA hold?
+\item A figura~\ref{fig.train-data-avoid} mostra um robô se aproximando de uma parede. A parte superior do diagrama mostra várias situações em que o robô detecta a parede com seus sensores direitos; portanto, ele deve virar à esquerda para se mover em torno da parede. Da mesma forma, na parte inferior do diagrama, o robô deve virar à direita.
+\item Escreva um programa que armazene os valores dos sensores tanto do sensor direito como do esquerdo quando um botão é pressionado. O programa também armazena a identidade de qual botão foi pressionado; isto representa a classe que estamos procurando ao fazer a prevenção de obstáculos.
+\item Treinar o robô: Coloque o robô ao lado de uma parede e execute o programa. Pressione o botão esquerdo se o robô deve virar à esquerda ou o botão direito se o robô deve virar à direita. Repita muitas vezes.
+\item Plotar as amostras dos dois sensores em um gráfico de $x$-$y$ e agrupá-las por classe: vire à direita ou à esquerda para evitar a parede. Você deve obter um gráfico semelhante ao da Fig.~\ref{fig.machlearnavoid}.
+\item Desenhe uma linha discriminante que separe as duas classes.
+\item Qual é o sucesso de sua linha discriminante? Que porcentagem das amostras pode ser classificada com sucesso?
+\item Calcule o discriminante ideal usando LDA. Qual é o grau de sucesso? As suposições da LDA são válidas?
 \end{itemize}
 \end{framed}
 
@@ -501,24 +498,24 @@ Activities for LDA are collected in this section.
 \node at (-1,-3) {\textsf{Turn}\\\textsf{right}};
 \end{tikzpicture}
 \end{center}
-\caption{Training for obstacle avoidance}\label{fig.train-data-avoid}
+\caption{Treinamento para evitar obstáculos}\label{fig.train-data-avoid}
 \end{figure}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{avoid-graph-classes.pdf}
 \end{center}
-\caption{Obstacle avoidance data from the class ``go left'' (red x'es) and the class ``go right'' (black triangles)}\label{fig.machlearnavoid}
+\caption{Dados para evitar obstáculos da classe ``go esquerda'' (x'es vermelhos) e da classe ``go direita'' (triângulos pretos)}\label{fig.machlearnavoid}
 \end{figure}
 
 \begin{framed}
-\act{Following an object}{follow}
+\act{Seguindo um objeto}{follow}
 \begin{itemize}
-\item Write a program that causes the robot to follow an object. The robot moves forward if it detects the object in front; it moves backwards if it is  too close to the object. The robot turns right if the object is to its right and the robot turns left if the object is to its left.
-\item Use two sensors so we can visualize the data on an $x$-$y$ plot.
-\item Acquire and plot the data as in Activity~\ref{act.LDAobstacle}. The plot should be similar to the one shown in Fig.~\ref{fig.machlearnfollow}.
-\item Explain the classifications in Fig.~\ref{fig.machlearnfollow}. What is the problem with classifying a sample as going forwards or going backwards? Why do the samples for going forwards and backwards have different values for the left and right sensors?
-\item Suggest an algorithm for classifying the four situations. Could you use a combination of linear separators?
+\item Escreva um programa que faz com que o robô siga um objeto. O robô se move para frente se detectar o objeto na frente; ele se move para trás se estiver muito próximo do objeto. O robô vira para a direita se o objeto estiver à sua direita e o robô vira para a esquerda se o objeto estiver à sua esquerda.
+\item Use dois sensores para que possamos visualizar os dados em um gráfico de $x$-$y$.
+\item Adquirir e plotar os dados como em Activity~\ref{act.LDAobstacle}. O gráfico deve ser semelhante ao mostrado na Fig.~\ref{fig.machlearnfollow}.
+\item Explicar as classificações na Fig.~\ref{fig.machlearnfollow}. Qual é o problema de classificar uma amostra como indo para frente ou indo para trás? Por que as amostras para avançar e retroceder têm valores diferentes para os sensores esquerdo e direito?
+\item Sugerir um algoritmo para classificar as quatro situações. Você poderia usar uma combinação de separadores lineares?
 \end{itemize}
 \end{framed}
 
@@ -526,31 +523,30 @@ Activities for LDA are collected in this section.
 \begin{center}
 \includegraphics[width=\textwidth]{graph-follow-classes.pdf}
 \end{center}
-\caption{Data acquired in a learning phase for following an object}\label{fig.machlearnfollow}
+\caption{Dados adquiridos em uma fase de aprendizagem para seguir um objeto}\label{fig.machlearnfollow}
 \end{figure}
 
-\section{Generalization of the linear discriminant}\label{s.gen-lda}
+\section{Generalização do discriminante linear}\label{s.gen-lda}
 
-In this section we point out some ways in which LDA can be extended and improved.
+Nesta seção apontamos algumas maneiras pelas quais o LDA pode ser ampliado e melhorado.
 
-First, we can have more sensors. The mathematics becomes more complex because with $n$ sensors, the vectors will have $n$ elements and the covariance matrix will have $n\times n$ elements, requiring more computing power and more memory. Instead of a discriminant line, the discriminant will be an $n-1$ dimension hyperplane. Classification with multiple sensors is used with electroencephalography (EEG) signals from the brain in order to control a robot by thought alone.
+Em primeiro lugar, podemos ter mais sensores. A matemática se torna mais complexa porque com sensores $n$, os vetores terão elementos $n$ e a matriz de covariância terá $n\times n$ elementos, exigindo mais potência computacional e mais memória. Ao invés de uma linha discriminante, o discriminante será um hiperplano de dimensão $n-1$. A classificação com múltiplos sensores é usada com sinais eletroencefalográficos (EEG) do cérebro, a fim de controlar um robô apenas pelo pensamento.
 
-Activity~\ref{act.follow} demonstrated another generalization: classification into more than two classes. Discriminants are used to classify between each pair of classes. Suppose you have three classes $C_1$, $C_2$, and $C_3$, and discriminants $\Delta_{12}, \Delta_{13}, \Delta_{23}$. If a new sample is classified in class $C_2$ by $\Delta_{12}$, in class $C_1$ by $\Delta_{12}$, and in class $C_2$ by $\Delta_{23}$, the final classification will be into class $C_2$ because more discriminants assign the sample to that class.
+A atividade~\ref{act.follow} demonstrou outra generalização: a classificação em mais de duas classes. Discriminantes são usados para classificar entre cada par de classes. Suponha que você tenha três classes $C_1$, $C_2$, e $C_3$, e discriminantes $\Delta_{12}, \Delta_{13}, \Delta_{23}$. Se uma nova amostra for classificada na classe $C_2$ por $\Delta_{12}$, na classe $C_1$ por $\Delta_{12}$, e na classe $C_2$ por $\Delta_{23}$, a classificação final será na classe $C_2$ porque mais discriminantes atribuem a amostra a essa classe.
 
-A third generalization is to use a higher order curve instead of a straight line, for example, a quadratic function. A higher order discriminant can separate classes whose data sets are not simple clusters of samples.
+Uma terceira generalização é usar uma curva de ordem mais alta em vez de uma linha reta, por exemplo, uma função quadrática. Um discriminante de ordem superior pode separar classes cujos conjuntos de dados não são simples clusters de amostras.
 
 \section{Perceptrons}\label{s.perceptrons}
 
+A LDA pode distinguir entre as classes somente sob a suposição de que as amostras têm distribuições semelhantes nas classes. Nesta seção, apresentamos outra abordagem de classificação usando \emph{perceptrons} que estão relacionados a redes neurais (Cap.~\ref{ch.neural}). Aí mostramos como as regras de aprendizagem podem gerar comportamentos específicos ligando sensores e motores; aqui mostramos como eles podem ser usados para classificar os dados em classes.
 
-LDA can distinguish between classes only under the assumption that the samples have similar distributions in the classes. In this section, we present another approach to classification using \emph{perceptrons} which are related to neural networks (Chap.~\ref{ch.neural}). There we showed how learning rules can generate specified behaviors linking sensors and motors; here we show how they can be used to classify data into classes.
+\subsection{Detectar um declive}\label{s.detect-slope}
 
-\subsection{Detecting a slope}\label{s.detect-slope}
+Considere um robô explorando terrenos difíceis. É importante que o robô identifique declives íngremes para que não caia, mas é difícil especificar antecipadamente todas as situações perigosas, pois estas dependem de características como a geometria do solo e suas propriedades (úmido/seco, areia/mude). Em vez disso, desejamos treinar o robô para adaptar seu comportamento em diferentes ambientes.
 
-Consider a robot exploring difficult terrain. It is important that the robot identify steep slopes so it won't fall over, but it is difficult to specify in advance all dangerous situations since these depend on characteristics such as the geometry of the ground and its properties (wet/dry, sand/mud). Instead, we wish to train the robot to adapt its behavior in different environments.
+Para simplificar o problema, suponha que o robô possa mover-se apenas para frente e para trás, e que tenha acelerômetros em dois eixos \emph{relativo ao corpo do robô}: um mede a aceleração para frente e para trás, e o outro mede a aceleração para cima e para baixo. Um robô que está estacionário em uma superfície plana medirá aceleração zero para frente e para trás, e uma aceleração para baixo de $9,8$ m/s$^{2}$ devido à gravidade. A aceleração gravitacional é relativamente forte em comparação com a aceleração de um robô de movimento lento, portanto os valores relativos do acelerômetro ao longo dos dois eixos darão uma boa indicação de sua atitude.
 
-To simplify the problem, assume that the robot can move just forwards and backwards, and that it has accelerometers on two axes \emph{relative to the body of the robot}: one measures acceleration forwards and backwards, and the other measures acceleration upwards and downwards. A robot that is stationary on a level surface will measure zero acceleration forwards and backwards, and an downwards acceleration of $9.8$ m/s$^{2}$ due to gravity. Gravitational acceleration is relatively strong compared with the acceleration of a slow-moving robot, so the relative values of the accelerometer along the two axes will give a good indication of its attitude.
-
-Figure~\ref{fig.slopes} shows a robot moving forwards on a slope. The values returned by both accelerometers are similar, $\mathit{acc}_1\approx \mathit{acc}_2$, so we can infer that the robot is on a slope. If $\mathit{acc}_2\gg\mathit{acc}_1$, we would infer that the robot is on level ground because the up/down accelerometer measures the full force of gravity while the front/back accelerometer measures only the very small acceleration of the moving robot. The task is to distinguish between a safe position of the robot and one in which the slope starts to become too steep so that the robot is in danger of falling.
+A figura~\ref{fig.slopes} mostra um robô movendo-se para frente em uma encosta. Os valores retornados por ambos os acelerômetros são similares, $\mathit{acc}_1\approx \mathit{acc}_2$, então podemos inferir que o robô está em uma encosta. Se $\mathit{acc}_2\gg \mathit{acc}_1$, podemos inferir que o robô está em terreno plano porque o acelerômetro para cima/para baixo mede toda a força da gravidade enquanto o acelerômetro para frente/para trás mede apenas a muito pequena aceleração do robô em movimento. A tarefa é distinguir entre uma posição segura do robô e uma em que a inclinação começa a ficar muito íngreme para que o robô esteja em perigo de cair.
 
 \begin{figure}
 \begin{center}
@@ -568,23 +564,23 @@ Figure~\ref{fig.slopes} shows a robot moving forwards on a slope. The values ret
 \node at (-.2,-.5) {$\textit{acc}_2$};
 \end{tikzpicture}
 \end{center}
-\caption{A robot with accelerometers moving in difficult terrain}\label{fig.slopes}
+\caption{Um robô com acelerômetros movendo-se em terreno difícil}\label{fig.slopes}
 \end{figure}
 
-Figure~\ref{fig.slopemes} shows data acquired during a training session as the robot moves down a slope. When the operator of the training session determines that the robot is stable (class $C_1$), she initiates a measurement indicated by a red $\times$; when she determines that the robot is in a dangerous situation (class $C_2$), she initiates a measurement indicated by a black triangle. The challenge is to find a way of distinguishing samples of the two classes.
+A figura~\ref{fig.slopemes} mostra os dados adquiridos durante uma sessão de treinamento à medida que o robô desce uma encosta. Quando o operador da sessão de treinamento determina que o robô é estável (classe $C_1$), ela inicia uma medida indicada por um vermelho $\times$; quando ela determina que o robô está em uma situação perigosa (classe $C_2$), ela inicia uma medida indicada por um triângulo preto. O desafio é encontrar uma maneira de distinguir as amostras das duas classes.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{slope-allmu.pdf}
 \end{center}
-\caption{Detecting a dangerous slope using data from the accelerometers}\label{fig.slopemes}
+\caption{Detecção de um declive perigoso usando dados dos acelerômetros}\label{fig.slopemes}
 \end{figure}
 
-The dashed lines in the figure show the means for the two data sets. It is clear that they do not help us classify the data because of the large overlap between the two sets of samples. Furthermore, LDA is not appropriate because there is no similarity in the distributions: samples when the robot is stable appear in many parts of the plot, while samples from dangerous situations are concentrated in a small area around their mean.
+As linhas tracejadas na figura mostram os meios para os dois conjuntos de dados. É claro que elas não nos ajudam a classificar os dados devido à grande sobreposição entre os dois conjuntos de amostras. Além disso, o LDA não é apropriado porque não há similaridade nas distribuições: amostras quando o robô é estável aparecem em muitas partes da trama, enquanto amostras de situações perigosas estão concentradas em uma pequena área ao redor de sua média.
 
-\subsection{Classification with perceptrons}
+\subsection{Classificação com perceptrons}
 
-A \emph{perceptron} is an artificial neuron with a specific structure (Fig.~\ref{fig.perceptron}). It has a summation unit with inputs $\{x_1,\ldots,x_n\}$ and each input $x_i$ is multiplied by a factor $w_i$ before summation. An additional input $x_0$ has the constant value $1$ for setting a bias independent of the inputs. The output of the perceptron is obtained by applying a function $f$ to the result of the addition.
+Um \emph{perceptron} é um neurônio artificial com uma estrutura específica (Fig.~\ref{fig.perceptron}). Ele tem uma unidade de soma com entradas $\{x_1,\ldots,x_n\}$ e cada entrada $x_i$ é multiplicada por um fator $w_i$ antes da soma. Um input adicional $x_0$ tem o valor constante $1$ para definir um viés independente dos inputs. A saída do perceptron é obtida aplicando uma função $f$ ao resultado da adição.
 
 \begin{figure}
 \begin{center}
@@ -610,45 +606,45 @@ A \emph{perceptron} is an artificial neuron with a specific structure (Fig.~\ref
 \draw[->] (in) node [xshift=-5pt] {$x_n$} -- node[fill=white] {$w_n$} (neuron);
 \end{tikzpicture}
 \end{center}
-\caption{A perceptron}\label{fig.perceptron}
+\caption{Um perceptron}\label{fig.perceptron}
 \end{figure}
 
-When used as a classifier, the inputs to the perceptron are the values returned by the sensors for a sample to be classified and the output will be one of two values that indicate the class to which the sample is assigned. Usually, the output function $f$ is just the sign of the weighted sum:
+Quando usado como classificador, as entradas para o perceptron são os valores retornados pelos sensores para que uma amostra seja classificada e a saída será um dos dois valores que indicam a classe para a qual a amostra é atribuída. Normalmente, a função de saída $f$ é apenas o sinal da soma ponderada:
 \begin{equation}
 y=sign\left(\,\sum_{i=0}^{n} w_i\,x_i\,\right)=\pm 1\,,\label{eq.perceptron-output}
 \end{equation}
-where one class corresponds to $+1$ and the other to $-1$.
+onde uma classe corresponde a $+1$ e a outra a $-1$.
 
-The data are normalized so that all inputs are in the same range, usually $-1\leq x_i\leq +1$. The data in Fig.~\ref{fig.slopemes} can be normalized by dividing each value by $30$.
+Os dados são normalizados para que todas as entradas estejam na mesma faixa, geralmente $-1\leq x_i\leq +1$. Os dados na Fig.~\ref{fig.slopemes} podem ser normalizados dividindo cada valor por $30$.
 
-Given a set of input values $\{x_0=1,x_1,\ldots,x_n\}$ of a sample, the object of a training session is to find a set of weights $\{w_0,w_1,\ldots,w_n\}$ so that the output will be the value $\pm 1$ that assigns the sample to the correct class.
+Dado um conjunto de valores de entrada $\{x_0=1,x_1,\ldots,x_n\}$ de uma amostra, o objetivo de uma sessão de treinamento é encontrar um conjunto de pesos $\{w_0,w_1,\ldots,w_n\}$ para que a saída seja o valor $\pm 1$ que atribui a amostra à classe correta.
 
-If the sample is close to the border between two classes, the weighted sum will be close to zero. Therefore, a perceptron is also a linear classifier: to distinguish between outputs of $\pm 1$, the discriminant dividing the two classes is defined by the set of weights giving an output of zero:
+Se a amostra estiver perto da borda entre duas classes, a soma ponderada será próxima a zero. Portanto, um perceptron é também um classificador linear: para distinguir entre saídas de $\pm 1$, o discriminante que divide as duas classes é definido pelo conjunto de pesos que dá uma saída de zero:
 \[
 \sum_{i=0}^{n} w_i\,x_i=0\,,
 \]
-or
+ou
 \begin{equation}
 w_0 + w_1x_1 + \cdots + w_nx_n = 0\,.\label{eq.perceptron-disc}
 \end{equation}
-The presentation of LDA for a two-dimensional problem ($n=2$) led to Eq.~\ref{eq.diseq}, which is the same as Eq.~\ref{eq.perceptron-disc} when $c=-w_0$. The difference between the two approaches is in the way the weights are obtained: in LDA statistics are used while for perceptrons they result from an iterative learning process.
+A apresentação do LDA para um problema bidimensional ($n=2$) levou ao Eq.~\ref{eq.diseq}, que é o mesmo que Eq.~\ref{eq.perceptron-disc} quando $c=-w_0$. A diferença entre as duas abordagens está na forma como os pesos são obtidos: em LDA as estatísticas são usadas enquanto para perceptrons elas resultam de um processo de aprendizado iterativo.
 
-\subsection{Learning by a perceptron}
+\subsection{Aprendendo por um perceptron}
 
-The iterative search for values of the weights $\{w_0,w_1,\ldots,w_n\}$ starts by setting them to a small value such as $0.1$. During the learning phase, a set of samples is presented to the perceptron, together with the expected output (the class) for each element of the set. The set of samples must be constructed randomly and include elements from all the classes; furthermore, the elements from a single class must also be chosen randomly. This is to prevent the learning algorithm from generating a discriminant that is optimal in one specific situation, and to ensure that the process converges rapidly to an overall optimal discriminant, rather than spending too much time optimizing for specific cases.
+A busca iterativa dos valores dos pesos $\{w_0,w_1,\ldots,w_n\}$ começa definindo-os para um valor pequeno, como $0,1$. Durante a fase de aprendizagem, um conjunto de amostras é apresentado ao perceptron, juntamente com o resultado esperado (a classe) para cada elemento do conjunto. O conjunto de amostras deve ser construído de forma aleatória e incluir elementos de todas as classes; além disso, os elementos de uma única classe também devem ser escolhidos aleatoriamente. Isto é para evitar que o algoritmo de aprendizado gere uma discriminação que seja ótima em uma situação específica, e para assegurar que o processo converge rapidamente para uma discriminação geral ótima, ao invés de gastar muito tempo otimizando para casos específicos.
 
-The adjustment of the weights is computed as follows:
+O ajuste dos pesos é calculado da seguinte forma:
 \begin{equation}
 w_i(t+1) = w_i(t) + \eta \,x_i \,y\,,\;\;0\leq i \leq n\,.\label{eq.perceptron-learn}
 \end{equation}
-This is essentially the Hebbian rule for ANNs (Eq.~\ref{eq.hebbian}). $w_i(t)$ and $w_i(t+1)$ are the $i$'th weights before and after the correction, $\eta$ defines the learning rate, $x_i$ is the normalized input, and $y$ is the desired output. Since the sign function is applied to the sum of the weighted inputs, $y$ is $1$ or $-1$, except on the rare occasions where the sum is exactly zero. 
+Esta é essencialmente a regra Hebbiana para as ANNs (Eq.~\ref{eq.hebbian}). $w_i(t)$ e $w_i(t+1)$ são os pesos $i$'th antes e depois da correção, $\eta$ define a taxa de aprendizagem, $x_i$ é a entrada normalizada, e $y$ é a saída desejada. Como a função de sinal é aplicada à soma das entradas ponderadas, $y$ é $1$ ou $-1$, exceto nas raras ocasiões em que a soma é exatamente zero. 
 
-Eq.~\ref{eq.perceptron-learn} corrects the weights by adding or subtracting a value that is proportional to the input, where the coefficient of proportionality is the learning rate. A small value for the learning rate means that the corrections to the weights will be in small increments, while a high learning rate will cause the corrections to the weights to be in larger increments. Once learning is completed, the weights are used to classify subsequent samples.
+O Eq.~\ref{eq.perceptron-learn} corrige os pesos adicionando ou subtraindo um valor que é proporcional à entrada, onde o coeficiente de proporcionalidade é a taxa de aprendizado. Um valor pequeno para a taxa de aprendizado significa que as correções dos pesos serão em pequenos incrementos, enquanto uma alta taxa de aprendizado fará com que as correções dos pesos sejam em incrementos maiores. Uma vez concluído o aprendizado, os pesos são usados para classificar as amostras subseqüentes.
 
-Algorithms~\ref{alg.perceptron1}--\ref{alg.perceptron2} are a formal description of classification by perceptrons. The constant $N$ is the size of the set of samples for the learning phase, while $n$ is the number of sensor values returned for each sample.
+Algoritmos~\ref{alg.perceptron1}--\ref{alg.perceptron2} são uma descrição formal da classificação por perceptrons. A constante $N$ é o tamanho do conjunto de amostras para a fase de aprendizagem, enquanto $n$ é o número de valores dos sensores retornados para cada amostra.
 
 \begin{figure}
-\begin{alg}{Classification by a perceptron (learning phase)}{perceptron1}
+\begin{alg}{Classificação por um perceptron (fase de aprendizagem)}{perceptron1}
 \hline
 &\idv{}float array[$N$,$n$] $\vec{X}$&// Set of samples\\
 &\idv{}float array[$n+1$] $\vec{w}$ \ass{} $[0.1,0.1,\ldots]$&// Weights\\
@@ -667,7 +663,7 @@ Algorithms~\ref{alg.perceptron1}--\ref{alg.perceptron2} are a formal description
 \end{figure}
 
 \begin{figure}
-\begin{alg}{Classification by a perceptron (recognition phase)}{perceptron2}
+\begin{alg}{Classificação por um perceptron (fase de reconhecimento)}{perceptron2}
 &\idv{}float $\vec{w}$ \ass weights from the learning phase&\\
 &\idv{}float $\vec{x}$&\\
 &\idv{}integer $y$&\\
@@ -682,27 +678,27 @@ Algorithms~\ref{alg.perceptron1}--\ref{alg.perceptron2} are a formal description
 \end{alg}
 \end{figure}
 
-When should the learning phase be terminated? One could specify an arbitrary value, for example: terminate the learning phase when $98\%$ of the samples are classified correctly. However, it may not be possible to achieve this level. A better method is to terminate the learning phase when the magnitudes of the corrections to the weights become small.
+Quando a fase de aprendizagem deve ser encerrada? Pode-se especificar um valor arbitrário, por exemplo: encerrar a fase de aprendizagem quando $98\%$ das amostras forem classificadas corretamente. Entretanto, pode não ser possível atingir este nível. Um método melhor é encerrar a fase de aprendizagem quando a magnitude das correções dos pesos se torna pequena.
 
-\subsection{Numerical example}
+\subsection{Exemplo numérico}
 
-We return to the robot that is learning to avoid dangerous slopes and apply the learning algorithm to the data in Fig.~\ref{fig.slopemes}. The perceptron has three inputs: $x_0$ which always set to $1$, $x_1$ for the data from the front/back accelerometer, and $x_2$ for the data from the up/down accelerometer. The data is normalized by dividing each sample by $30$ so that values will be between $0$ and $1$. We specify that an output of $1$ corresponds to class $C_1$ (stable) and an output of $-1$ corresponds to class $C_2$ (dangerous).
+Voltamos ao robô que está aprendendo a evitar inclinações perigosas e aplicamos o algoritmo de aprendizagem aos dados da Fig.~\ref{fig.slopemes}. O perceptron tem três entradas: $x_0$, que sempre é de $1$, $x_1$ para os dados do acelerômetro frontal/traseiro, e $x_2$ para os dados do acelerômetro para cima/para baixo. Os dados são normalizados dividindo cada amostra por $30$ para que os valores fiquem entre $0$ e $1$. Especificamos que uma saída de $1$ corresponde à classe $C_1$ (estável) e uma saída de $-1$ corresponde à classe $C_2$ (perigosa).
 
-Select a random sample from the input data, for example, a sample in class $C_1$ whose sensor values are $x_{1}=14$ and $x_{2}=18$. The normalized input is $x_{1}=14/30=0.47$ and $x_{2}=18/30=0.6$. The output of the perceptron with initial weights $0.1$ is:
+Selecione uma amostra aleatória dos dados de entrada, por exemplo, uma amostra na classe $C_1$ cujos valores de sensor são $x_{1}=14$ e $x_{2}=18$. A entrada normalizada é $x_{1}=14/30=0,47$ e $x_{2}=18/30=0,6$. A saída do perceptron com pesos iniciais $0,1$ é:
 \begin{eqnarray*}
 y &=& \mathit{sign}(w_0\times 1 + w_1x_1 + w_2x_2)\\
 &=& \mathit{sign}(0.1\times 1 + 0.1\times 0.47 + 0.1\times 0.6)\\
 &=& \mathit{sign}(0.207)\\
 &=& 1\,.
 \end{eqnarray*}
-This output is correct so the weights need not be corrected. Now choose a random sample in class $C_2$ whose sensor values are  $x_{1}=17$ and $x_{2}=15$. The normalized input is $x_{1}=17/30=0.57$ and $x_{2}=15/30=0.5$. The output of the perceptron is:
+Esta saída é correta, portanto, os pesos não precisam ser corrigidos. Agora escolha uma amostra aleatória na classe $C_2$ cujos valores do sensor sejam $x_{1}=17$ e $x_{2}=15$. A entrada normalizada é $x_{1}=17/30=0,57$ e $x_{2}=15/30=0,5$. A saída do perceptron é:
 \begin{eqnarray*}
 y &=& \mathit{sign}(w_0\times 1 + w_1x_1 + w_2x_2)\\
 &=& \mathit{sign}(0.1\times 1 + 0.1\times 0.57 + 0.1\times 0.5)\\
 &=& \mathit{sign}(0.207)\\
 &=& 1\,.
 \end{eqnarray*}
-This output is not correct: the sample is from class $C_2$ which corresponds to $-1$. The weights are now adjusted using Eq.~\ref{eq.perceptron-learn} with a learning rate $\eta = 0.1$:
+Esta saída não é correta: a amostra é da classe $C_2$ que corresponde a $-1$. Os pesos são agora ajustados usando Eq.~ref{eq.perceptron-learn} com uma taxa de aprendizagem $\eta = 0,1$:
 \[
 \spacearray
 \begin{array}{lclclcl}
@@ -711,7 +707,7 @@ w_1(t+1) &=& w_1(t) + \eta \,x_1 y &=& 0.1 + 0.1\times 0.57\times-1 &=& 0.043 \\
 w_2(t+1) &=& w_2(t) + \eta \,x_2 y &=& 0.1 + 0.1\times 0.5\times -1 &=& 0.05\,.
 \end{array}
 \]
-These will be the new weights for the next iteration. If we continue for $2000$ iterations, the weights evolve as shown in Fig.~\ref{fig.weights-fixeta}. At the end of the learning process, the weights are:
+Estes serão os novos pesos para a próxima iteração. Se continuarmos por $2000$ iterações, os pesos evoluem como mostrado na Fig.~\ref{fig.weights-fixeta}. No final do processo de aprendizagem, os pesos estão:
 \[
 w_0 = -0.1,\;\;\; w_1 = -0.39,\;\;\; w_2 = 0.53\,.
 \]
@@ -720,33 +716,33 @@ w_0 = -0.1,\;\;\; w_1 = -0.39,\;\;\; w_2 = 0.53\,.
 \begin{center}
 \includegraphics[width=0.8\textwidth]{weights.pdf}
 \end{center}
-\caption{Evolution of the weights for learning by a perceptron}\label{fig.weights-fixeta}
+\caption{Evolução dos pesos para a aprendizagem por um perceptron}\label{fig.weights-fixeta}
 \end{figure}
 
-These weights can now be used by the recognition phase of the classification Algorithm~\ref{alg.perceptron2}. The discriminant line built by the perceptron (Eq.~\ref{eq.perceptron-disc}) is:
+Estes pesos podem agora ser utilizados na fase de reconhecimento da classificação Algoritmo~\ref{alg.perceptron2}. A linha discriminante construída pelo perceptron (Eq.~\ref{eq.perceptron-disc}) é:
 \[
 -0.1 -0.39x_1 + 0.53x_2 = 0\,.
 \]
-The coordinates of this line are the normalized values, but they can be transformed back into the raw values obtained from the accelerometers. The line is shown in Fig.~\ref{fig.perceptron-dis} and considering the large overlap of the classes, it does a reasonably good job of distinguishing between them.
+As coordenadas desta linha são os valores normalizados, mas eles podem ser transformados novamente nos valores brutos obtidos dos acelerômetros. A linha é mostrada na Fig.~\ref{fig.perceptron-dis} e considerando a grande sobreposição das classes, ela faz um trabalho razoavelmente bom de distinção entre elas.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{perceptron-discrim.pdf}
 \end{center}
-\caption{Discriminant line computed from the perceptron weights}\label{fig.perceptron-dis}
+\caption{Linha discriminante computada a partir dos pesos de perceptron}\label{fig.perceptron-dis}
 \end{figure}
 
-\subsection{Tuning the parameters of the perceptron}
+\subsection{Afinação dos parâmetros do perceptron}
 
-The performance of a perceptron is determined by the number of iterations and the learning rate. Figure~\ref{fig.weights-fixeta} shows that there is a strong variation in the weights at the beginning, but the weights stabilize as the number of iterations increases. Thus it is relatively simple to monitor the weights and terminate the computation when the weights stabilize.
+O desempenho de um perceptron é determinado pelo número de iterações e pela taxa de aprendizagem. A figura~\ref{fig.weights-fixeta} mostra que há uma forte variação nos pesos no início, mas os pesos se estabilizam à medida que o número de iterações aumenta. Assim, é relativamente simples monitorar os pesos e encerrar o cálculo quando os pesos se estabilizam.
 
-This evolution of the weights depends strongly on the learning rate. Increasing the learning rate speeds the variation at the beginning, but strong corrections are not beneficial when the weights begin to stabilize. From Fig.~\ref{fig.weights-fixeta}, it is clear that even at the end of the run, there are significant variations in the weights which oscillate around the optimal value. This suggests that we reduce the learning rate to reduce the oscillations, but doing so will slow down the convergence to the optimal weights at the beginning of the learning phase.
+Esta evolução dos pesos depende fortemente da taxa de aprendizado. Aumentar a taxa de aprendizado acelera a variação no início, mas correções fortes não são benéficas quando os pesos começam a se estabilizar. A partir da Fig.~\ref{fig.weights-fixeta}, fica claro que, mesmo no final da corrida, há variações significativas nos pesos que oscilam em torno do valor ótimo. Isto sugere que reduzimos a taxa de aprendizagem para reduzir as oscilações, mas isso irá retardar a convergência para os pesos ótimos no início da fase de aprendizagem.
 
-The solution is to use a variable learning rate that is not constant. It should start out large to encourage rapid convergence to the optimal values, and then become smaller to reduce oscillations. For example, we can start with the learning rate of $0.1$ and then decrease it continually using the equation:
+A solução é usar uma taxa de aprendizagem variável que não seja constante. Ela deve começar grande para incentivar a convergência rápida para os valores ótimos, e depois se tornar menor para reduzir as oscilações. Por exemplo, podemos começar com a taxa de aprendizagem de $0,1$ e depois reduzi-la continuamente usando a equação:
 \[
 \eta\,(t+1) = \eta\,(t) \times 0.997\,.
 \]
-Figure~\ref{fig.perceptron-dis-etavar} shows the evolution of the weights when this variable learning rate is used. The exponential decrease of $\eta$ is also plotted in the figure. A comparison of Fig.~\ref{fig.weights-fixeta} and Fig.~\ref{fig.perceptron-dis-etavar} clearly shows the superiority of the variable learning rate and this improvement is obtained with very little additional computation.
+A figura~\ref{fig.perceptron-dis-etavar} mostra a evolução dos pesos quando esta taxa de aprendizagem variável é utilizada. A diminuição exponencial de $\eta$ também é plotada na figura. Uma comparação entre Fig.~\ref{fig.weights-fixeta} e Fig.~\ref{fig.perceptron-dis-etavar} mostra claramente a superioridade da taxa de aprendizagem variável e esta melhoria é obtida com muito pouco cálculo adicional.
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{weights-etavar.pdf}
@@ -755,18 +751,18 @@ Figure~\ref{fig.perceptron-dis-etavar} shows the evolution of the weights when t
 \end{figure}
 
 \begin{framed}
-\act{Learning by a perceptron}{perceptronlearn}
+\act{Aprendendo com um perceptron}{perceptronlearn}
 \begin{itemize}
-\item Take a set of measurements of the accelerometers on your robot on various slopes and plot the data. For each sample you will have to decide if the robot is in danger of falling off the slope.
-\item Classify the data using a perceptron. What discriminant line do you find?
-\item Use a perceptron to classify the gray areas using the data of Activity~\ref{act.LDAchameleon}. What discriminant do you find? Compare the discriminant found by the perceptron to the discriminant found by LDA.
+\item Faça um conjunto de medidas dos acelerômetros em seu robô em várias inclinações e trace os dados. Para cada amostra, você terá que decidir se o robô corre o risco de cair da encosta.
+\item Classificar os dados usando um perceptron. Que linha discriminante você encontra?
+\item Use um perceptron para classificar as áreas cinzentas usando os dados da Activity~\ref{act.LDAchameleon}. Que discriminante você acha? Compare o discriminante encontrado pelo perceptron com o discriminante encontrado pela LDA.
 \end{itemize}
 \end{framed}
 
-\section{Summary}
+\section{Sumário}
 
-Samples of two classes can be distinguished using their means alone or using both the means and the variances. Linear discriminant analysis is a method for classification that is based on computing the covariances between the samples of the classes. LDA performs well only when the distributions of the samples of the classes are similar. When this assumption does not hold, perceptrons can be used. For optimum performance, the learning rate of a perceptron must be adjusted, if possible dynamically during the learning phase.
+Amostras de duas classes podem ser distinguidas usando apenas seus meios ou usando tanto os meios como as variâncias. A análise linear discriminante é um método de classificação que se baseia no cálculo das covariâncias entre as amostras das classes. A LDA só tem um bom desempenho quando as distribuições das amostras das classes são semelhantes. Quando esta suposição não se mantém, perceptrons podem ser usados. Para um ótimo desempenho, a taxa de aprendizagem de um perceptron deve ser ajustada, se possível dinamicamente durante a fase de aprendizagem.
 
-\section{Further reading}
+\section{Leitura adicional}
 
-A detailed mathematical presentation of linear discriminant analysis can be found in Izenman~\cite[Chapter~8]{izenman2008}. Textbooks on machine learning techniques are \cite{harrington2012machine, kubat2015machinelearning}.
+Uma apresentação matemática detalhada da análise linear discriminante pode ser encontrada em Izenman~\cite[Chapter~8]{izenman2008}. Os livros didáticos sobre técnicas de aprendizagem de máquinas são \cite{harrington2012machine, kubat2015machinelearning}.

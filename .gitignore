@@ -9,7 +9,6 @@ pt/tikz/*
 *.aux
 *.log
 *.auxlock
-*.bbl
 *.blg
 *.synctex*
 *.toc

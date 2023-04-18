@@ -1,58 +1,58 @@
 % !TeX root = er.tex
 
-\chapter{Image Processing}\label{ch.image}
+\chapter{Processamento de imagem}\label{ch.image}
 
-The distance sensor on your self-driving car detects an object $100$ meters in front of your car. Are you following the car in front of you at a safe distance or has a pedestrian jumped into the road? The robotics algorithms presented so far have been based upon the measurement of physical properties like distance, angles and reflectance. More complex tasks require that a robot obtain detailed information on its surroundings, especially when the robot is intended to function autonomously in an unfamiliar environment.
+O sensor de distância em seu carro que dirige sozinho detecta um objeto a $100$ metros na frente do seu carro. Você está seguindo o carro à sua frente a uma distância segura ou tem um pedestre saltando para a estrada? Os algoritmos robóticos apresentados até agora têm sido baseados na medição de propriedades físicas como distância, ângulos e reflectância. Tarefas mais complexas exigem que um robô obtenha informações detalhadas sobre seu ambiente, especialmente quando o robô se destina a funcionar de forma autônoma em um ambiente não familiar.
 
-For us, the obvious way to make sense of our environment is to use vision. We take vision for granted and don't realize how complex our visual system---our eyes and brain---really is. In fact, about $30\%$ of the brain is used for vision. We can instantly distinguish between a moving car and a pedestrian crossing the road and react quickly.
+Para nós, a forma óbvia de fazer sentido ao nosso ambiente é usar a visão. Tomamos a visão como certa e não nos damos conta de quão complexo nosso sistema visual - nossos olhos e cérebro - realmente é. De fato, cerca de $30\%$ do cérebro é usado para a visão. Podemos distinguir instantaneamente entre um carro em movimento e um pedestre atravessando a estrada e reagindo rapidamente.
 
-For almost two hundred years it has been possible to automatically record images using a camera, but the interpretation of images remained a task for humans. With the advent of computers, it became possible to automatically process and interpret images. Digital images are familiar: weather maps from satellites, medical images (X-rays, CT and MRI scans, ultrasound images), and the photos we take with our smartphones. The field of \emph{digital image processing} is one of the most intensely studied fields of computer science and engineering, but image processing systems have not yet reached the capability of the human visual system.
+Por quase duzentos anos foi possível gravar imagens automaticamente usando uma câmera, mas a interpretação das imagens continuou sendo uma tarefa para os humanos. Com o advento dos computadores, tornou-se possível processar e interpretar as imagens automaticamente. As imagens digitais são familiares: mapas meteorológicos de satélites, imagens médicas (raios X, tomografias e ressonâncias magnéticas, imagens de ultra-som) e as fotos que tiramos com nossos smartphones. O campo de \emph{digital image processing} é um dos campos mais intensamente estudados da ciência da computação e engenharia, mas os sistemas de processamento de imagens ainda não atingiram a capacidade do sistema visual humano.
 
-In this chapter, we present a taste of algorithms for digital image processing and describe how they are used in robotics systems. Sections~\ref{s.obtaining-images}--\ref{s.image-overview} provide an overview of imaging systems and digital image processing. Sections~\ref{s.enhance}--\ref{s.blob} describe algorithms for image processing: enhancement by digital filters and histogram manipulation, segmentation (edge detection), and feature recognition (detection of corners and blobs, identification of multiple features).
+Neste capítulo, apresentamos um gosto dos algoritmos para processamento digital de imagens e descrevemos como eles são usados em sistemas robóticos. As seções~\ref{s.obtaining-images}--ref{s.image-overview} fornecem uma visão geral dos sistemas de processamento de imagem e processamento de imagem digital. As seções~\ref{s.enhance}--\ref{s.blob} descrevem algoritmos para processamento de imagem: aprimoramento por filtros digitais e manipulação de histograma, segmentação (detecção de bordas) e reconhecimento de características (detecção de cantos e blobs, identificação de múltiplas características).
 
-For reasons of cost and computing power, few educational robots use cameras, so to study image processing algorithms you can implement the algorithms on a personal computer using images captured with a digital camera. Nevertheless, we propose some activities that demonstrate image processing algorithms on an educational robot. The robot moves over a one-dimensional image and samples are read by a ground sensor. This results in a one-dimensional array of pixels that can be processed using simplified versions of the algorithms that we present.
+Por razões de custo e poder computacional, poucos robôs educacionais usam câmeras, portanto, para estudar algoritmos de processamento de imagem é possível implementar os algoritmos em um computador pessoal usando imagens capturadas com uma câmera digital. No entanto, propomos algumas atividades que demonstram algoritmos de processamento de imagem em um robô educacional. O robô se move sobre uma imagem unidimensional e as amostras são lidas por um sensor de terra. Isto resulta em uma matriz unidimensional de pixels que pode ser processada usando versões simplificadas dos algoritmos que apresentamos.
 
-\section{Obtaining images}\label{s.obtaining-images}
+\section{Obtenção de imagens}\label{s.obtaining-images}
 
-In this section we give an overview of design considerations for imaging systems.
+Nesta seção, damos uma visão geral das considerações de projeto para sistemas de imagem.
 
-\subsection*{Optics}
+\subsection*{Óptica}
 
-The optical system of a camera consists of a lens that focuses light on a sensor. The wider the lens, the more light that can be collected, which is important for systems that need to work in dark environments. The longer the focal length (which is related to the distance between the lens and the sensor), the greater the magnification. That is why professional photographers carry heavy cameras with long lenses. Manufacturers of smartphones are faced with a dilemma: we want our phones to be thin and elegant, but that limits the focal length of the camera. For most robotics applications, magnification is not worth the size and weight required to achieve a long focal length.
+O sistema óptico de uma câmera consiste em uma lente que focaliza a luz em um sensor. Quanto mais larga a lente, mais luz pode ser coletada, o que é importante para sistemas que precisam trabalhar em ambientes escuros. Quanto maior a distância focal (que está relacionada à distância entre a lente e o sensor), maior é a ampliação. É por isso que os fotógrafos profissionais carregam câmeras pesadas com lentes longas. Os fabricantes de smartphones se deparam com um dilema: queremos que nossos telefones sejam finos e elegantes, mas isso limita a distância focal da câmera. Para a maioria das aplicações robóticas, a ampliação não vale o tamanho e o peso necessários para alcançar uma distância focal longa.
 
-\subsection*{Resolution}
+\subsection*{Resolução}
 
-Once upon a time, images were captured on film by a chemical reaction caused by light hitting a sheet of plastic covered with an emulsion of tiny silver particles. In principle, each particle could react independently so the resolution was extremely high. In digital images, light is captured by semiconductor devices such as \emph{charge-coupled devices (CCD)}. A digital camera contains a chip with a fixed number of elements in a rectangular array. Each element measures the light intensity independently and these measurements are called \emph{pixels}. The more pixels captured by a chip of a given area, the higher the resolution. Currently, even inexpensive cameras in smartphones can capture millions of pixels in a single image.
+Era uma vez, as imagens eram capturadas no filme por uma reação química causada por uma luz atingindo uma folha de plástico coberta com uma emulsão de minúsculas partículas de prata. Em princípio, cada partícula podia reagir independentemente, de modo que a resolução era extremamente alta. Em imagens digitais, a luz é capturada por dispositivos semicondutores, tais como \emph{dispositivos acoplados à carga (CCD)}. Uma câmera digital contém um chip com um número fixo de elementos em uma matriz retangular. Cada elemento mede a intensidade da luz independentemente e estas medidas são chamadas \emph{pixels}. Quanto mais pixels forem capturados por um chip de uma determinada área, maior será a resolução. Atualmente, mesmo câmeras baratas em smartphones podem capturar milhões de pixels em uma única imagem.
 
-The problem with high resolution images is the large amount of memory needed to store them. Consider a high-resolution computer screen with $1920\times 1080$ pixels and assume that each pixel uses $8$ bits to store intensity in the range $0$--$255$. A single image requires about $2$ megabytes (MB) of memory. An embedded computer could analyze a single such image, but a mobile robot may need to store several images per second.
+O problema das imagens de alta resolução é a grande quantidade de memória necessária para armazená-las. Considere uma tela de computador de alta resolução com $1920\times 1080$ pixels e assuma que cada pixel usa $8$ bits para armazenar intensidade na faixa de $0$--$255$. Uma única imagem requer cerca de $2$ megabytes (MB) de memória. Um computador incorporado poderia analisar uma única imagem desse tipo, mas um robô móvel pode precisar armazenar várias imagens por segundo.
 
-Even more important than the amount of memory required is the computing power required to analyze the images. Image processing algorithms require the computer to perform a computation on each individual pixel. This is not a problem for an astronomer analyzing images sent to earth from a space telescope, but it is a problem for a self-driving car which needs to make decisions in a fraction of a second.
+Ainda mais importante do que a quantidade de memória necessária é o poder computacional necessário para analisar as imagens. Os algoritmos de processamento de imagens exigem que o computador faça um cálculo em cada pixel individual. Isto não é um problema para um astrônomo que analisa imagens enviadas à Terra a partir de um telescópio espacial, mas é um problema para um carro que se auto dirige e que precisa tomar decisões em uma fração de segundo.
 
-\subsection*{Color}
+\subsection*{Cor}
 
-Our visual system has the capability of distinguishing a range of wavelengths called \emph{visible light}. We discern different wavelengths as different colors. Light of longer wavelengths is called \emph{red}, while light of shorter wavelengths is called \emph{violet}. The human eye can distinguish millions of different colors although we name only a few: red, orange, yellow, green, cyan, blue, violet, etc. Color is one of the primary tools that we use to identify objects.
+Nosso sistema visual tem a capacidade de distinguir uma gama de comprimentos de onda chamada \emph{visible light}. Distinguimos comprimentos de onda diferentes como cores diferentes. A luz de comprimentos de onda mais longos é chamada \emph{red}, enquanto a luz de comprimentos de onda mais curtos é chamada \emph{violet}. O olho humano pode distinguir milhões de cores diferentes, apesar de nomearmos apenas algumas: vermelho, laranja, amarelo, verde, ciano, azul, violeta, etc. A cor é uma das principais ferramentas que usamos para identificar objetos.
 
-Sensors are able to measure light of wavelengths outside the range we call visual light: \emph{infrared} light of longer wavelengths and \emph{ultraviolet} light of shorter wavelengths. Infrared images are important in robotics because hot objects such as people and cars can be detected as bright infrared light.
+Os sensores são capazes de medir a luz de comprimentos de onda fora do alcance que chamamos de luz visual: luz \emph{infravermelha} de comprimentos de onda mais longos e luz \emph{ultravioleta} de comprimentos de onda mais curtos. As imagens infravermelhas são importantes na robótica porque objetos quentes como pessoas e carros podem ser detectados como luz infravermelha brilhante.
 
-The problem with color is that it triples the requirements for storing and processing images. All colors can be formed by taking varying amounts of the three \emph{primary colors}: red, green and blue (RGB). Therefore, a color image requires three bytes for each pixel. A single color image of resolution $1920\times 1080$ requires over $6$ MB of memory to store and the image processing takes at least three times as long.
+O problema com a cor é que ela triplica os requisitos para o armazenamento e processamento de imagens. Todas as cores podem ser formadas tomando quantidades variáveis das três \emph{primárias cores}: vermelho, verde e azul (RGB). Portanto, uma imagem colorida requer três bytes para cada pixel. Uma única imagem colorida de resolução de $1920\times 1080$ requer mais de $6$ MB de memória para ser armazenada e o processamento da imagem leva pelo menos três vezes mais tempo.
 
-\section{An overview of digital image processing}\label{s.image-overview}
+\section{Uma visão geral do processamento de imagens digitais}\label{s.image-overview}
 
-The optical system of a robot captures images as rectangular arrays of pixels, but the tasks of a robot are expressed in terms of objects of the environment: enter a room through a door, pick up an item off a shelf, stop if a pedestrian walks in front of the car. How can we go from pixels to objects?
+O sistema óptico de um robô captura imagens como matrizes retangulares de pixels, mas as tarefas de um robô são expressas em termos de objetos do ambiente: entrar em uma sala através de uma porta, pegar um item de uma prateleira, parar se um pedestre caminhar na frente do carro. Como podemos passar de pixels a objetos?
 
-The first stage is \emph{image enhancement}. Images contain noise that results from the optics and electronics. Furthermore, the lighting in the environment can cause an image to be too dark or washed out; the image may be accidentally rotated; the image may be out of focus. All these problems are independent of the content. It doesn't matter if an image that is out of focus shows a cat or a child. Image enhancement algorithms typically work by modifying the values assigned to individual pixels without regard to their meaning.\footnote{We limit ourselves to \emph{spatial} processing algorithms that work on the pixels themselves. There is another approach called \emph{frequency} processing algorithms, but that requires mathematical techniques beyond the scope of this book.}
+A primeira etapa é \emph{image enhancement}. As imagens contêm ruídos que resultam da ótica e da eletrônica. Além disso, a iluminação do ambiente pode fazer com que uma imagem fique muito escura ou lavada; a imagem pode ser girada acidentalmente; a imagem pode estar desfocada. Todos estes problemas são independentes do conteúdo. Não importa se uma imagem que esteja fora de foco mostra um gato ou uma criança. Os algoritmos de melhoria de imagem normalmente funcionam modificando os valores atribuídos a pixels individuais sem considerar seu significado.\footnote{Nós nos limitamos a algoritmos de processamento \emph{espacial} que funcionam nos próprios pixels. Há outra abordagem chamada \emph{freqüência} processing algorithms, mas que requer técnicas matemáticas além do escopo deste livro.}
 
-Image enhancement is difficult because there is no formal definition of what it means to enhance an image. A blurred blob might be dirt on a camera's lens or an unknown galaxy. Section~\ref{s.enhance} presents two approaches to image enhancement: filtering removes noise by replacing a pixel with an average of its neighboring pixels and histogram manipulation modifies the brightness and contrast of an image.
+A melhoria da imagem é difícil porque não há uma definição formal do que significa melhorar uma imagem. Uma mancha embaçada pode ser sujeira nas lentes de uma câmera ou em uma galáxia desconhecida. A seção~\ref{s.enhance} apresenta duas abordagens para melhorar a imagem: a filtragem remove o ruído ao substituir um pixel por uma média de seus pixels vizinhos e a manipulação do histograma modifica o brilho e o contraste de uma imagem.
 
-Objects are distinguished by lines, curves and areas. A door consists of three straight edges of a rectangle with one short side missing. A traffic light consists of three bright disks one above another. Before a door or traffic light can be identified, image processing algorithms must determine which pixels represent lines, edges, etc. This process is called \emph{segmentation} or \emph{feature extraction} because the algorithms have to determine which pixels are part of a segment of an image.
+Os objetos são distinguidos por linhas, curvas e áreas. Uma porta consiste em três bordas retas de um retângulo com um lado curto em falta. Um semáforo consiste em três discos brilhantes, um acima do outro. Antes que uma porta ou semáforo possa ser identificado, os algoritmos de processamento de imagem devem determinar quais pixels representam linhas, bordas, etc. Este processo é chamado \emph{segmentação} ou \emph{extração de características} porque os algoritmos têm que determinar quais pixels fazem parte de um segmento de uma imagem.
 
-Segmentation would be easy if edges, lines and curves were uniform, but this is not what occurs in real images. An edge may be slanted at an arbitrary angle and some of its pixels may obscured by shadows or even missing. We are familiar with \emph{captchas} where letters are intentionally distorted to make automatic recognition very difficult whereas humans can easily identify distorted letters. Enhancement algorithms can make segmentation easier, for example, by filling in missing pixels, but they may also introduce artificial segments. Section~\ref{s.edge-detection} demonstrates one segmentation technique: a filter that detects edges in an image.
+A segmentação seria fácil se as bordas, linhas e curvas fossem uniformes, mas isto não é o que ocorre em imagens reais. Uma borda pode ser inclinada em um ângulo arbitrário e alguns de seus pixels podem estar obscurecidos por sombras ou até mesmo ausentes. Estamos familiarizados com \emph{captchas} onde as letras são intencionalmente distorcidas para tornar o reconhecimento automático muito difícil, enquanto que os humanos podem facilmente identificar letras distorcidas. Algoritmos de melhoria podem facilitar a segmentação, por exemplo, ao preencher os pixels faltantes, mas também podem introduzir segmentos artificiais. A seção~\ref{s.edge-detection} demonstra uma técnica de segmentação: um filtro que detecta bordas em uma imagem.
 
-The final phase of image processing is to recognize objects. In Sect.~\ref{s.corners}, we present two algorithms for detecting corners: by locating the intersection of two edges and by counting neighbors with similar intensities. Section~\ref{s.blob} describes how to recognize \emph{blobs}, which are areas whose pixels have similar intensities but which are not bounded by regular features such as lines and curves. Finally, Activity~\ref{act.recognize} demonstrates the recognition of an object that is defined by more than one feature, such as a door defined by two edges that are at an arbitrary distance from each other.
+A fase final do processamento da imagem é o reconhecimento de objetos. Em Sect.~\ref{s.corners}, apresentamos dois algoritmos de detecção de cantos: pela localização da interseção de duas bordas e pela contagem de vizinhos com intensidades semelhantes. A seção~\ref{s.blob} descreve como reconhecer \emph{blobs}, que são áreas cujos pixels têm intensidades semelhantes, mas que não são delimitadas por características regulares, como linhas e curvas. Finalmente, Activity~\ref{act.recognize} demonstra o reconhecimento de um objeto que é definido por mais de uma característica, tal como uma porta definida por duas arestas que estão a uma distância arbitrária uma da outra.
 
-\section{Image enhancement}\label{s.enhance}
+\section{Melhoria de imagem}\label{s.enhance}
 
-Figure~\ref{fig.no-noise} shows an image of a rectangle whose intensity is uniform horizontally and shaded dark to light from top to bottom. The representation of the image as a $6\times 10$ rectangular array of pixels is shown in Fig.~\ref{fig.pixel-no-noise}, where each pixel is represented by a light intensity level in the range $0$--$100$. Now look at Fig.~\ref{fig.noise}: the image is no longer \emph{smooth} in the sense that there are three points whose intensity is not similar to the intensities of its neighbors. Compare the pixel array in Fig.~\ref{fig.pixel-noise} with the one in Fig.~\ref{fig.pixel-no-noise}: the intensities of the pixels at locations $(2,3)$, $(3,6)$, $(4,4)$ are different. This is probably the result of noise and not an actual feature of the object being photographed. 
+A figura~\ref{fig.no-noise} mostra uma imagem de um retângulo cuja intensidade é uniforme horizontalmente e sombreada de cima para baixo de escuro à luz. A representação da imagem como uma matriz retangular de pixels de $6,00\times 10$ é mostrada na Fig.~\ref{fig.pixel-noise}, onde cada pixel é representado por um nível de intensidade de luz na faixa de $0$--$100$. Agora veja a Fig.~\ref{fig.noise}: a imagem não é mais \emph{smooth} no sentido de que há três pontos cuja intensidade não é similar às intensidades de seus vizinhos. Compare a matriz de pixels na Fig.~ref{fig.pixel-noise} com a da Fig.~\ref{fig.pixel-noise}: as intensidades dos pixels nos locais $(2,3)$, $(3,6)$, $(4,4)$ são diferentes. Isto é provavelmente o resultado de ruído e não uma característica real do objeto que está sendo fotografado. 
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -154,20 +154,20 @@ $\scriptstyle 5$ & $60$ & $60$ & $60$ & $60$ & $60$ & $60$ & $60$ & $60$ & $60$ 
 %\end{minipage}
 %\end{figure}
 
-It doesn't really matter where the noise comes from: from the object itself, dust on the camera lens, non-uniformity in the sensor or noise in the electronics. It is impossible to get rid of the noise entirely, because we can never be sure whether a pixel is noise or an actual feature of the object, but we do want to enhance the image so that the noise is no longer noticeable.
+Não importa realmente de onde vem o ruído: do próprio objeto, poeira na lente da câmera, não-uniformidade no sensor ou ruído na eletrônica. É impossível nos livrarmos inteiramente do ruído, porque nunca podemos ter certeza se um pixel é ruído ou uma característica real do objeto, mas queremos melhorar a imagem para que o ruído não seja mais perceptível.
 
 \subsection{Spatial filters}
 
-Consider row $4$ in the pixel array in Fig.~\ref{fig.pixel-noise}:
+Considere a linha $4$ na matriz de pixels em Fig.~\ref{fig.pixel-noise}:
 \[
 50,\, 50,\, 50,\,50,\, 90,\, 50,\, 50,\, 50,\, 50,\, 50\,.
 \]
-Figure~\ref{fig.before-average} is a plot of the light intensity $f$ for the pixels in that row. It is clear that one of the pixels has an unlikely value because its value is so different from its neighbors. A program can make each pixel more like its neighbors by replacing the intensity of the pixel with the average of its intensity and the intensities of its neighbors. For most of the pixels in the row, this doesn't change their values: $(50+50+50)/3=50$, but the noise pixel and its two neighbors receive new values: $(50+90+50)/3\approx 60$ (Fig.~\ref{fig.after-average}). Averaging has caused two pixels to receive ``wrong'' values, but overall the image will be visually enhanced because the intensity of the noise will be reduced.
+Figura~\ref{fig.before-average} é um gráfico da intensidade da luz $f$ para os pixels naquela linha. É claro que um dos pixels tem um valor improvável porque seu valor é muito diferente do de seus vizinhos. Um programa pode tornar cada pixel mais parecido com seus vizinhos, substituindo a intensidade do pixel pela média de sua intensidade e as intensidades de seus vizinhos. Para a maioria dos pixels da linha, isto não muda seus valores: $(50+50+50)/3=50$, mas o pixel de ruído e seus dois vizinhos recebem novos valores: $(50+90+50)/3\approx 60$ (Fig.~ref{fig.after-average}). A média fez com que dois pixels recebessem valores "errados", mas em geral a imagem será visualmente melhorada porque a intensidade do ruído será reduzida.
 
 \begin{figure}
 \begin{minipage}{.47\textwidth}
 \begin{tikzpicture}[scale=1]
-\draw (0,2) -- node[left] {$f$} (0,0) -- node[below,yshift=-1mm] {\textit{colonne}} (4,0);
+\draw (0,2) -- node[left] {$f$} (0,0) -- node[below,yshift=-1mm] {\textit{coluna}} (4,0);
 \draw[thick] (0,.5) -- (1.5,.5) -- (1.5,1.5) -- (2,1.5) -- (2,.5) -- (4,.5);
 \node at (-2mm,.5) {$\scriptstyle 50$};
 \node at (-2mm,1.5) {$\scriptstyle 90$};
@@ -181,7 +181,7 @@ Figure~\ref{fig.before-average} is a plot of the light intensity $f$ for the pix
 \hspace{\fill}
 \begin{minipage}{.47\textwidth}
 \begin{tikzpicture}[scale=1]
-\draw (0,2) -- node[left,yshift=2mm] {$f$} (0,0) -- node[below,yshift=-1mm] {\textit{colonne}} (4,0);
+\draw (0,2) -- node[left,yshift=2mm] {$f$} (0,0) -- node[below,yshift=-1mm] {\textit{coluna}} (4,0);
 \draw[thick] (0,.5) -- (1,.5) -- (1,.75) -- (2.5,.75) -- (2.5,.5) -- (4,.5);
 \node at (-2mm,.5) {$\scriptstyle 50$};
 \node at (-2mm,.75) {$\scriptstyle 60$};
@@ -227,11 +227,11 @@ Figure~\ref{fig.before-average} is a plot of the light intensity $f$ for the pix
 %\end{minipage}
 %\end{figure}
 
-Taking the average of a sequence of pixels is the discrete version of integrating a continuous intensity function. Integration smooths out local variation of the function. The dotted lines in Figs.~\ref{fig.before-average}--\ref{fig.after-average} indicate a three-pixel sequence and it can be seen that the areas they bound are about the same.
+Tomando a média de uma seqüência de pixels é a versão discreta da integração de uma função de intensidade contínua. A integração suaviza a variação local da função. As linhas pontilhadas nas Figs.~\ref{fig.before-average}--\ref{fig.after-average} indicam uma seqüência de três pixels e pode-se ver que as áreas delimitadas são mais ou menos as mesmas.
 
-The averaging operation is performed by applying a \emph{spatial filter} at each pixel of the image.\footnote{The mathematical term for applying a function $g$ at every point of a function $f$ is called (discrete) \emph{convolution}. For continuous functions integration is used in place of the addition of averaging.} For the two-dimensional array of pixels, the filter is represented by a $3\times 3$ array, where each element of the array specifies the factor by which the pixel and its neighbors are multiplied. Each pixel has four or eight neighbors, depending on whether we include the diagonal neighbors. Here, we include the diagonal pixels in the filters.
+A operação de média é realizada aplicando um filtro de espaço em cada pixel da imagem.\footnote{O termo matemático para aplicar uma função $g$ em cada ponto de uma função $f$ é chamado de (discreto) \emph{convolução}. Para funções contínuas, a integração é usada no lugar da adição de média.} Para a matriz bidimensional de pixels, o filtro é representado por uma matriz de $3\times 3$, onde cada elemento da matriz especifica o fator pelo qual o pixel e seus vizinhos são multiplicados. Cada pixel tem quatro ou oito vizinhos, dependendo se incluímos os vizinhos diagonais. Aqui, incluímos os píxeis diagonais nos filtros.
 
-The \emph{box filter} is:
+O \emph{filtro da caixa} é:
 \[
 \left[
 \begin{array}{ccc}
@@ -241,9 +241,9 @@ The \emph{box filter} is:
 \end{array}
 \right]\,.
 \]
-The results of the multiplications are added and the sum is divided by $9$ to scale the result back to an intensity value.
+Os resultados das multiplicações são adicionados e a soma é dividida por $9$ para redimensionar o resultado para um valor de intensidade.
 
-The application of the filter to each pixel $(r,c)$ can be written explicitly as:
+A aplicação do filtro a cada pixel $(r,c)$ pode ser escrita explicitamente como:
 \[
 \begin{array}{llll}
 g(r,c) = &(\\
@@ -253,7 +253,7 @@ g(r,c) = &(\\
 & ) \; / \; 9\,.
 \end{array}
 \]
-The result of applying the box filter to the noisy image in Fig.~\ref{fig.pixel-noise} is shown in Fig.~\ref{fig.box-filter}.\footnote{The filter is not applied to the pixels in the boundary of the image to avoid exceeding the bounds of the array. Alternatively, the image can be padded with extra rows and columns.} The intensity values are no longer uniform but they are quite close to the original values, except where a noise pixels existed. The second row from the bottom shows that the noise value of $90$ no longer appears; instead, all the values in the row are close together in the range $46$--$54$.
+O resultado da aplicação do filtro de caixa à imagem ruidosa na Fig.~\ref{fig.pixel-noise} é mostrado na Fig.~\ref{fig.box-filter}..\footnote{O filtro não é aplicado aos pixels no limite da imagem para evitar exceder os limites da matriz. Alternativamente, a imagem pode ser acolchoada com filas e colunas extras.} Os valores de intensidade não são mais uniformes, mas estão bastante próximos dos valores originais, exceto quando havia um pixel de ruído. A segunda linha do fundo mostra que o valor do ruído de $90$ não aparece mais; em vez disso, todos os valores na linha estão próximos uns dos outros na faixa $46$--$54$.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -315,7 +315,7 @@ $\scriptstyle 5$ & 60 & 60 & 60 & 60 & 60 & 60 & 60 & 60 & 60 & 60\\
 %\end{minipage}
 %\end{figure}
 
-The box filter gives equal importance to the pixel and all its neighbors, but a \emph{weighted filter} uses different factors for different pixels. The following filter gives much more weight to the pixel itself than to its neighbors:
+O filtro da caixa dá igual importância ao pixel e a todos os seus vizinhos, mas um filtro \emph{pesado} utiliza diferentes fatores para diferentes pixels. O seguinte filtro dá muito mais peso ao próprio pixel do que a seus vizinhos:
 \[
 \left[
 \begin{array}{ccc}
@@ -325,16 +325,16 @@ The box filter gives equal importance to the pixel and all its neighbors, but a 
 \end{array}
 \right]\,.
 \]
-It would be appropriate to use this filter if we think that a pixel almost certainly has its correct value, but we still want its neighbors to influence its value. After applying this filter, the result must be divided by $16$ to scale the sum to an intensity value. Figure~\ref{fig.weighted-filter} shows the result of using the weighted filter. Looking again at the second row from the bottom, the value of $90$ has only been reduced to $70$ because greater weight is given to the pixel relative to its neighbors.
+Seria apropriado usar este filtro se pensarmos que um pixel quase certamente tem seu valor correto, mas ainda queremos que seus vizinhos influenciem seu valor. Após a aplicação deste filtro, o resultado deve ser dividido por $16$ para escalar a soma a um valor de intensidade. A figura~\ref{fig.weighted-filter} mostra o resultado da utilização do filtro ponderado. Olhando novamente para a segunda linha do fundo, o valor de $90$ só foi reduzido para $70$ porque é dado maior peso ao pixel em relação a seus vizinhos.
 
 \begin{framed}
-\act{Image enhancement: smoothing}{smoothing}
+\act{Melhoria de imagem: suavização}{smoothing}
 \begin{itemize}
-\item Print a sheet of paper with a gray-level pattern like the one shown in Fig.~\ref{fig.one-enhance}. The pattern has two black lines that we wish to detect but also three dark-gray areas (indicated by the arrows) that are likely to be incorrectly detected as lines.
-\item Program the robot so that it moves from left to right over the pattern, sampling the output of the ground sensor. Examine the output and set a threshold so that the robot detects both the black lines and the dark-gray areas. Modify the program so that in its second pass, it indicates (by light or sound) when it has detected a black line and a dark area.
-\item Modify the program so that it replaces every sample by the average of the intensity of the sample and its two neighbors. The robot should now detect the two black lines but not the gray areas.
-\item Experiment with different weights for the average.
-\item Experiment with different sampling rates. What happens if you sample the ground sensor at very short intervals?
+\item Imprimir uma folha de papel com um padrão de nível de cinza como o mostrado na Fig.~ref{fig.one-enhance}. O padrão tem duas linhas pretas que desejamos detectar, mas também três áreas cinza-escuras (indicadas pelas setas) que provavelmente serão detectadas incorretamente como linhas.
+\item Programar o robô de modo que ele se mova da esquerda para a direita sobre o padrão, amostrando a saída do sensor de terra. Examine a saída e defina um limite para que o robô detecte tanto as linhas pretas quanto as áreas de cinza escuro. Modifique o programa para que em sua segunda passagem, indique (por luz ou som) quando tiver detectado uma linha preta e uma área escura.
+\item Modificar o programa para que ele substitua cada amostra pela média da intensidade da amostra e de seus dois vizinhos. O robô deve agora detectar as duas linhas pretas, mas não as áreas cinzentas.
+\item Experimentar com pesos diferentes para a média.
+\item Experimento com diferentes taxas de amostragem. O que acontece se o sensor do solo for amostrado em intervalos muito curtos?
 \end{itemize}
 \end{framed}
 
@@ -353,13 +353,13 @@ It would be appropriate to use this filter if we think that a pixel almost certa
 \draw[fill,color=black] (3,0) rectangle +(1,3);
 \draw[fill,color=black] (6,0) rectangle +(1,3);
 \end{tikzpicture}
-\caption{One-dimensional image enhancement}\label{fig.one-enhance}
+\caption{Melhoria de imagem unidimensional}\label{fig.one-enhance}
 \end{center}
 \end{figure}
 
-\subsection{Histogram manipulation}
+\subsection{Manipulação de histogramas}
 
-Figure~\ref{fig.binary-no-noise} shows the pixels of a binary image: an image where each pixel is either black or white.\footnote{The values $10$ for black and $90$ for white have been used instead of the more usual $0$ and $100$ for clarity in printing the array.} The image shows a $3\times 5$ white rectangle on the black background. Figure~\ref{fig.binary-noise} shows the same image with a lot of random noise added. By looking at the image it is possible to identify the rectangle, but it is very difficult to do and smoothing the image won't help.
+A figura~\ref{fig.binary-noise} mostra os pixels de uma imagem binária: uma imagem onde cada pixel é preto ou branco.\footnote{Os valores $10$ para preto e $90$ para branco foram usados ao invés dos mais usuais $0$ e $100$ para clareza na impressão da matriz.} Timagem mostra um retângulo branco de $3\times 5$ sobre o fundo preto. A figura~\ref{fig.binary-noise} mostra a mesma imagem com muito ruído aleatório adicionado. Olhando para a imagem é possível identificar o retângulo, mas é muito difícil de fazer e suavizar a imagem não ajudará.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -419,44 +419,44 @@ $\scriptstyle 5$ & $10$ & $34$ & $29$ & $14$ & $35$ & $31$ & $26$ & $42$ & $15$ 
 %\end{minipage}
 %\end{figure}
 
-Let us now construct a \emph{histogram} of the intensities (Fig.~\ref{fig.hist}). A histogram is constructed of \emph{bins}, where each bin stores a count of the pixels having a range of intensities. The histogram in the figure contains ten bins for intensities in the ranges $0$--$9$, $10$--$19$, \ldots, $91$--$99$. If we assume that the white rectangle is small relative to the background, it is easy to see from the histogram that there are two groups of pixels, those that are relatively dark and those that are relatively bright. A threshold of $50$ or $60$ should be able to distinguish between the rectangle and the background even in the presence of noise. In fact, a threshold of $50$ restores the original image, while a threshold of $60$ correctly restores $13$ of the $15$ pixels of the rectangle.
+Vamos agora construir um \emph{histograma} das intensidades (Fig.~\ref{fig.hist}). Um histograma é construído de \emph{bins}, onde cada contentor armazena uma contagem dos pixels com uma gama de intensidades. O histograma na figura contém dez caixas para intensidades nas faixas de $0$--$9$, $10$--$19$, \ldots, $91$--$99$. Se assumirmos que o retângulo branco é pequeno em relação ao fundo, é fácil ver pelo histograma que existem dois grupos de pixels, aqueles que são relativamente escuros e aqueles que são relativamente brilhantes. Um limiar de $50$ ou $60$ deve ser capaz de distinguir entre o retângulo e o fundo, mesmo na presença de ruído. De fato, um limiar de $50$ restaura a imagem original, enquanto um limiar de $60$ restaura corretamente $13$ dos $15$ pixels do retângulo.
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}
-\draw (0,2) -- node[left,xshift=-2mm] {\textit{count}} (0,0) -- node[below,yshift=-5mm] {\textit{intensity}} (10,0);
+\draw (0,2) -- node[left,xshift=-2mm] {\textit{contar}} (0,0) -- node[below,yshift=-5mm] {\textit{intensidade}} (10,0);
 \foreach \n/\v/\y/\lab in {0/0/0/0--9, 1/14/1.4/10--19, 2/9/.9/20--29, 3/12/1.2/30--39, 4/10/1/40--49, 5/2/.2/50--59, 6/7/.7/60--69, 7/3/.3/70--79, 8/2/.2/80--89, 9/1/.1/90--99}
   \pic { barhist=\n/\v/\y/\lab };
 \end{tikzpicture}
-\caption{Histogram of the noisy image}\label{fig.hist}
+\caption{Histograma da imagem ruidosa}\label{fig.hist}
 \end{center}
 \end{figure}
 
-The advantage of histogram manipulation is that it is very efficient to compute even on large images. For each pixel, divide the intensity by the number of bins and increment the bin number:
+A vantagem da manipulação de histogramas é que é muito eficiente computar até mesmo em imagens grandes. Para cada pixel, divida a intensidade pelo número de caixas e aumente o número de caixas:
 \begin{quote}
 \p{for each pixel p}\\
 \hspace*{2em}\p{bin\_number} $\leftarrow$ \p{intensity(p) / number\_of\_bins}\\
 \hspace*{2em}\p{bins[bin\_number]} $\leftarrow$ \p{bins[bin\_number] + 1}
 \end{quote}
-Compare this operation with the application of a $3\times 3$ spatial filter which requires $9$ multiplications, $8$ additions and a division at each pixel. Furthermore, little memory is needed. We chose $10$ bins so that Fig.~\ref{fig.hist} could display the entire histogram, but a full $8$-bit grayscale histogram requires only $256$ bins.
+Compare esta operação com a aplicação de um $3\times 3$ filtro espacial que requer multiplicações de $9$, adições de $8$ e uma divisão em cada pixel. Além disso, é necessária pouca memória. Escolhemos caixas de $10$ para que Fig.~ref{fig.hist} pudesse exibir todo o histograma, mas um histograma completo de $8$-bits em escala de cinza requer apenas caixas de $256$.
 
-Choosing a threshold by examining a plot of the histogram is easy, and if you know roughly the fraction of the background covered by objects, the selection of the threshold can be done automatically.
+Escolher um limiar examinando uma trama do histograma é fácil, e se você souber aproximadamente a fração de fundo coberta pelos objetos, a seleção do limiar pode ser feita automaticamente.
 
-Algorithms for histogram manipulation can perform more complex enhancement than the simple binary threshold we described here. In particular, there are algorithms for enhancing images by modifying the brightness and contrast of an image. 
+Algoritmos para manipulação do histograma podem realizar melhorias mais complexas do que o simples limiar binário que descrevemos aqui. Em particular, existem algoritmos para melhorar imagens modificando o brilho e o contraste de uma imagem. 
 
 \begin{framed}
-\act{Image enhancement: histogram manipulation}{hist}
+\act{Melhoria de imagem: manipulação de histograma}{hist}
 \begin{itemize}
-\item Modify the program in Activity~\ref{act.smoothing} so that it computes the histogram of the samples.
-\item How does the histogram change if the number of samples is increased?
-\item Examine the histogram to determine a threshold that will be used to distinguish between the black lines and the background.
-\item Compute the sum of the contents of the bins until the sum is greater than a fraction (perhaps one-third) of the samples. Use the index of the last bin to set the threshold.
+\item Modificar o programa em Activity~\ref{act.smoothing} para que ele calcule o histograma das amostras.
+\item Como o histograma muda se o número de amostras é aumentado?
+\item Examine o histograma para determinar um limiar que será usado para distinguir entre as linhas pretas e o fundo.
+\item Calcule a soma do conteúdo das caixas até que a soma seja maior que uma fração (talvez um terço) das amostras. Use o índice da última lixeira para definir o limite.
 \end{itemize}
 \end{framed}
 
-\section{Edge detection}\label{s.edge-detection}
+\section{Detecção de bordas}\label{s.edge-detection}
 
-Medical image processing systems need sophisticated image enhancement algorithms for modifying brightness and contrast, removing noise, etc. However, once the image is enhanced, interpretation of the image is performed by specialists who know which lines and shadows correspond with which organs in the body, and if the organs are normal or not. An autonomous robot does not have a human to perform interpretation: it needs to identify objects such as doors in a building, boxes in a warehouse and cars on the road. The first step is to extract features or segments such as lines, edges and areas.
+Os sistemas de processamento de imagem médica precisam de algoritmos sofisticados de melhoria de imagem para modificar o brilho e o contraste, remover ruídos, etc. Entretanto, uma vez que a imagem é aprimorada, a interpretação da imagem é feita por especialistas que sabem quais linhas e sombras correspondem a quais órgãos do corpo, e se os órgãos são normais ou não. Um robô autônomo não tem um humano para fazer interpretação: ele precisa identificar objetos como portas em um prédio, caixas em um armazém e carros na estrada. O primeiro passo é extrair características ou segmentos, tais como linhas, bordas e áreas.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -474,7 +474,7 @@ $\scriptstyle 5$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath 
 \hspace{\fill}
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}[scale=1.5,baseline=-18mm]
-\draw (0,1) -- node[left] {$f$} (0,0) -- node[below,yshift=-2mm] {\textit{rangée}} (3,0);
+\draw (0,1) -- node[left] {$f$} (0,0) -- node[below,yshift=-2mm] {\textit{linha}} (3,0);
 \draw[thick] (0,.25) -- (1.5,.25) -- (2,.75) -- (3,.75);
 \node at (-1.5mm,.2) {\scriptsize{30}};
 \node at (-1.5mm,.8) {\scriptsize{50}};
@@ -515,12 +515,12 @@ $\scriptstyle 5$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath 
 %\end{minipage}
 %\end{figure}
 
-Consider the $6\times 6$ array of pixels in Fig.~\ref{fig.edge}. The intensity level of each row is uniform but there is a sharp discontinuity between the intensity level of rows $2$ and $3$. Clearly, this represents an edge between the dark area at the top and the light area at the bottom. Averaging will make the intensity change smoother and we lose the sharp change at the edge.
+Considere o conjunto de pixels de $6\times 6$ em Fig.~\ref{fig.edge}. O nível de intensidade de cada linha é uniforme, mas há uma descontinuidade acentuada entre o nível de intensidade das linhas de $2$ e $3$. Claramente, isto representa uma borda entre a área escura na parte superior e a área clara na parte inferior. O cálculo da média tornará a mudança de intensidade mais suave e perderemos a mudança acentuada na borda.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}[scale=1.4,baseline=-1.5cm]
-\draw (0,1) -- node[left] {$f'$} (0,0) -- node[below,yshift=-1mm] {\textit{rangée}} (3,0);
+\draw (0,1) -- node[left] {$f'$} (0,0) -- node[below,yshift=-1mm] {\textit{linha}} (3,0);
 \draw[thick] (0,1pt) -- (1.5,1pt) -- (1.6,1) -- (1.9,1) -- (2,1pt) -- (3,1pt);
 \foreach \x in {.5,1,1.5,2,2.5,3}
   \draw[thin] (\x,-1mm) -- (\x,0);
@@ -532,12 +532,12 @@ Consider the $6\times 6$ array of pixels in Fig.~\ref{fig.edge}. The intensity l
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}[scale=1.4]
 \draw (0,-1) -- node[left] {$f''$} (0,1);
-\draw (0,0) -- node[below,yshift=-1mm] {\textit{rangée}} (3,0);
+\draw (0,0) -- node[below,yshift=-1mm] {\textit{linha}} (3,0);
 \draw[thick] (0,1pt) -- (1.5,1pt) -- (1.53,1) -- (1.56,1pt) -- (1.94,1pt) -- (1.97,-1) -- (2,1pt) -- (3,1pt);
 \foreach \x in {.5,1,1.5,2,2.5,3}
   \draw[thin] (\x,-1mm) -- (\x,0);
 \end{tikzpicture}
-\caption{Second derivative of edge intensity}\label{fig.edge-second}
+\caption{Segunda derivada da intensidade da borda}\label{fig.edge-second}
 \end{minipage}
 \end{figure}
 
@@ -567,11 +567,11 @@ Consider the $6\times 6$ array of pixels in Fig.~\ref{fig.edge}. The intensity l
 %\end{minipage}
 %\end{figure}
 
-Since averaging is an integrating operator that \emph{removes} abrupt changes in intensities, it is not surprising that the differential operator can be used to \emph{detect} abrupt changes that represent edges. Figure~\ref{fig.edge-intensity} plots the intensity against the row number along a single column of Fig.~\ref{fig.edge}, although the intensities are shown as lines instead of as discrete points. The intensity doesn't change for the first three pixels, then it rapidly increases and continues at the higher level. The first derivative $f'$ of a function $f$ is zero when $f$ is constant, positive when $f$ increases and negative when $f$ decreases. This is shown in Fig.~\ref{fig.edge-first}. An edge can be detected by searching for a rapid increase or decrease of the first derivative of the image intensity.
+Como a média é um operador integrador que suprime mudanças abruptas de intensidade, não é surpreendente que o operador diferencial possa ser usado para \emph{detectar} mudanças abruptas que representam bordas. Figura~\ref{fig.edge-intensity} traça a intensidade contra o número da linha ao longo de uma única coluna da Fig.~\ref{fig.edge}, embora as intensidades sejam mostradas como linhas ao invés de pontos discretos. A intensidade não muda para os três primeiros pixels, depois aumenta rapidamente e continua no nível mais alto. A primeira derivada $f'$ de uma função $f$ é zero quando $f$ é constante, positiva quando $f$ aumenta e negativa quando $f$ diminui. Isto é mostrado na Fig.~\ref{fig.edge-first}. Uma borda pode ser detectada pela busca de um rápido aumento ou diminuição da primeira derivada da intensidade da imagem.
 
-In practice, it is better to use the second derivative. Figure~\ref{fig.edge-second} shows a plot of $f''$, the derivative of $f'$ in Fig.~\ref{fig.edge-first}. The positive spike followed by the negative spike indicates a transition from dark to light; if the transition were from light to dark, the negative spike would precede the positive spike.
+Na prática, é melhor usar a segunda derivada. A figura~\ref{fig.edge-second} mostra um gráfico de $f''$, a derivada de $f'$ na fig.~\ref{fig.edge-first}. O pico positivo seguido do pico negativo indica uma transição do escuro para o claro; se a transição fosse do claro para o escuro, o pico negativo precederia o pico positivo.
 
-There are many digital derivative operators. A simple but effective one is the \emph{Sobel filter}. There are two filters, one for detecting horizontal edges (on the left) and other for detecting vertical edges (on the right):
+Existem muitos operadores de derivados digitais. Um simples mas eficaz é o \emph{Sobel filter}. Há dois filtros, um para detectar bordas horizontais (à esquerda) e outro para detectar bordas verticais (à direita):
 \[
 \begin{array}{c@{\hspace{4em}}c}
 \left[
@@ -591,9 +591,9 @@ There are many digital derivative operators. A simple but effective one is the \
 \right]\,.
 \end{array}
 \]
-A characteristic of a derivative filter is that the sum of its elements must equal zero. The reason is that if the operator is applied to a pixel whose intensity is the same as that of all its neighbors, the result must be zero. Look again at Figs.~\ref{fig.edge-intensity} and~\ref{fig.edge-first} where the derivative is zero when the intensity is constant.
+Uma característica de um filtro derivado é que a soma de seus elementos deve ser igual a zero. A razão é que se o operador é aplicado a um pixel cuja intensidade é a mesma de todos os seus vizinhos, o resultado deve ser igual a zero. Veja novamente as Figs.~\ref{fig.edge-intensity} e \ref{fig.edge-first} onde a derivada é zero quando a intensidade é constante.
 
-When the Sobel filters are applied to the pixel array in Fig.~\ref{fig.edge}, the result clearly detects that there is a horizontal edge (Fig.~\ref{fig.sobel-horizontal}) but no vertical edge (Fig.~\ref{fig.sobel-vertical}).
+Quando os filtros Sobel são aplicados à matriz de pixels na Fig.~\ref{fig.edge}, o resultado detecta claramente que existe uma borda horizontal (Fig.~\ref{fig.sobel-horizontal}), mas nenhuma borda vertical (Fig.~\ref{fig.sobel-vertical}).
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -655,7 +655,7 @@ $\scriptstyle 5$ &    $0$ &   $0$ &   $0$ &   $0$ &   $0$ &   $0$ \\
 %\end{minipage}
 %\end{figure}
 
-Sobel filters are very powerful because they can not only detect an edge but also compute the angle of the edge within the image. Figure~\ref{fig.diagonal-edge} shows an image with an edge running diagonally from the upper left to the lower right. The results of applying the two Sobel filters are shown in Figs.~\ref{fig.sobel-diagonal-horizontal}--\ref{fig.sobel-diagonal-vertical}. From the magnitudes and signs of the elements of these arrays, the angle of the edge can be computed as described in \cite[Sect.~4.3.1]{siegwart}.
+Os filtros Sobel são muito potentes porque podem não apenas detectar uma borda, mas também calcular o ângulo da borda dentro da imagem. A figura~\ref{fig.diagonal-edge} mostra uma imagem com uma borda correndo diagonalmente da parte superior esquerda para a parte inferior direita. Os resultados da aplicação dos dois filtros Sobel são mostrados nas Figs.~\ref{fig.sobel-diagonal-horizontal}--\ref{fig.sobel-diagonal-vertical}. A partir das magnitudes e sinais dos elementos destas matrizes, o ângulo da borda pode ser computado como descrito em \cite[Sect.~4.3.1]{siegwart}.
 
 \begin{figure}
 \begin{tabular}{r@{\hspace{4pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r}
@@ -730,13 +730,13 @@ $\scriptstyle 5$ &    $0$ &   $0$ &   $0$ &   $0$ &   $0$ &   $0$ \\
 %\end{figure}
 
 \begin{framed}
-\act{Detecting an edge}{edge-detection}
+\act{Detectando uma borda}{edge-detection}
 \begin{itemize}
-\item Print out a pattern with a sharp edge (Fig.~\ref{fig.edge-activity}).
-\item Adapt the program from Activity~\ref{act.smoothing} to cause the robot to sample and store the ground sensor as the robot moves over the pattern from left to right. Apply a derivative filter to the samples.
-\item During a second pass over the pattern, the robot indicates when the value of the derivative is not close to zero.
-\item What happens if the robot moves over the pattern from right to left?
-\item When applying the filter, the results must be stored in a separate array, not in the array used to store the pixels. Why?
+\item Imprimir um padrão com uma borda afiada (Fig.~\ref{fig.edge-activity}).
+\item Adaptar o programa da Atividade~\ref{act.smoothing} para fazer com que o robô faça a amostragem e armazene o sensor de terra enquanto o robô se move sobre o padrão da esquerda para a direita. Aplique um filtro derivado nas amostras.
+\item Durante uma segunda passagem sobre o padrão, o robô indica quando o valor da derivada não está próximo a zero.
+\item O que acontece se o robô se mover sobre o padrão da direita para a esquerda?
+\item Ao aplicar o filtro, os resultados devem ser armazenados em uma matriz separada, não na matriz usada para armazenar os pixels. Por quê?
 \end{itemize}
 \end{framed}
 
@@ -751,9 +751,9 @@ $\scriptstyle 5$ &    $0$ &   $0$ &   $0$ &   $0$ &   $0$ &   $0$ \\
 \caption{Edge detection activity}\label{fig.edge-activity}
 \end{figure}
 
-\section{Corner detection}\label{s.corners}
+\section{Detecção de cantos}\label{s.corners}
 
-The black rectangle within the gray background in Fig.~\ref{fig.corner-image} is more than just a set of edges. The vertical edges form two corners with the horizontal edge. Here we describe two algorithms for identifying corners in an image. For simplicity, we assume that the corners are aligned with the rectangular image.
+O retângulo preto dentro do fundo cinza na Fig.~\ref{fig.corner-image} é mais do que um conjunto de bordas. As bordas verticais formam dois cantos com a borda horizontal. Aqui descrevemos dois algoritmos para identificar os cantos em uma imagem. Para simplificar, assumimos que os cantos estão alinhados com a imagem retangular.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -774,7 +774,6 @@ $\scriptstyle 3$ & $30$ & $30$ & $30$ & \boldmath $50$ & \boldmath $50$ & \boldm
 $\scriptstyle 4$ & $30$ & $30$ & $30$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & $30$ & $30$\\
 $\scriptstyle 5$ & $30$ & $30$ & $30$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & \boldmath $50$ & $30$ & $30$\\
 \end{tabular}
-
 \caption{Pixel array de um canto}\label{fig.corner-pixels}
 \end{minipage}
 \end{figure}
@@ -805,9 +804,9 @@ $\scriptstyle 5$ & $30$ & $30$ & $30$ & \boldmath $50$ & \boldmath $50$ & \boldm
 %\end{minipage}
 %\end{figure}
 
-We know how to detect edges in an image. A corner is defined by the intersection of a vertical edge and a horizontal edge. Figure~\ref{fig.corner-pixels} is the $6\times 10$ pixel array for the image in Fig.~\ref{fig.corner-image}. If we apply the Sobel edge detectors to this pixel array, we obtain two vertical edges (Fig.~\ref{fig.corner-vertical}) and one horizontal edge (Fig.~\ref{fig.corner-horizontal}).
+Nós sabemos como detectar bordas em uma imagem. Um canto é definido pela intersecção de uma borda vertical e uma borda horizontal. Figura~\ref{fig.corner-pixels} é a $6\times 10$ matriz de pixels para a imagem em Fig.~\ref{fig.corner-image}. Se aplicarmos os detectores de bordas Sobel a esta matriz de pixels, obtemos duas bordas verticais (Fig.~\ref{fig.corner-vertical}) e uma horizontal (Fig.~\ref{fig.corner-horizontal}).
 
-The intersection is defined for pixels for which the sum of the absolute values in the two Sobel edge arrays is above a threshold. With a threshold of $30$, the edges intersect in the pixels $(2,3)$ and $(2,7)$ which are the corners.
+A interseção é definida para os pixels para os quais a soma dos valores absolutos nas duas matrizes de bordas Sobel está acima de um limite. Com um limiar de $30$, as bordas se cruzam nos pixels $(2,3)$ e $(2,7)$ que são as esquinas.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -868,7 +867,7 @@ $\scriptstyle 5$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$\\
 %\end{minipage}
 %\end{figure}
 
-A uniform area, an edge and a corner can be distinguished by analyzing the neighbors of a pixel. In a uniform area, all the neighbors of the pixel have approximately the same intensity. At an edge, the intensities of the neighbors of the pixel are very different in one direction but similar in the other direction. At a corner, the intensities of the neighbors of the pixel show little similarity. To detect a corner, count the number of similar neighbors for each pixel, find the minimum value and identify as corners those pixels with that minimum value. Figure~\ref{fig.similar-neighbors} shows the counts for the pixels in Fig.~\ref{fig.corner-pixels}. As expected, the corner pixels $(2,3)$ and $(2,7)$ have the minimum number of similar neighbors.
+Uma área uniforme, uma borda e um canto podem ser distinguidos pela análise dos vizinhos de um pixel. Em uma área uniforme, todos os vizinhos do píxel têm aproximadamente a mesma intensidade. Em uma borda, as intensidades dos vizinhos do pixel são muito diferentes em uma direção, mas semelhantes na outra direção. Em um canto, as intensidades dos vizinhos do píxel mostram pouca semelhança. Para detectar um canto, conte o número de vizinhos semelhantes para cada pixel, encontre o valor mínimo e identifique como cantos aqueles pixels com esse valor mínimo. A Figura~\ref{fig.similar-neighbors} mostra a contagem dos pixels na Fig.~\ref{fig.corner-pixels}. Como esperado, os pixels de canto $(2,3)$ e $(2,7)$ têm o número mínimo de vizinhos similares.
 
 \begin{figure}
 \begin{tabular}{r@{\hspace{4pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r@{\hspace{6pt}}r}
@@ -880,20 +879,20 @@ $\scriptstyle 3$ & $0$ & $8$ & $5$ & $5$ & $8$ & $8$ & $8$ & $5$ & $5$ & $0$\\
 $\scriptstyle 4$ & $0$ & $8$ & $5$ & $5$ & $8$ & $8$ & $8$ & $5$ & $5$ & $0$\\
 $\scriptstyle 5$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$\\
 \end{tabular}
-\caption{Similar neighbors}\label{fig.similar-neighbors}
+\caption{Vizinhos semelhantes}\label{fig.similar-neighbors}
 \end{figure}
 
 \begin{framed}
-\act{Detecting a corner}{detect-corner}
+\act{Detectando um canto}{detect-corner}
 \begin{itemize}
-\item Implement corner detection by intersecting edges using a robot with two ground proximity sensors. The robot moves from the bottom of the image in Fig.~\ref{fig.corner-image} to the top. If placed over the black rectangle it does not detect a corner, while if it is placed so that one sensor is over the black rectangle and the other over the gray background it does detect the corner.
-\item Implement corner detection by similar neighbors. Repeatedly, check the current samples from the left and right sensors and the previous samples from the left and right sensors. If only one of the four samples is black, a corner is detected.
+\item Implementar a detecção de cantos cruzando as bordas usando um robô com dois sensores de proximidade do solo. O robô se move da parte inferior da imagem na Fig.~\ref{fig.corner-image} para a parte superior. Se colocado sobre o retângulo preto, ele não detecta um canto, enquanto que se for colocado de modo que um sensor esteja sobre o retângulo preto e o outro sobre o fundo cinza, ele detecta o canto.
+\item Implementar detecção de canto por vizinhos similares. Repetidamente, verifique as amostras atuais dos sensores esquerdo e direito e as amostras anteriores dos sensores esquerdo e direito. Se apenas uma das quatro amostras for preta, um canto é detectado.
 \end{itemize}
 \end{framed}
 
-\section{Recognizing blobs}\label{s.blob}
+\section{Reconhecendo bolhas}\label{s.blob}
 
-Figure~\ref{fig.blob} shows a \emph{blob}: a roughly circular area of $12$ pixels with high intensity on a background of low intensity. The blob does not have a well-defined boundary like a rectangle. The next to the last row also shows two artifacts of high intensity that are not part of the blob, although they may represent distinct blobs. Figure~\ref{fig.blob-with-noise} shows the pixels after adding random noise. The task is to identify the blob in the presence of noise, without depending on a predefined intensity threshold and ignoring the artifacts. The independence of the identification from the overall intensity is important so that the robot can fulfill its task regardless of the lighting conditions in the environment.
+A figura~\ref{fig.blob} mostra uma área \emph{blob}: uma área aproximadamente circular de $12$ pixels com alta intensidade sobre um fundo de baixa intensidade. O blob não tem um limite bem definido como um retângulo. O próximo à última linha também mostra dois artefatos de alta intensidade que não fazem parte da bolha, embora possam representar bolhas distintas. A figura~\ref{fig.blob-with-noise} mostra os pixels após a adição de ruído aleatório. A tarefa é identificar o blob na presença de ruído, sem depender de um limite de intensidade pré-definido e ignorando os artefatos. A independência da identificação da intensidade total é importante para que o robô possa cumprir sua tarefa independentemente das condições de iluminação no ambiente.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -954,11 +953,11 @@ $\scriptstyle 5$ & $39$ & $37$ & $38$ & $34$ & $33$ & $40$ & $35$ & $37$ & $34$ 
 %\end{minipage}
 %\end{figure}
 
-To ignore noise without predefining a threshold, we use a threshold which is defined in terms of the average intensity of the image. To separate the blobs from one another, we first find a pixel whose intensity is above the threshold and then \emph{grow} the blob by adding neighboring pixels whose intensity is above the threshold. For the noisy image in Fig.~\ref{fig.blob-with-noise}, the average intensity is $54$. Since the blob presumably occupies a relatively small part of the background, it might be a good idea to take a threshold somewhat higher than the average, say $60$.
+Para ignorar o ruído sem predefinir um limiar, usamos um limiar que é definido em termos da intensidade média da imagem. Para separar os blobs uns dos outros, primeiro encontramos um pixel cuja intensidade está acima do limiar e, em seguida, \emph{crescimento} do blob, adicionando pixels vizinhos cuja intensidade está acima do limiar. Para a imagem ruidosa em Fig.~\ref{fig.blob-with-noise}, a intensidade média é de $54$. Como o blob supostamente ocupa uma parte relativamente pequena do fundo, pode ser uma boa idéia tomar um limite um pouco mais alto do que a média, digamos $60$.
 
-Figure~\ref{fig.blob-after-threshold} shows the image after assigning $0$ to all pixels below the threshold. The blob has been detected but so have the two artifacts. Algorithm~\ref{alg.blob} is an algorithm for isolating a single blob. First, search for some pixel that is non-zero; starting from the top left, this will be pixel $p_1=(1,4)$ with intensity $67$. Now grow the blob that adding all neighbors of $p_1$ whose intensities are non-zero; these are $p_2=(1,5), p_3=(2,3), p_4=(2,4), p_5=(2,5)$. Continue adding non-zero neighbors of each $p_i$ to the blob until no more pixels are added. The result will be the $12$-pixel blob without the artifacts at $(4,0), (4,9)$.
+A figura~\ref{fig.blob-after-threshold} mostra a imagem após atribuir $0$ a todos os pixels abaixo do limiar. O blob foi detectado, mas os dois artefatos também foram detectados. Algoritmo~\ref{alg.blob} é um algoritmo para isolar um único blob. Primeiro, procure por algum pixel que não seja zero; a partir do topo esquerdo, este será pixel $p_1=(1,4)$ com intensidade $67$. Agora, faça crescer o blob que adiciona todos os vizinhos de $p_1$ cujas intensidades são não-zero; estes são $p_2=(1,5), p_3=(2,3), p_4=(2,4), p_5=(2,5)$. Continue adicionando vizinhos não-zero de cada $p_i$ ao blob até que não sejam adicionados mais pixels. O resultado será o blob de $12$-pixel sem os artefatos a $(4,0), (4,9)$.
 
-The algorithm works because the first non-zero pixel found belonged to the blob. If there were an isolated non-zero pixel at $(1,1)$, this artifact would have been detected as a blob. If there is an estimate for the minimum size of a blob, the algorithm should be followed by a check that the blob is at least this size.
+O algoritmo funciona porque o primeiro pixel não-zero encontrado pertenceu ao blob. Se houvesse um píxel não zero isolado a $(1,1)$, este artefato teria sido detectado como bolha. Se houver uma estimativa para o tamanho mínimo de uma bolha, o algoritmo deve ser seguido por uma verificação de que a bolha tem pelo menos este tamanho.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -1013,7 +1012,7 @@ $\scriptstyle 5$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ 
 %\end{figure}
 
 \begin{figure}
-\begin{alg}{Detecting a blob}{blob}           
+\begin{alg}{Detectando uma bolha}{blob}           
 &\idv{}integer threshold&\\
 &\idv{}pixel p&\\
 &\idv{}set not-explored \ass empty-set&\\
@@ -1030,22 +1029,22 @@ $\scriptstyle 5$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ & $ 0$ 
 \end{alg}
 \end{figure}
 
-Check that Algorithm~\ref{alg.blob} is not sensitive to the intensity level by subtracting the constant value $20$ from all elements of the noisy image (Fig.~\ref{fig.blob-with-noise}) and rerunning the algorithm. It should still identify the same pixels as belonging to the blob.
+Verifique se o Algoritmo~\ref{alg.blob} não é sensível ao nível de intensidade subtraindo o valor constante $20$ de todos os elementos da imagem ruidosa (Fig.~\ref{fig.blob-with-noise}) e executando novamente o algoritmo. Ele ainda deve identificar os mesmos pixels que pertencem ao blob.
 
 \begin{framed}
-\act{Detecting a blob}{blob}
+\act{Detectando uma bolha}{blob}
 \begin{itemize}
-\item Write a program that causes the robot to sample the ground sensor as it moves from left to right over the pattern in Fig.~\ref{fig.blob-for-activity}.
-\item Compute the average intensity and set the threshold to the average.
-\item On a second pass over the pattern, after detecting the first sample from the black rectangle that is below the threshold, the robot provides an indication (by light or sound) as long as it moves over the rectangle.
-\item The robot should consider the second black rectangle as an artifact and ignore it.
+\item Escreva um programa que faz com que o robô experimente o sensor do solo enquanto ele se move da esquerda para a direita sobre o padrão na Fig.~ref{fig.blob-for-activity}.
+\item Calcule a intensidade média e defina o limite para a média.
+\item Em uma segunda passagem sobre o padrão, após detectar a primeira amostra do retângulo preto que está abaixo do limite, o robô fornece uma indicação (por luz ou som) desde que ele se mova sobre o retângulo.
+\item O robô deve considerar o segundo retângulo preto como um artefato e ignorá-lo.
 \end{itemize}
 \end{framed}
 
 \begin{framed}
-\act{Recognizing a door}{recognize}
+\act{Reconhecendo uma porta}{recognize}
 \begin{itemize}
-\item In Fig.~\ref{fig.door}, the gray rectangle represents an open door in a dark wall represented by the black rectangles. Figure~\ref{fig.not-a-door} represents a dark wall between two gray open doors. If you run the program from Activity~\ref{act.edge-detection}, you will see that two edges are detected for both patterns. Modify the program so that the robot can distinguish between the two patterns.
+\item Na Fig.~ref{fig.door}, o retângulo cinza representa uma porta aberta em uma parede escura representada pelos retângulos pretos. Fig.~\ref{fig.not-a-door} representa uma parede escura entre duas portas cinzas abertas. Se você executar o programa a partir de Activity~\ref{act.edge-detection}, você verá que duas bordas são detectadas para ambos os padrões. Modifique o programa de modo que o robô possa distinguir entre os dois padrões.
 \end{itemize}
 \end{framed}
 
@@ -1093,14 +1092,14 @@ Check that Algorithm~\ref{alg.blob} is not sensitive to the intensity level by s
 %\end{minipage}
 %\end{figure}
 
-\section{Summary}
+\section{Sumário}
 
-In human beings and most animals vision is the most important sensor and a large portion of the brain is devoted to interpreting visual signals. Robots can use vision to perform advanced tasks within an environment that is constantly changing. The technology of digital cameras is highly advanced and the cameras can transfer high-resolution pixel arrays to the robot's computer. Algorithms for digital image processing enhance and interpret these images.
+Em seres humanos e na maioria dos animais, a visão é o sensor mais importante e uma grande parte do cérebro é dedicada à interpretação de sinais visuais. Os robôs podem usar a visão para realizar tarefas avançadas dentro de um ambiente que está em constante mudança. A tecnologia das câmeras digitais é altamente avançada e as câmeras podem transferir matrizes de pixels de alta resolução para o computador do robô. Algoritmos para o processamento de imagens digitais melhoram e interpretam essas imagens.
 
-Enhancement algorithms remove noise, improve contrast and perform other operations that do not depend on what objects appear in an image. They use spatial filters that modify the intensity of each pixel based on the intensities of its neighbors. Histogram modification uses the global distribution of intensities in an image to modify individual pixels.
+Algoritmos de aprimoramento removem ruídos, melhoram o contraste e realizam outras operações que não dependem de quais objetos aparecem em uma imagem. Eles usam filtros espaciais que modificam a intensidade de cada pixel com base nas intensidades de seus vizinhos. A modificação do histograma utiliza a distribuição global das intensidades em uma imagem para modificar pixels individuais.
 
-Following image enhancement, algorithms identify the objects in the image. They start by detecting simple geometric properties like edges and corners, and then proceed to identify the objects that appear in the image.
+Após a melhoria da imagem, os algoritmos identificam os objetos na imagem. Eles começam detectando propriedades geométricas simples como bordas e cantos, e então procedem à identificação dos objetos que aparecem na imagem.
 
-\section{Further reading}
+\section{Leitura adicional}
 
-Gonzalez and Woods \cite{GW} is a comprehensive textbook on digital image processing that includes the mathematical fundamentals of the topic. Russ \cite{russ} is a reference work on image processing. Szeliski \cite{szeliski} is a book on computer vision which goes beyond image processing and focuses on constructing 3D models of images. For applications of image processing in robotics, see \cite[Chapter~4]{siegwart}.
+Gonzalez e Woods \cite{GW} é um livro de texto abrangente sobre processamento digital de imagens que inclui os fundamentos matemáticos do tópico. Russ \cite{russ} é um trabalho de referência sobre o processamento de imagens. Szeliski \cite{szeliski} é um livro sobre visão computadorizada que vai além do processamento de imagens e se concentra na construção de modelos 3D de imagens. Para aplicações de processamento de imagem em robótica, veja \cite[Chapter~4]{siegwart}.

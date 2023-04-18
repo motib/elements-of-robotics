@@ -205,7 +205,7 @@ Agora é fácil encontrar um caminho mais curto trabalhando para trás a partir 
 \]
 Invertendo a lista, obtém-se o caminho mais curto de \p{S} para \p{G}. Verifique se este é o mesmo caminho que encontramos intuitivamente (Fig.~\ref{fig.dijkstra-path}).
 
-\medskip
+\smallskip
 
 \noindent\textbf{Exemplo} A figura~\ref{fig.dijkstra} mostra como o algoritmo de Dijkstra funciona em um exemplo mais complicado. O mapa da grade tem células de $16\times 16$ e a célula de objetivo \p{G} está fechada dentro de um obstáculo e é difícil de alcançar. O diagrama superior esquerdo mostra o mapa da grade após três iterações e o diagrama superior direito mostra o mapa após as iterações de $19$. O algoritmo agora prossegue explorando as células ao redor dos dois lados do obstáculo. Finalmente, no diagrama inferior esquerdo, \p{G} é encontrado após as iterações de $25$, e o caminho mais curto é indicado em cinza no diagrama inferior direito. Vemos que o algoritmo não é muito eficiente para este mapa: embora o caminho mais curto seja de apenas $25$ passos, o algoritmo explorou células de $256-25=231$!
 

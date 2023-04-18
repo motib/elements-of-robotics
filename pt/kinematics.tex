@@ -1,27 +1,27 @@
 % !TeX root = er.tex
 
-\chapter{Kinematics of a Robotic Manipulator}\label{ch.kinematics}
+\chapter{Cinemática de um Manipulador Robótico}\label{ch.kinematics}
 
-Our presentation has focused on mobile robots. Most educational robots are mobile robots and you may have encountered commercial mobile robots such as robotic vacuum cleaners. You probably have not encountered \emph{robotic manipulators}, but you have seen pictures of factories that assemble electronic circuits or weld frames of cars (Fig.~\ref{fig.assemblyline}). The most important difference between mobile and fixed robots is the environment in which they work. A mobile robot moves within an environment that has obstacles and uneven ground, so the environment is not fully known in advance. A robotic vacuum cleaner does not ask you to give it a map of your apartment with the location of each piece of furniture, nor do you have to reprogram it whenever you move a sofa. Instead, the robot autonomously senses the layout of the apartment: the rooms and the position of the furniture. While maps and odometry are helpful in moving a robot to an approximate position, sensors must be used to precisely locate the robot within its environment.
+Nossa apresentação concentrou-se em robôs móveis. A maioria dos robôs educacionais são robôs móveis e você pode ter encontrado robôs móveis comerciais, tais como aspiradores de pó robóticos. Provavelmente você não encontrou \emph{multiplicadores robóticos}, mas você viu fotos de fábricas que montam circuitos eletrônicos ou molduras de solda de carros (Fig.~\ref{fig.assemblyline}). A diferença mais importante entre robôs móveis e fixos é o ambiente em que eles trabalham. Um robô móvel move-se dentro de um ambiente que possui obstáculos e terreno irregular, de modo que o ambiente não é totalmente conhecido com antecedência. Um aspirador robótico não pede que você lhe dê um mapa de seu apartamento com a localização de cada móvel, nem que você tenha que reprogramá-lo sempre que você mover um sofá. Em vez disso, o robô sente de forma autônoma a disposição do apartamento: os quartos e a posição dos móveis. Embora mapas e odometria sejam úteis para mover um robô para uma posição aproximada, devem ser usados sensores para localizar com precisão o robô dentro de seu ambiente.
 
-A robotic manipulator in a factory is fixed to a stable concrete floor and its construction is robust: repeatedly issuing the same commands will move the manipulator to precisely the same position. In this chapter we present algorithms for the \emph{kinematics} of manipulators: how the commands to a manipulator and the robot's motion are related. The presentation will be in terms of an arm with two links in a plane whose joints can rotate.
+Um manipulador robótico em uma fábrica é fixado a um piso de concreto estável e sua construção é robusta: emitindo repetidamente os mesmos comandos, o manipulador será movido precisamente para a mesma posição. Neste capítulo apresentamos algoritmos para a \emph{kinematics} dos manipuladores: como os comandos para um manipulador e o movimento do robô estão relacionados. A apresentação será em termos de um braço com dois elos em um plano cujas articulações podem girar.
 
-There are two complementary tasks in kinematics:
+Há duas tarefas complementares na cinemática:
 \begin{itemize}
-\item \textit{Forward kinematics} (Sect.~\ref{s.forward-kinematics}): Given a sequence of commands, what is the final position of the robotic arm?
-\item \textit{Inverse kinematics}  (Sect.~\ref{s.inverse-kinematics}): Given a desired position of the robotic arm, what sequence of commands will bring it to that position?
+\item \textit{Cinemática frontal} (Sect.~\ref{s.forward-kinematics}): Dada uma seqüência de comandos, qual é a posição final do braço robótico?
+\item \textit{Cinemática inversa} (Sect.~\ref{s.inverse-kinematics}): Dada uma posição desejada do braço robótico, que seqüência de comandos o trará para essa posição?
 \end{itemize}
 
-Forward kinematics is relatively easy to compute because the calculation of the change in position that results from moving each joint involves simple trigonometry. If there is more than one link, the final position is calculated by performing the calculations for one joint after another. Inverse kinematics is very difficult, because you start with one desired position and have to look for a sequence of commands to reach that position. A problem in inverse kinematics may have one solution, multiple solutions or even no solution at all.
+A cinemática dianteira é relativamente fácil de calcular porque o cálculo da mudança de posição que resulta da movimentação de cada junta envolve trigonometria simples. Se houver mais de um elo, a posição final é calculada realizando os cálculos para uma junta após a outra. A cinemática inversa é muito difícil, porque você começa com uma posição desejada e tem que procurar uma seqüência de comandos para chegar a essa posição. Um problema na cinemática inversa pode ter uma solução, múltiplas soluções ou mesmo nenhuma solução.
 
-Kinematic computations are performed in terms of coordinate frames. A frame is attached to each joint of the manipulator and motion is described as transformations from one frame to another by rotations and translations. Transformation of coordinate frames in two-dimensions is presented in Sects.~\ref{s.rotations}--\ref{s.rotate-translate}. Most robots manipulators are three-dimensional. The mathematical treatment of 3D motion is beyond the scope of this book, but we hope to entice you to study this subject by presenting a taste of 3D rotations in Sects.~\ref{s.three}--\ref{s.advanced-three}.
+Os cálculos cinemáticos são feitos em termos de quadros de coordenadas. Um quadro é anexado a cada junta do manipulador e o movimento é descrito como transformações de um quadro para outro por rotações e traduções. A transformação de quadros de coordenadas em duas dimensões é apresentada em Seções.~\ref{s.rotations}--\ref{s.rotate-translate}. A maioria dos manipuladores de robôs são tridimensionais. O tratamento matemático do movimento 3D está além do escopo deste livro, mas esperamos seduzi-lo a estudar este assunto apresentando um gosto pelas rotações 3D em Seitas.~\ref{s.three}--\ref{s.advanced-three}.
 
 
-\section{Forward kinematics}\label{s.forward-kinematics}
+\section{Cinemática frontal}\label{s.forward-kinematics}
 
-We develop the kinematics of a two-dimensional robotic arm with two links, two joints and an \emph{end effector} such as a gripper, a welder or a paint sprayer (Fig.~\ref{fig.forward-kinematics}). The first joint can rotate but it is mounted on a base that is fixed to a table or the floor. Link $l_1$ connects this joint to a second joint that can move and rotate; a second link $l_2$ connects this joint to the fixed end effector.
+Desenvolvemos a cinemática de um braço robótico bidimensional com dois elos, duas articulações e um \emph{efeitor final} como uma pinça, um soldador ou um pulverizador de tinta (Fig.~\ref{fig.forward-kinematics}). A primeira junta pode girar, mas é montada sobre uma base que é fixada a uma mesa ou ao chão. O link $l_1$ conecta esta junta a uma segunda junta que pode se mover e girar; um segundo link $l_2$ conecta esta junta ao efetor final fixo.
 
-A two-dimensional coordinate system is assigned with the first joint at $(0,0)$. The lengths of the two links are $l_1$ and $l_2$. Rotate the first joint by $\alpha$ to move the end of the first link with the second joint to $(x',y')$. Now rotate the second joint by $\beta$. What are the coordinates $(x,y)$ of the end of the arm, in terms of the two constants $l_1,l_2$ and the two parameters $\alpha,\beta$?
+Um sistema de coordenadas bidimensionais é atribuído com a primeira junta a $(0,0)$. O comprimento dos dois elos é de $l_1$ e $l_2$. Gire a primeira junta em $\alpha$ para mover a extremidade do primeiro link com a segunda junta para $(x',y')$. Agora girar a segunda junta por $\beta$. Quais são as coordenadas $(x,y)$ da extremidade do braço, em termos das duas constantes $l_1,l_2$ e os dois parâmetros $\alpha,\beta$?
 
 \begin{figure}
 \begin{center}
@@ -48,34 +48,34 @@ A two-dimensional coordinate system is assigned with the first joint at $(0,0)$.
 \path (prime -| point) -- node[right] {$y''$} (point);
 \end{tikzpicture}
 \end{center}
-\caption{Forward kinematics of a two-link arm}\label{fig.forward-kinematics}
+\caption{Cinemática frontal de um braço de dois elos}\label{fig.forward-kinematics}
 \end{figure}
 
-Project $(x',y')$ on the $x$- and $y$-axes; by trigonometry its coordinates are:
+Projeto $(x',y')$ sobre os eixos $x$- e $y$-eixos; por trigonometria suas coordenadas são:
 \begin{eqnarray*}
 x' &=& l_1 \cos \alpha\\
 y' &=& l_1 \sin \alpha\,.
 \end{eqnarray*}
-Now take $(x',y')$ as the origin of a new coordinate system and project $(x,y)$ on its axes to obtain $(x'',y'')$. The position of the end effector \emph{relative to} the new coordinate system is:
+Agora tome $(x'',y'')$ como origem de um novo sistema de coordenadas e projete $(x,y)$ em seus eixos para obter $(x'',y'')$. A posição do efeito final ou \emph{relativa} ao novo sistema de coordenadas é:
 \begin{eqnarray*}
 x'' &=& l_2 \cos (\alpha+\beta)\\
 y'' &=& l_2 \sin (\alpha+\beta)\,.
 \end{eqnarray*}
-In Fig.~\ref{fig.forward-kinematics}, $\beta$ is negative (a clockwise rotation) so $\alpha+\beta$ is the angle between the second link and the line parallel to the $x$-axis.
+Na Fig.~\ref{fig.forward-kinematics}, $\beta$ é negativo (uma rotação no sentido horário) então $\alpha+\beta$ é o ângulo entre o segundo elo e a linha paralela ao eixo $x$.
 
-Combining the results gives:
+Combinando os resultados dá:
 \begin{eqnarray*}
 x &=& l_1 \cos \alpha + l_2 \cos(\alpha + \beta)\\
 y &=& l_1 \sin \alpha + l_2 \sin(\alpha + \beta)\,.
 \end{eqnarray*}
 
-\noindent\textbf{Example} Let $l_1 = l_2 = 1$, $\alpha = 60^{\circ}$, $\beta = -30^{\circ}$. Then:
+\noindent\textbf{Exampule} Let $l_1 = l_2 = 1$, $\alpha = 60^{\circ}$, $\beta = -30^{\circ}$. Depois:
 \begin{eqnarray*}
 x &=& 1\cdot\cos 60 + 1\cdot\cos(60-30) = \frac{1}{2} + \frac{\sqrt{3}}{2} = \frac{1+\sqrt{3}}{2}\\
 y &=& 1\cdot\sin 60 + 1\cdot\sin(60-30) = \frac{\sqrt{3}}{2} + \frac{1}{2} = \frac{1+\sqrt{3}}{2}\,.
 \end{eqnarray*}
 
-Let us check if this result makes sense. Figure~\ref{fig.kinematics-triangle} shows a triangle formed by adding a line between $(0,0)$ and $(x,y)$. The complement of the angle $\beta$ is $180-30=150$ and the triangle is isoceles since both sides are $1$, so the other angles of the triangle are equal and their values are $(180-150)/2=15$. The angle that the new line forms with the $x$-axis is $60-15=45$, which is consistent with $x=y$.
+Vamos verificar se este resultado faz sentido. A figura~\ref{fig.kinematics-triangle} mostra um triângulo formado pela adição de uma linha entre $(0,0)$ e $(x,y)$. O complemento do ângulo $\beta$ é $180-30=150$ e o triângulo é isoceles já que ambos os lados são $1$, portanto os outros ângulos do triângulo são iguais e seus valores são $(180-150)/2=15$. O ângulo que a nova linha forma com o eixo $x$ é $60-15=45$, o que é consistente com $x=y$.
 
 \begin{figure}
 \begin{center}
@@ -96,20 +96,20 @@ Let us check if this result makes sense. Figure~\ref{fig.kinematics-triangle} sh
 \node[above right,xshift=5mm,yshift=1mm] at (origin) {$\alpha-15^{\circ}=60^{\circ}-15^{\circ}=45^{\circ}$};
 \end{tikzpicture}
 \end{center}
-\caption{Computing the angles}\label{fig.kinematics-triangle}
+\caption{Cálculo dos ângulos}\label{fig.kinematics-triangle}
 \end{figure}
 
 \begin{framed}
-\act{Forward kinematics}{forward-kinematics}
+\act{Cinemática frontal}{forward-kinematics}
 \begin{itemize}
-\item Program your robot so that it traces the path of the arm in Fig.~\ref{fig.forward-kinematics}: turn left $60^{\circ}$, move forward one unit ($1$m or some other convenient distance), turn right $30^{\circ}$, move forward one unit.
-\item Measure the $x$- and $y$-distances of the robot from the origin and compare them to the values computed by the equations for forward kinematics.
+\item Programe seu robô para que ele trace o caminho do braço na Fig.~ref{fig.forward-kinematics}: vire à esquerda $60^{\circ}$, avance uma unidade ($1$m ou alguma outra distância conveniente), vire à direita $30^{\circ}$, avance uma unidade.
+\item Medir os $x$- e $y$-distâncias do robô desde a origem e compará-las com os valores computados pelas equações da cinemática de avanço.
 \end{itemize}
 \end{framed}
 
-\section{Inverse kinematics}\label{s.inverse-kinematics}
+\section{Cinemática inversa}\label{s.inverse-kinematics}
 
-The gray ring in Fig.~\ref{fig.workspace} shows the \emph{workspace} of the two-link arm, the set of positions that the end effector can reach. (We assume that $l_2<l_1$.) The workspace is circularly symmetric since we assume that there are no limitations of the rotation of the joints in a full circle between $-180^{\circ}$ and $180^{\circ}$. Any point like $a$ on the circumference of the outer circle is a furthest position of the arm from the origin; it is obtained when the two links are lined up so the arm length is $l_1+l_2$. The closest positions to the origin in the workspace are points like $b$ on the circumference of the inner circle; they are obtained when the second link is bend back on the first link giving a length of $l_1-l_2$. Another reachable position $c$ is shown; there are \emph{two} configurations (rotations of the joints) that cause the arm to be positioned at $c$.
+O anel cinza na Fig.~\ref{fig.workspace} mostra o {espacial de trabalho} do braço de dois elos, o conjunto de posições que o efetor final pode alcançar. (Assumimos que $l_2<l_1$.) O espaço de trabalho é circularmente simétrico, pois assumimos que não há limitações de rotação das articulações em um círculo completo entre $-180^{\circ}$ e $180^{\circ}$. Qualquer ponto como $a$ na circunferência do círculo externo é a posição mais distante do braço desde a origem; é obtido quando os dois elos estão alinhados de modo que o comprimento do braço seja $l_1+l_2$. As posições mais próximas da origem no espaço de trabalho são pontos como $b$ na circunferência do círculo interno; são obtidas quando o segundo elo é dobrado de volta no primeiro elo dando um comprimento de $l_1-l_2$. Outra posição alcançável $c$ é mostrada; há configurações \emph{two} (rotações das juntas) que fazem com que o braço seja posicionado a $c$.
 
 \begin{figure}
 \begin{center}
@@ -135,16 +135,16 @@ The gray ring in Fig.~\ref{fig.workspace} shows the \emph{workspace} of the two-
 \draw[fill] (endtwo) circle [radius=2pt];
 \end{tikzpicture}
 \end{center}
-\caption{Workspace of a two-lever arm}\label{fig.workspace}
+\caption{Espaço de trabalho de um braço de duas alavancas}\label{fig.workspace}
 \end{figure}
 
-Under the assumption that $l_2<l_1$, no sequence of rotations can position the end of the arm closer to the origin that $l_1-l_2$ and no position at a distance greater than $l_1+l_2$ from the origin is accessible. From the figure we learn that a problem in inverse kinematics---finding commands to reach a specified point---can have zero, one or many solutions.
+Sob a suposição de que $l_2<l_1$, nenhuma seqüência de rotações pode posicionar a extremidade do braço mais perto da origem que $l_1-l_2$ e nenhuma posição a uma distância maior que $l_1+l_2$ da origem é acessível. Pela figura aprendemos que um problema na cinemática inversa - encontrar comandos para alcançar um ponto específico - pode ter zero, uma ou muitas soluções.
 
-The computation of the inverse kinematics uses the \emph{law of cosines} (Fig.~\ref{fig.cosines}):
+O cálculo da cinemática inversa utiliza a \emph{law of cosines}. (Fig.~\ref{fig.cosines}):
 \[
 a^2 + b^2 - 2ab \cos \theta = c^2\,.
 \]
-In a right triangle $\cos 90^{\circ} = 0$ and the law reduces to the Pythagorean theorem.
+Num triângulo à direita $\cos 90^{\circ} = 0$ e a lei reduz ao teorema de Pitágoras.
 
 \begin{figure}
 \begin{center}
@@ -155,12 +155,12 @@ In a right triangle $\cos 90^{\circ} = 0$ and the law reduces to the Pythagorean
 \node[below,xshift=1mm,yshift=-2mm] at (one) {$\theta$};
 \end{tikzpicture}
 \end{center}
-\caption{Law of cosines}\label{fig.cosines}
+\caption{Lei de cosseno}\label{fig.cosines}
 \end{figure}
 
-Suppose now that we are given a point $(x,y)$ and we want values for $\alpha,\beta$ (if any exist) which will bring the arm to that point. Figure~\ref{fig.inverse-kinematics} similar to Fig.~\ref{fig.kinematics-triangle} except that the specific values are replaced by arbitrary angles and lengths.
+Suponha agora que nos é dado um ponto $(x,y)$ e queremos valores para $\alpha,\beta$ (se houver algum) que trará o braço a esse ponto. Figura~\ref{fig.inverse-kinematics} semelhante à Figura~\ref{fig.kinematics-triangle} exceto que os valores específicos são substituídos por ângulos e comprimentos arbitrários.
 
-By the Pythagorean theorem, $r=\sqrt{x^2 + y^2}$.
+Pelo teorema de Pitágoras, $r=\sqrt{x^2 + y^2}$.
 
 \begin{figure}
 \begin{center}
@@ -185,84 +185,87 @@ By the Pythagorean theorem, $r=\sqrt{x^2 + y^2}$.
 \draw[->] (18mm,2mm) -- node[right,xshift=8mm] {$\alpha-\gamma$} (5mm,2mm);
 \end{tikzpicture}
 \end{center}
-\caption{Inverse kinematics of a two-link arm}\label{fig.inverse-kinematics}
+\caption{Cinemática inversa de um braço de dois elos}\label{fig.inverse-kinematics}
 \end{figure}
 
-The law of cosines gives:
+A lei de cosseno dá:
 \[
 l_1^2 + l_2^2 - 2l_1 l_2 \cos(180^\circ-\beta) = r^2\,,
 \]
-which can be solved for $\beta$:
+que pode ser resolvido por $\beta$:
 \begin{eqnarray*}
 \cos(180^\circ-\beta) &=& \frac{l_1^2 + l_2^2 - r^2}{2l_1 l_2}\\
 \beta &=& 180^\circ-\cos^{-1}\left(\frac{l_1^2 + l_2^2 - r^2}{2l_1 l_2}\right)\,.
 \end{eqnarray*}
-To obtain $\gamma$ and then $\alpha$, use the law of cosines with $\gamma$ as the central angle:
+Para obter $\gamma$ e depois $\alpha$, use a lei de cosines com $\gamma$ como o ângulo central:
 \[
 \cos\gamma = \frac{l_1^2 +r^2 - l_2^2}{2l_1 r}\,.
 \]
-From the right triangle formed by $(x,y)$ we have:
+Do triângulo direito formado por $(x,y)$ que temos:
 \begin{eqnarray*}
 \tan(\alpha - \gamma) &=& \frac{y}{x}\\
 \alpha &=& \tan^{-1} \frac{y}{x} + \gamma\,,
 \end{eqnarray*}
-so:
+portanto:
 \[
 \alpha = \tan^{-1} \frac{y}{x} + \cos^{-1}\left(\frac{l_1^2 +r^2 - l_2^2}{2l_1 r}\right)\,.
 \]
 
-\noindent\textbf{Example} Assume again that $l_1 = l_2 = 1$ and that the end effector is at the point computed from the forward kinematics:
+\noindent\textbf{Exemplo} Suponha novamente que $l_1 = l_2 = 1$ e que o efetor final está no ponto computado a partir da cinemática de avanço:
 \[
 (x,y) = \left(\frac{1+\sqrt{3}}{2},\frac{1+\sqrt{3}}{2}\right)\,.
 \]
-First, compute $r^2$:
+Primeiro, computar $r^2$:
 \[
 r^2 = x^2+y^2 = \left( \frac{1+\sqrt{3}}{2}\right)^2 + \left( \frac{1+\sqrt{3}}{2}\right)^2 = 2+\sqrt{3}\,,
 \]
-and use it in the computation of $\beta$:
+e usá-lo no cálculo de $\beta$:
 \begin{eqnarray*}
 \beta &=& 180^{\circ} - \cos^{-1} \left(\frac{1^2 + 1^2 - (2+\sqrt{3})}{2\cdot 1\cdot 1}\right)\\
 &=& 180^{\circ} - \cos^{-1}\left(-\frac{\sqrt{3}}{2}\right)\\
 &=& 180^{\circ} \pm 150^{\circ}\\
 &=& \pm 30^{\circ}\,,
 \end{eqnarray*}
-since $330^{\circ}=-30^{\circ} \!\!\!\pmod{360^\circ}$. There are two solutions because there are two ways of moving the arm to $(x,y)$.
+desde $330^{\circ}=-30^{\circ} \!\!\!\pmod{360^\circ}$. Há duas soluções porque há duas maneiras de mover o braço para $(x,y)$.
 
-Next compute $\gamma$:
+Próximo computar $\gamma$:
 \begin{equation}
 \gamma = \cos^{-1}\left(\frac{1^2 + r^2 - 1^2}{2\cdot 1 \cdot r}\right) = \cos^{-1}\left(\frac{r}{2}\right)= \cos^{-1}\left(\frac{\sqrt{2+\sqrt{3}}}{2}\right) = \pm 15^{\circ}\,.\label{eq.cos15}
 \end{equation}
-The inverse cosine can be obtained numerically on a calculator or algebraically as shown in Appendix~\ref{a.cosine}.
+O cosseno inverso pode ser obtido numericamente em uma calculadora ou algébricamente como mostrado no Apêndice~\ref{a.cosine}.
 
-Since $x=y$, the computation of $\alpha$ is easy:
-\[\alpha = \tan^{-1}\frac{y}{x} + \gamma = \tan^{-1}1 + \gamma = 45^{\circ} \pm 15^{\circ} = 60^{\circ} \;\textrm{or}\; 30^{\circ}\,.
+Desde $x=y$, o cálculo de $\alpha$ é fácil:
+\[
+\alpha = \tan^{-1}\frac{y}{x} + \gamma = 
+\tan^{-1}1 + \gamma = 45^{\circ} \pm 15^{\circ} = 
+60^{\circ} \;\textrm{ou}\; 30^{\circ}\,.
 \]
-The solution $\alpha=60^{\circ},\beta=-30^{\circ}$ corresponds to the rotation of the joints in Fig.~\ref{fig.forward-kinematics}, while the solution $\alpha=30^{\circ},\beta=30^{\circ}$ corresponds to rotating both of the joints $30^{\circ}$ counterclockwise.
+A solução $\alpha=60^{\circ},\beta=-30^{\circ}$ corresponde à rotação das articulações na Fig.~\ref{fig.forward-kinematics}, enquanto a solução $\alpha=30^{\circ},\beta=30^{\circ}$ corresponde à rotação das duas articulações no sentido anti-horário.
 
-In this simple case, it is possible to solve the forward kinematics equation to obtain formulas for the inverse kinematics. In general this is not possible so approximate numerical solutions are used.
+Neste caso simples, é possível resolver a equação da cinemática direta para obter fórmulas para a cinemática inversa. Em geral, isto não é possível, portanto, são utilizadas soluções numéricas aproximadas.
 
 \begin{framed}
-\act{Inverse kinematics}{inverse-kinematics}
+\act{Cinemática inversa}{inverse-kinematics}
 \begin{itemize}
-\item Use the formulas for the inverse kinematics to program your robot to move to a specified coordinate.
-\item Measure the $x$- and $y$-distances of the robot from the origin and compare them to the specified coordinates.
-\item If your robot's computer does not have the capability to compute the formulas, compute them offline and then input the commands to the robot.
+\item Use as fórmulas para a cinemática inversa para programar seu robô para se mover para uma coordenada especificada.
+\item Meça as distâncias de $x$- e $y$-distâncias do robô desde a origem e compare-as com as coordenadas especificadas.
+\item Se o computador de seu robô não tiver a capacidade de computar as fórmulas, computá-las off-line e depois inserir os comandos no robô.
 \end{itemize}
 \end{framed}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Rotations}\label{s.rotations}
+\section{Rotações}\label{s.rotations}
 
-The motion of a robotic manipulator is described in terms of \emph{coordinate frames}. Three frames are associated with the arm in Fig.~\ref{fig.forward-kinematics}: one frame is associated with the joint at the origin (which we assume is fixed to a table or the floor), a second frame is associated with the joint between the two links,  and a third frame is associated with the end effector at the end of the second link.
+O movimento de um manipulador robótico é descrito em termos de \emph{coordenate frames}. Três armações estão associadas ao braço na Fig.~\ref{fig.forward-kinematics}: uma armação está associada à articulação na origem (que supomos estar fixada a uma mesa ou ao chão), uma segunda armação está associada à articulação entre as duas ligações, e uma terceira armação está associada ao efetor final no final da segunda ligação.
 
-In this section we describe how the rotational motion of a robotic arm can be mathematically modeled using \emph{rotation matrices}. The links in robotic arms introduce \emph{translations}: the second joint is offset by a linear distance of $l_1$ from the first joint, and the end effector is offset by a linear distance of $l_2$ from the second joint. The mathematical treatment of translations uses an extension of rotation matrices called \emph{homogeneous transforms}.
+Nesta seção descrevemos como o movimento de rotação de um braço robótico pode ser modelado matematicamente usando \emph{rotation matrizes de rotação}. Os links nos braços robóticos introduzem \emph{translations}: a segunda junta é compensada por uma distância linear de $l_1$ da primeira junta, e o efetor final é compensado por uma distância linear de $l_2$ da segunda junta. O tratamento matemático das traduções utiliza uma extensão de matrizes de rotação chamada \emph{homogeneous transforms}.
 
-Rotations can be confusing because a rotation matrix can have three interpretations that are described in the following subsections: rotating a vector, rotating a coordinate frame and transforming a vector from one coordinate frame to another.
+As rotações podem ser confusas porque uma matriz de rotação pode ter três interpretações que são descritas nas seguintes subseções: rotação de um vetor, rotação de um quadro de coordenadas e transformação de um vetor de um quadro de coordenadas para outro.
 
-\subsection{Rotating a vector}
+\subsection{Girando um vetor}
 
-Consider a vector with cartesian coordinates $(x,y)$ and polar coordinates $(r,\phi)$ (Fig.~\ref{fig.one-vector}). Now rotate the vector by an angle $\theta$ (Fig.~\ref{fig.rotated-vector}). Its polar coordinates are $(r,\phi+\theta)$. What are its cartesian coordinates?
+Considere um vetor com coordenadas cartesianas $(x,y)$ e coordenadas polares $(r,\phi)$ (Fig.~\ref{fig.one-vector}). Agora, gire o vetor por um ângulo $(x,y)$ e coordenadas polares $(r,y)$ (Fig.~\ref{fig.rotated-vector}). Suas coordenadas polares são $(r,\phi+theta)$. Quais são suas coordenadas cartesianas?
 \begin{figure}
 \begin{minipage}{.48\textwidth}
 \begin{tikzpicture}[scale=1.2]
@@ -332,7 +335,7 @@ Consider a vector with cartesian coordinates $(x,y)$ and polar coordinates $(r,\
 %\end{minipage}
 %\end{figure}
 
-Using the trigonometric identities for the sum of two angles and the conversion of $(r,\phi)$ to $(x,y)$ we have:
+Usando as identidades trigonométricas para a soma de dois ângulos e a conversão de $(r,\phi)$ para $(x,y)$ que temos:
 \begin{eqnarray*}
 x' &=& r\cos(\phi+\theta)\\
 &=&r\cos\phi\cos\theta - r\sin\phi\sin\theta\\
@@ -345,17 +348,14 @@ y' &=& r\sin(\phi+\theta)\\
 &=&y\cos\theta + x\sin\theta\\
 &=&x\sin\theta + y\cos\theta\,.\\
 \end{eqnarray*}
-These equations can be expressed as the multiplication of a matrix called the \emph{rotation matrix} and a vector:
+Estas equações podem ser expressas como a multiplicação de uma matriz chamada \emph{rotation matrix} e um vetor:
 \[
 \spacearray
 \left[\begin{array}{c}x'\\y'\end{array}\right]=
 \left[\begin{array}{cc}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{array}\right]
 \left[\begin{array}{c}x\\y\end{array}\right]\,.
 \]
-
-\medskip
-
-\noindent\textbf{Example} Let $p$ be the point at the tip of a vector of length $r=1$ that forms an angle of $\phi=30^{\circ}$ with the positive $x$-axis. The cartesian coordinates of $p$ are $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suppose that the vector is rotated by $\theta=30^{\circ}$. What are the new cartesian coordinates of $p$? Using matrix multiplication:
+\noindent\textbf{Exemplo} Que $p$ seja o ponto na ponta de um vetor de comprimento $r=1$ que forma um ângulo de $\phi=30^{\circ}$ com o positivo $x$-eixo. As coordenadas cartesianas de $p$ são $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suponha que o vetor seja girado por $\theta=30^{\circ}$. Quais são as novas coordenadas cartesianas de $p$? Usando a multiplicação matricial:
 \[
 \spacearray
 \left[\begin{array}{c}x'\\y'\end{array}\right]\;=\;
@@ -363,9 +363,9 @@ These equations can be expressed as the multiplication of a matrix called the \e
 \left[\begin{array}{c}\frac{\sqrt{3}}{2}\\\frac{1}{2}\end{array}\right]\;=\;
 \left[\begin{array}{c}\frac{1}{2}\\\frac{\sqrt{3}}{2}\end{array}\right]\,.
 \]
-The result makes sense because rotating a vector whose angle with the $x$-axis is $30^{\circ}$ by $30^{\circ}$ should give a vector whose angle with the $x$-axis is $60^{\circ}$.
+O resultado faz sentido porque girar um vetor cujo ângulo com o eixo $x$ é $30^{\circ}$ por $30^{\circ}$ deve dar um vetor cujo ângulo com o eixo $x$ é $60^{\circ}$.
 
-Suppose that the vector is rotated by an additional $30^{\circ}$; its new coordinates are:
+Suponha que o vetor seja girado por um adicional de $30^{\circ}$; suas novas coordenadas são:
 \begin{equation}\label{eq.rotate1}
 \spacearray
 \left[\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]\;\;
@@ -375,9 +375,9 @@ Suppose that the vector is rotated by an additional $30^{\circ}$; its new coordi
 \left[\begin{array}{c}\frac{1}{2}\\\frac{\sqrt{3}}{2}\end{array}\right]\;=\;
 \left[\begin{array}{c}0\\1\end{array}\right]\,.
 \end{equation}
-This result also makes sense. Rotating a vector whose angle is $30^{\circ}$ twice by $30^{\circ}$ (for a total of $60^\circ$) should give $90^{\circ}$. The cosine of $90^{\circ}$ is $0$ and the sine of $90^{\circ}$ is $1$.
+Este resultado também faz sentido. A rotação de um vetor cujo ângulo é de $30^{\circ}$ duas vezes por $30^{\circ}$ (para um total de $60^{\circ}$) deve dar $90^{\circ}$. O co-seno de $90^{\circ}$ é $0$ e o seno de $90^{\circ}$ é $1$.
 
-Since matrix multiplication is associative, the multiplication could also be performed as follows:
+Como a multiplicação matricial é associativa, a multiplicação também poderia ser feita da seguinte forma:
 \begin{equation}\label{eq.rotate2}
 \spacearray
 \left(\left[\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]
@@ -386,23 +386,23 @@ Since matrix multiplication is associative, the multiplication could also be per
 \end{equation}
 
 \begin{framed}
-\act{Rotation matrices}{rotation-matrix}
+\act{Matrizes de rotação}{rotation-matrix}
 \begin{itemize}
-\item Demonstrate the associativity of matrix multiplication by showing that the multiplication in Eq.~\ref{eq.rotate2} gives the same result as the multiplication in Eq.~\ref{eq.rotate1}.
-\item Compute the matrix for a rotation of $-30^{\circ}$ and show that multiplying this matrix by the matrix for a rotation of $30^{\circ}$ gives the matrix for a rotation of $0^{\circ}$.
-\item Is this multiplication commutative?
-\item Is multiplication of two-dimensional rotational matrices commutative?
+\item Demonstrar a associatividade da multiplicação da matriz mostrando que a multiplicação em Eq.~ref{eq.rotate2} dá o mesmo resultado que a multiplicação em Eq.~\ref{eq.rotate1}.
+\item Calcular a matriz para uma rotação de $-30^{\circ}$ e mostrar que a multiplicação desta matriz pela matriz para uma rotação de $30^{\circ}$ dá a matriz para uma rotação de $0^{\circ}$.
+\item Este item é uma multiplicação comutativa?
+\item A multiplicação de matrizes de rotação bidimensionais é comutativa?
 \end{itemize}
 \end{framed}
 
-\subsection{Rotating a coordinate frame}
+\subsection{Girando uma estrutura de coordenadas}
 
-Let us reinterpret Figs.~\ref{fig.one-vector}--\ref{fig.rotated-vector}. Figure~\ref{fig.one-frame} shows a coordinate frame (blue) defined by two orthogonal unit vectors:
+Vamos reinterpretar Figs.~\ref{fig.one-vector}--\ref{fig.rotated-vector}. A figura~\ref{fig.one-frame} mostra um quadro de coordenadas (azul) definido por dois vetores de unidade ortogonais:
 \[
 \vec{x}= \left[\begin{array}{c}1\\0\end{array}\right]\,,\;\;
 \vec{y}= \left[\begin{array}{c}0\\1\end{array}\right]\,.
 \]
-Fig.~\ref{fig.frame-rotated} shows the \emph{coordinate frame} rotated by $\theta$ degrees (red). The new unit vectors $\vec{x'}$ and $\vec{y'}$ can be obtained by multiplication by the rotation matrix derived above:
+Fig.~\ref{fig.frame-rotated} mostra o \emph{coordenate frame} girado em $\theta$ graus (vermelho). Os novos vetores de unidade $\vec{x'}$ e $\vec{y'}$ podem ser obtidos pela multiplicação pela matriz de rotação derivada acima:
 \begin{eqnarray*}
 \vec{x'}&=&
 \left[\spacearray\begin{array}{cc}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{array}\right]
@@ -486,10 +486,7 @@ Fig.~\ref{fig.frame-rotated} shows the \emph{coordinate frame} rotated by $\thet
 %\rightcaption{New coordinate frame (red) obtained by rotating the original coordinate frame (blue) by $\theta$}\label{fig.frame-rotated}
 %\end{minipage}
 %\end{figure}
-
-\medskip
-
-\noindent\textbf{Example} For the unit vectors in Fig.~\ref{fig.one-frame} and a rotation of $30^\circ$:
+\noindent\textbf{Exemplo} Para os vetores de unidade em Fig.~\ref{fig.one-frame} e uma rotação de $30^\circ$:
 \begin{eqnarray*}
 \vec{x'}&=&\left[\spacearray\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]
 \left[\spacearray\begin{array}{c}1\\0\end{array}\right]=
@@ -500,9 +497,9 @@ Fig.~\ref{fig.frame-rotated} shows the \emph{coordinate frame} rotated by $\thet
 \left[\spacearray\begin{array}{c}-\frac{1}{2}\\\frac{\sqrt{3}}{2}\end{array}\right]\,.
 \end{eqnarray*}
 
-\subsection{Transforming a vector from one coordinate frame to another}
+\subsection{Transformar um vetor de um quadro de coordenadas para outro}
 
-Let the origin of a coordinate frame $b$ (blue) represent the joint of an end effector such as a welder and let point $p$ be the tip of the welder (Fig.~\ref{fig.frameb}). By convention in robotics, the coordinate frame of an entity is denoted by a ``pre'' superscript.\footnote{The convention is to use uppercase letters for both the frame and the coordinates, but we use lowercase for clarity.}  In the frame $b$, the point $\bp$ has polar coordinates $(r,\phi)$ and cartesian coordinates $(\bx,\by)$ related by the usual trigonometric formulas:
+Deixe a origem de uma armação coordenada $b$ (azul) representar a junta de um efetor final como um soldador e deixe o ponto $p$ ser a ponta do soldador (Fig.~\ref{fig.frameb}). Por convenção em robótica, o quadro de coordenadas de uma entidade é denotado por um superescrito ``pre''. Nota de rodapé (A convenção é utilizar letras maiúsculas tanto para o quadro quanto para as coordenadas, mas utilizamos letras minúsculas para maior clareza).  No quadro $b$, o ponto $\bp$ tem coordenadas polares $(r,\phi)$ e coordenadas cartesianas $(\bx,\bx,\by)$ relacionadas pelas fórmulas trigonométricas usuais:
 \[
 \bp = (\bx,\by) = (r\cos\phi,\, r\sin\phi)\,.
 \]
@@ -588,11 +585,11 @@ Let the origin of a coordinate frame $b$ (blue) represent the joint of an end ef
 %\end{minipage}
 %\end{figure}
 
-Suppose that the joint (\emph{with its coordinate frame}) is rotated by the angle $\theta$. The coordinates of the point relative to $b$ remain the same, but the coordinate frame has moved so we ask: What are the coordinates $\ap=(\ax,\ay)$ of the point in the coordinate frame before it was moved? In Fig.~\ref{fig.framea} the original frame $b$ is shown rotated to a new position (and still shown in blue), while the coordinate frame $a$ is in the old position of $b$ and is shown as red dashed lines. In the previous section we asked how to transform one coordinate frame into another; here, we are asking how to transform the coordinates of a point in a frame to its coordinates in another frame.
+Suponha que a junta (\emph{com sua estrutura de coordenadas}) seja girada pelo ângulo de $\theta$. As coordenadas do ponto em relação a $b$ permanecem as mesmas, mas a estrutura de coordenadas se moveu, então perguntamos: Quais são as coordenadas $ap=(\ax,\ay)$ do ponto na estrutura de coordenadas antes de ser movida? Na Fig.~\ref{fig.framea} a moldura original $b$ é mostrada girada para uma nova posição (e ainda é mostrada em azul), enquanto a moldura de coordenadas $a$ está na posição antiga de $b$ e é mostrada como linhas tracejadas vermelhas. Na seção anterior, perguntamos como transformar uma moldura de coordenadas em outra; aqui, perguntamos como transformar as coordenadas de um ponto em uma moldura em suas coordenadas em outra moldura.
 
-In terms of the robotic arm: we know $(\bx,\by)$, the coordinates of the tip of the end effector relative to the frame of the end effector, and we now ask for its coordinates $\ap=(\ax,\ay)$ relative to the fixed base. This is important because if we know $\ap$, we can compute the distance and angle from the tip of the welder to the parts of the car it must now weld.
+Em termos do braço robótico: nós sabemos $(\bx,\by)$, as coordenadas da ponta do efetor final em relação ao quadro do efetor final, e agora pedimos suas coordenadas $\ap=(\ax,\ay)$ em relação à base fixa. Isto é importante porque se soubermos $\ap$, podemos calcular a distância e o ângulo desde a ponta do soldador até as partes do carro que ele deve agora soldar.
 
-We can repeat the computation used for rotating a vector:
+Podemos repetir o cálculo utilizado para a rotação de um vetor:
 \begin{eqnarray*}
 \ax &=& r\cos(\phi+\theta)\\
 &=&r\cos\phi\cos\theta - r\sin\phi\sin\theta\\
@@ -602,21 +599,18 @@ We can repeat the computation used for rotating a vector:
 &=&r\sin\phi\cos\theta + r\cos\phi\sin\theta\\
 &=&\bx\sin\theta + \by\cos\theta\,,\\
 \end{eqnarray*}
-to obtain the rotation matrix:
+para obter a matriz de rotação:
 \begin{equation}
 \spacearray
 \left[\begin{array}{c}\ax\\\ay\end{array}\right]=
 \left[\begin{array}{cc}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{array}\right]
 \left[\begin{array}{c}\bx\\\by\end{array}\right]\,.\label{eq.frame-to-frame}
 \end{equation}
-The matrix is called the rotation matrix \emph{from} frame $b$ \emph{to} frame $a$ and denoted $\leftidx{^a_b}{R}{}$. Pre-multiplying the point $\bp$ in frame $b$ by the rotation matrix gives $\ap$ its coordinates in frame $a$:
+A matriz é chamada de matriz de rotação $b$ emoldurada para $a$ emoldurada e designada por $leftidx{^a_b}{R}$. A pré-multiplicação do ponto $bp$ na moldura $b$ pela matriz de rotação dá $ap$ suas coordenadas na moldura $a$:
 \[
 \ap = \leftidx{^a_b}{R}{} \; \bp\,.
 \]
-
-\medskip
-
-\noindent\textbf{Example} Let $\bp$ be the point in frame $b$ at the tip of a vector of length $r=1$ that forms an angle of $\phi=30^{\circ}$ with the positive $x$-axis. The coordinates of $\bp$ are $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suppose that the coordinate frame $b$ (together with the point $p$) is rotated by $\theta=30^{\circ}$ to obtain the coordinate frame $a$. What are the coordinates of $\ap$? Using Eq.~\ref{eq.frame-to-frame}:
+\noindent\textbf{Exemplo} Que $\bp$ seja o ponto na moldura $b$ na ponta de um vetor de comprimento $r=1$ que forma um ângulo de $\phi=30^{\circ}$ com o positivo $x$-eixo. As coordenadas de $\bp$ são $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suponha que o quadro de coordenadas $b$ (juntamente com o ponto $p$) seja girado por $theta=30^{\circ}$ para obter o quadro de coordenadas $a$. Quais são as coordenadas de $ap$? Usando Eq.~ref{eq.frame-to frame}:
 \[
 \spacearray
 \ap=
@@ -625,7 +619,7 @@ The matrix is called the rotation matrix \emph{from} frame $b$ \emph{to} frame $
 \left[\begin{array}{c}\frac{\sqrt{3}}{2}\\\frac{1}{2}\end{array}\right]\;=\;
 \left[\begin{array}{c}\frac{1}{2}\\\frac{\sqrt{3}}{2}\end{array}\right]\,.
 \]
-If frame $a$ is now rotated $30^{\circ}$, we obtain the coordinates of the point in a third frame $a1$. Pre-multiply $\ap$ by the rotation matrix for $30^{\circ}$ to obtain $\aprimep$:
+Se o frame $a$ for agora girado $30^{\circ}$, obtemos as coordenadas do ponto em um terceiro frame $a1$. Pré-multiplicar $ap$ pela matriz de rotação por $30^{\circ}$ para obter $\aprimep$:
 \[
 \spacearray
 \aprimep = \left[\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]\;\;
@@ -635,14 +629,14 @@ If frame $a$ is now rotated $30^{\circ}$, we obtain the coordinates of the point
 \left[\begin{array}{c}\frac{1}{2}\\\frac{\sqrt{3}}{2}\end{array}\right]\;=\;
 \left[\begin{array}{c}0\\1\end{array}\right]\,.
 \]
-The product of the two rotation matrices:
+O produto das duas matrizes de rotação:
 \[
 \spacearray
 \left[\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]
 \left[\begin{array}{cc}\frac{\sqrt{3}}{2}&-\frac{1}{2}\\\frac{1}{2}&\frac{\sqrt{3}}{2}\end{array}\right]=
 \left[\begin{array}{cc}\frac{1}{2}&-\frac{\sqrt{3}}{2}\\\frac{\sqrt{3}}{2}&\frac{1}{2}\end{array}\right]
 \]
-results in the rotation matrix for rotating the original coordinate frame $b$ by $60^{\circ}$:
+resulta na matriz de rotação para a rotação da moldura de coordenadas original $b$ por $60^{\circ}$:
 \[
 \spacearray
 \left[\begin{array}{cc}\frac{1}{2}&-\frac{\sqrt{3}}{2}\\\frac{\sqrt{3}}{2}&\frac{1}{2}\end{array}\right]
@@ -650,11 +644,11 @@ results in the rotation matrix for rotating the original coordinate frame $b$ by
 \left[\begin{array}{c}0\\1\end{array}\right]\,.
 \]
 
-Given a sequence of rotations, pre-multiplying their rotation matrices gives the rotation matrix for the rotation equivalent to the sum of the individual rotations.
+Dada uma seqüência de rotações, a pré-multiplicação de suas matrizes de rotação dá a matriz de rotação para a rotação equivalente à soma das rotações individuais.
 
-\section{Rotating and translating a coordinate frame}\label{s.rotate-translate}
+\section{Rotação e tradução de um quadro de coordenadas}\label{s.rotate-translate}
 
-The joints on robotics manipulators are connected by links so the coordinate systems are related not just by rotations but also by translations. The point $p$ in Fig.~\ref{fig.before-rotate} represents a point in the (red) coordinate frame $b$, but relative to the (blue dashed) coordinate frame $a$, frame $b$ is both rotated by the angle $\theta$ and its origin is translated by $\Delta x$ and $\Delta y$. If $\bp=(\bx,\by)$, the coordinates of the point in frame $b$, are known, what are its coordinates $\ap=(\ax,\ay)$ in frame $a$?
+As juntas nos manipuladores robóticos são conectadas por links, de modo que os sistemas de coordenadas são relacionados não apenas por rotações, mas também por traduções. O ponto $p$ na Fig.~\ref{fig.before-rotate} representa um ponto no quadro de coordenadas (vermelho) $b$, mas relativo ao quadro de coordenadas (azul tracejado) $a$, o quadro $b$ é girado pelo ângulo $theta$ e sua origem é traduzida por $Delta x$ e $Delta y$. Se $\bp=(\bx,\by)$, as coordenadas do ponto na moldura $b$, são conhecidas, quais são suas coordenadas $\ap=(\ax,\ay)$ na moldura $a$?
 
 \begin{figure}
 \begin{center}
@@ -679,18 +673,18 @@ The joints on robotics manipulators are connected by links so the coordinate sys
 \draw[fill] (origin) circle [radius=1pt];
 \draw[fill] (origina) circle [radius=1pt];
 \end{tikzpicture}
-\caption{Frame $b$ is rotated and translated to frame $a$}\label{fig.before-rotate}
+\caption{A moldura $b$ é girada e traduzida para moldura $a$}\label{fig.before-rotate}
 \end{center}
 \end{figure}
 
-To perform this computation, we define an intermediate (green) coordinate frame $a1$ that has the same origin as $b$ and the same orientation as $a$ (Fig.~\ref{fig.after-rotate}). What are the coordinates $\aprimep=(\aprimex,\aprimey)$ of the point in frame $a1$? This is simply the rotation by $\theta$ that we have done before:
+Para realizar este cálculo, definimos um quadro de coordenadas intermediário (verde) $a1$ que tem a mesma origem que $b$ e a mesma orientação que $a$ (Fig.~\ref{fig.after-rotate}). Quais são as coordenadas $\aprimep=(\aprimex,\aprimey)$ do ponto na moldura $a1$? Esta é simplesmente a rotação de $\theta$ que já fizemos antes:
 \[
 \spacearray
 \aprimep=\left[\begin{array}{c}\aprimex\\\aprimey\end{array}\right]=
 \left[\begin{array}{cc}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{array}\right]
 \left[\begin{array}{c}\bx\\\by\end{array}\right]\,.
 \]
-Now that we have the coordinates of the point in $a1$, it is easy to obtain the coordinates in frame $a$ by adding the offsets of the translation. In matrix form:
+Agora que temos as coordenadas do ponto em $a1$, é fácil obter as coordenadas no quadro $a$, acrescentando os offsets da tradução. Em forma de matriz:
 \[
 \spacearray
 \ap=\left[\begin{array}{c}\ax\\\ay\end{array}\right]=
@@ -722,30 +716,30 @@ Now that we have the coordinates of the point in $a1$, it is easy to obtain the 
 \draw[fill] (origin) circle [radius=1pt];
 \draw[fill] (origina) circle [radius=1pt];
 \end{tikzpicture}
-\caption{Frame $b$ is rotated to frame $a1$ and then translated to frame $a$}\label{fig.after-rotate}
+\caption{A moldura $b$ é girada para a moldura $a1$ e depois traduzida para a moldura $a$}\label{fig.after-rotate}
 \end{center}
 \end{figure}
 
-\emph{Homogeneous transforms} are used to combine a rotation and a translation in one operator. The two-dimensional vector giving the coordinates of a point is extended with a third element that has a fixed value of $1$:
+\emph{Tratamentos homogêneos} são usados para combinar uma rotação e uma tradução em um único operador. O vetor bidimensional que dá as coordenadas de um ponto é estendido com um terceiro elemento que tem um valor fixo de $1$:
 \[
 \spacearray
 \left[\begin{array}{c}x\\y\\1\end{array}\right]\,.
 \]
-The rotation matrix is extended to a $3\times 3$ matrix with a $1$ in the lower right corner and zeros elsewhere. It is easy to check that multiplication of a vector in frame $b$ by the rotation matrix results in the same vector as before except for the extra $1$ element:
+A matriz de rotação é estendida para uma matriz de $3\times$ no canto inferior direito e zeros em outros lugares. É fácil verificar que a multiplicação de um vetor no quadro $b$ pela matriz de rotação resulta no mesmo vetor que antes, exceto pelo elemento extra de $1$:
 \[
 \spacearray
 \left[\begin{array}{c}\leftidx{^{a1}}\!{x}{}\\\leftidx{^{a1}}\!{y}{}\\1\end{array}\right]\;=\;
 \left[\begin{array}{ccc}\cos\theta&-\sin\theta&0\\\sin\theta&\cos\theta&0\\0&0&1\end{array}\right]
 \left[\begin{array}{c}\bx\\\by\\1\end{array}\right]\,.
 \]
-The result is the coordinates of the point in the intermediate frame $a1$. To obtain the coordinates in frame $a$, we multiply by a matrix that performs the translation:
+O resultado são as coordenadas do ponto no quadro intermediário $a1$. Para obter as coordenadas no quadro $a$, multiplicamos por uma matriz que realiza a tradução:
 \[
 \spacearray
 \left[\begin{array}{c}\ax\\\ay\\1\end{array}\right]\;=\;
 \left[\begin{array}{ccc}1&0&\Delta x\\0&1&\Delta y\\0&0&1\end{array}\right]
 \left[\begin{array}{c}\leftidx{^{a1}}\!{x}{}\\\leftidx{^{a1}}\!{y}{}\\1\end{array}\right]\,.
 \]
-By multiplying the two transforms, we obtain a single homogeneous transform that can perform both the rotation and that translation:
+Multiplicando as duas transformações, obtemos uma única transformação homogênea que pode realizar tanto a rotação como a tradução:
 \[
 \spacearray
 \left[\begin{array}{ccc}1&0&\Delta x\\0&1&\Delta y\\0&0&1\end{array}\right]
@@ -753,14 +747,14 @@ By multiplying the two transforms, we obtain a single homogeneous transform that
 \left[\begin{array}{ccc}\cos\theta&-\sin\theta&\Delta x\\\sin\theta&\cos\theta&\Delta y\\0&0&1\end{array}\right]\,.
 \]
 
-\noindent\textbf{Example} Let us extend the previous example by adding a translation of $(3,1)$ to the rotation of $30^\circ$. The homogeneous transform of the rotation followed by the translation is:
+\noindent\textbf{Exemplo} Vamos estender o exemplo anterior adicionando uma tradução de $(3,1)$ à rotação de $30^\circ$. A transformação homogênea da rotação seguida da tradução é:
 \[
 \spacearray
 \left[\begin{array}{ccc}1&0&3\\0&1&1\\0&0&1\end{array}\right]
 \left[\begin{array}{ccc}\frac{\sqrt{3}}{2}&-\frac{1}{2}&0\\\frac{1}{2}&\frac{\sqrt{3}}{2}&0\\0&0&1\end{array}\right]\;\;=
 \left[\begin{array}{ccc}\frac{\sqrt{3}}{2}&-\frac{1}{2}&3\\\frac{1}{2}&\frac{\sqrt{3}}{2}&1\\0&0&1\end{array}\right]\,.
 \]
-The coordinates of the point in frame $a$ are:
+As coordenadas do ponto no quadro $a$ são:
 \[
 \spacearray
 \left[\begin{array}{c}\ax\\\ay\\1\end{array}\right]\;=\;
@@ -770,23 +764,23 @@ The coordinates of the point in frame $a$ are:
 \]
 
 \begin{framed}
-\act{Homogeneous transforms}{homogeneous}
+\act{Transformações homogêneas}{homogeneous}
 
 \begin{itemize}
-\item Draw the diagram for a rotation of $-30^\circ$ followed by a translation of $(3,-1)$.
-\item Compute the homogeneous transform.
+\item Desenhe o diagrama para uma rotação de $-30^\circ$ seguido de uma tradução de $(3,-1)$.
+\item Calcule a transformação homogênea.
 \end{itemize}
 \end{framed}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{A taste of three-dimensional rotations}\label{s.three}
+\section{Um sabor de rotações tridimensionais}\label{s.three}
 
-The concepts of coordinate transformations and kinematics in three-dimensions are the same as in two dimensions, however, the mathematics is more complicated. Furthermore, many of us find it difficult to visualize three-dimensional motion when all we are shown are two-dimensional representations of three-dimensional objects. In this section we give a taste of three-dimensional robotics by looking at rotations in three dimensions.
+Os conceitos de transformações de coordenadas e cinemáticas em três dimensões são os mesmos que em duas dimensões, no entanto, a matemática é mais complicada. Além disso, muitos de nós achamos difícil visualizar o movimento tridimensional quando tudo o que nos é mostrado são representações bidimensionais de objetos tridimensionais. Nesta seção, damos um gostinho da robótica tridimensional, observando as rotações em três dimensões.
 
-\subsection{Rotations around the three axes}\label{s.rotation-notation}
+\subsection{Rotações ao redor dos três eixos}\label{s.rotation-notation}
 
-A two-dimensional $x$-$y$ coordinate frame can be considered to be embedded in a three-dimensional coordinate frame by adding a $z$-axis perpendicular to the $x$- and $y$-axes. Figure~\ref{fig.frame} shows a two-dimensional representation of the three-dimensional frame. The $x$-axis is drawn left and right on the paper and the $y$-axis is drawn up and down. The diagonal line represents the $z$-axis which is perpendicular to the other two axes. The ``standard'' $x$-$y$-$z$ coordinate frame has the positive directions of its axes defined by the right-hand rule (see below). The positive directions are \textit{right} for the $x$-axis, \textit{up} for the $y$-axis and \textit{out} (of the paper towards the observer) for the $z$-axis. 
+Uma estrutura de coordenadas bidimensional de $x$-$y$ pode ser considerada embutida em uma estrutura de coordenadas tridimensional adicionando um eixo de $z$ perpendicular aos eixos de $x$- e $y$-. A figura~\ref{fig.frame} mostra uma representação bidimensional da moldura tridimensional. O eixo $x$- é desenhado à esquerda e à direita sobre o papel e o eixo $y$- é desenhado para cima e para baixo. A linha diagonal representa o eixo $z$- que é perpendicular aos outros dois eixos. A moldura de coordenadas "padrão" $x$-$y$-$z$ tem as direções positivas de seus eixos definidas pela regra da direita (ver abaixo). As direções positivas são \textit{direita} para o eixo $x$, \textit{up} para o eixo $y$ e \textit{out} (do papel para o observador) para o eixo $z$. 
 
 \begin{figure}
 \begin{center}
@@ -795,11 +789,11 @@ A two-dimensional $x$-$y$ coordinate frame can be considered to be embedded in a
 \draw[thick,blue] (0,-2,0) node [black,below] {\textit{down}} -- (0,2,0) node [black,above] {\textit{up}};
 \draw[thick,green!60!black] (0,0,-3.4) node [black,above right] {\textit{in}} -- (0,0,3.4) node [black,below left] {\textit{out}};
 \end{tikzpicture}
-\caption{Three-dimensional coordinate frame}\label{fig.frame}
+\caption{Estrutura de coordenadas tridimensionais}\label{fig.frame}
 \end{center}
 \end{figure}
 
-Rotate the coordinate frame counterclockwise around the $z$-axis, so that the $z$-axis remains unchanged (Figs.~\ref{fig.standard-axis1}-\ref{fig.rotatez}). The new orientation of the frame is (\textit{up}, \textit{left}, \textit{out}). Consider now a rotation of $90^\circ$ around the $x$-axis (Figs.~\ref{fig.standard-axis2}--\ref{fig.rotatex}). This causes the $y$-axis to ``jump out'' of the paper and the $z$-axis to ``fall down'' onto the paper, resulting in the orientation (\textit{right}, \textit{out}, \textit{down}). Finally, consider a rotation of $90^\circ$ around the $y$-axis (Figs.~\ref{fig.standard-axis3}--\ref{fig.rotatey}). The $x$-axis ``drops into'' the paper and the $z$-axis ``falls right'' onto the paper. The new position of the frame is (\textit{in}, \textit{up}, \textit{right}).
+Gire o quadro de coordenadas no sentido anti-horário em torno do eixo $z$, de modo que o eixo $z$ permaneça inalterado (Figs.~\ref{fig.standard-axis1}--\ref{fig.rotatez}). A nova orientação do quadro é (\textit{up}, \textit{left}, \textit{out}). Considere agora uma rotação de $90^\circ$ em torno do eixo $x$ (Figs.~ref{fig.standard2}--ref{fig.rotatex}). Isto faz com que o eixo de $y$ salte para fora do papel e o eixo de $z$ caia para baixo sobre o papel, resultando na orientação (\textit{right}, \textit{out}, \textit{down}). Finalmente, considere uma rotação de $90^\circ$ em torno do eixo $y$ (Figs.~\ref{fig.standard-axis3}--\ref{fig.rotatey}). O eixo de $x$ "cai" no papel e o eixo de $z$ "cai para a direita" no papel. A nova posição da moldura é (\textit{in}, \textit{up}, \textit{right}).
 
 \begin{figure}
 \begin{minipage}{.48\textwidth}
@@ -939,14 +933,14 @@ Rotate the coordinate frame counterclockwise around the $z$-axis, so that the $z
 %\end{minipage}
 %\end{figure}
 
-\subsection{The right-hand rule}
+\subsection{A regra da direita}
 
-There are two orientations for each axis, $2^3=8$ orientations overall. What matters is the relative orientation of one axis with respect to the other two; for example, once the $x$- and $y$-axes have been chosen to lie in the plane of the paper, the $z$-axis can have its positive direction pointing out of the paper or into the paper. The choice must be consistent. The convention in physics and mechanics is the \emph{right-hand rule}. Curl the fingers of your right hand so that they go from the one axis to another axis. Your thumb now points in the positive direction of the third axis. For the familiar $x$- and $y$-axes on paper, curl your fingers on the path from the $x$-axis to the $y$-axis. When you do so your thumb points out of the paper and this is taken as the positive direction of the $z$-axis. Fig.~\ref{fig.right-hand-rule} shows the right-hand coordinate system displayed with each of the three axes pointing \emph{out of the paper}. According to the right-hand rule the three rotations are:
+Há duas orientações para cada eixo, $2^3=8$ orientações em geral. O que importa é a orientação relativa de um eixo em relação aos outros dois; por exemplo, uma vez que os eixos $x$- e $y$-eixos foram escolhidos para ficar no plano do papel, o $z$-eixo pode ter sua direção positiva apontando para fora do papel ou para dentro do papel. A escolha deve ser consistente. A convenção em física e mecânica é a regra \emph{direito-mão}. Enrole os dedos de sua mão direita para que eles passem de um eixo para outro eixo. Seu polegar agora aponta para a direção positiva do terceiro eixo. Para os familiares eixos $x$- e $y$- sobre papel, enrole seus dedos no caminho do eixo $x$- para o eixo $y$-. Quando o fizer, seu polegar aponta para fora do papel e isto é tomado como a direção positiva do eixo $z$-eixo. Fig.~\ref{fig.right-hand-rule} mostra o sistema de coordenadas da direita exibido com cada um dos três eixos apontando para fora do papel. De acordo com a regra da direita, as três rotações são:
 \begin{quote}
 \normalsize
-Rotate \emph{from} x \emph{to} y around z,\\
-Rotate \emph{from} y \emph{to} z around x,\\
-Rotate \emph{from} z \emph{to} x around y.
+Girar \emph{de} x \emph{para} y por volta de z,\\
+Girar \emph{de} y \emph{para} z por volta de x,\\
+Girar \emph{de} z \emph{para} x por volta de y.
 \end{quote}
 
 \begin{figure}
@@ -971,34 +965,33 @@ Rotate \emph{from} z \emph{to} x around y.
 \draw [thick,blue,->] (0,0,0) -- (0,0,2) node [black,below left] {$y$};
 \draw[->] (.5,0,1) arc [start angle=0, end angle=270, radius=3.5mm];
 \end{tikzpicture}
-\caption{The right-hand rule}\label{fig.right-hand-rule}
+\caption{A regra da mão direita}\label{fig.right-hand-rule}
 \end{center}
 \end{figure}
 
-\subsection{Matrices for three-dimensional rotations}
+\subsection{Matrizes para rotações tridimensionais}
 
-A three-dimensional rotation matrix is a $3\times 3$ matrix because each point $p$ in a frame has three coordinates $p_x,p_y,p_z$ that must be moved. 
-Start with a rotation of $\psi$ around the $z$-axis, followed by a rotation of $\theta$ around the $y$ axis and finally a rotation of $\phi$ around the $x$-axis. For the first rotation around the $z$-axis, the $x$ and $y$ coordinates are rotated as in two dimensions and the $z$ coordinate remains unchanged. Therefore, the matrix is:
+Uma matriz de rotação tridimensional é uma matriz de $3\times 3$ porque cada ponto $p$ em uma moldura tem três coordenadas $p_x,p_y,p_z$ que devem ser movidas. 
+Comece com uma rotação de $psi$ em torno do eixo $z$, seguida por uma rotação de $theta$ em torno do eixo $y$ e finalmente uma rotação de $phi$ em torno do eixo $x$. Para a primeira rotação em torno do eixo $z$, as coordenadas $x$ e $y$ são giradas como em duas dimensões e a coordenada $z$ permanece inalterada. Portanto, a matriz é:
 \[
 \spacearray
 R_{z(\psi)}=\left[\begin{array}{ccc}\cos\psi&-\sin\psi&0\\\sin\psi&\cos\psi&0\\0&0&1\end{array}\right]\,.
 \]
-For the rotation by $\theta$ around the $y$-axis, the $y$ coordinate is unchanged and the $z$ and $x$ coordinates are transformed ``as if'' they were the $x$ and $y$ coordinates of a rotation around the $z$-axis:
+Para a rotação de $\theta$ em torno do eixo $y$, a coordenada $y$ não é alterada e as coordenadas $z$ e $x$ são transformadas ``como se'' fossem as coordenadas $x$ e $y$ de uma rotação em torno do eixo $z$:
 \[
 \spacearray
 R_{y(\theta)}=\left[\begin{array}{ccc}\cos\theta&0&\sin\theta\\0&1&0\\-\sin\theta&0&\cos\theta\\\end{array}\right]\,.
 \]
-For the rotation by $\phi$ around the $x$-axis, the $x$ coordinate is unchanged and the $y$ and $z$ coordinates are transformed ``as if'' they were the $x$ and $y$ coordinates of a rotation around the $z$-axis:
+Para a rotação de $\phi$ em torno do eixo $x$, a coordenada $x$ não é alterada e as coordenadas $y$ e $z$ são transformadas ``como se'' fossem as coordenadas $x$ e $y$ de uma rotação em torno do eixo $z$:
 \[
 \spacearray
 R_{x(\phi)}=\left[\begin{array}{ccc}1&0&0\\0&\cos\phi&-\sin\phi\\0&\sin\phi&\cos\phi\\\end{array}\right]\,.
 \]
+Pode parecer estranho que na matriz para a rotação em torno do eixo $y$ os sinais da função seno tenham mudado. Para convencer-se de que a matriz para esta rotação está correta, redesenhar o diagrama em Fig.~\ref{fig.framea}, substituindo $z$ por $x$ e $x$ por $y$ e realizar o cálculo trigonométrico.
 
-It may seem strange that in the matrix for the rotation around the $y$-axis  the signs of the sine function have changed. To convince yourself that matrix for this rotation is correct, redraw the diagram in Fig.~\ref{fig.framea}, substituting $z$ for $x$ and $x$ for $y$ and perform the trigonometric computation.
+\subsection{Múltiplas rotações}
 
-\subsection{Multiple rotations}
-
-There is a caveat to composing rotations: like matrix multiplication, three\--di\-men\-sion\-al rotations \emph{do not} commute. Let us demonstrate this by a simple sequence of two rotations. Consider a rotation of $90^\circ$ around the $z$-axis, followed by a rotation of $90^\circ$ around the (new position of the) $x$-axis (Fig.~\ref{fig.non-commutative1}). The result can be expressed as (\textit{up}, \textit{out}, \textit{right}).
+Há um aviso para compor rotações: como a multiplicação matricial, as rotações tridimensionais \emph{não} comutam. Vamos demonstrar isto através de uma seqüência simples de duas rotações. Considere uma rotação de $90^\circ$ em torno do eixo $z$, seguida por uma rotação de $90^\circ$ em torno do (nova posição do) eixo $x$ (Fig.~\ref{fig.non-commutative1}). O resultado pode ser expresso como (\textit{up}, \textit{out}, \textit{right}).
 
 \begin{figure}
 \begin{center}
@@ -1021,11 +1014,11 @@ There is a caveat to composing rotations: like matrix multiplication, three\--di
 \draw [thick,red,->] (0,0,0) -- (0,2,0) node [black,above] {$x$};
 \draw [thick,blue,->] (0,0,0) -- (0,0,2) node [black,below left] {$y$};
 \end{tikzpicture}
-\caption{Rotation around the $z$-axis followed by rotation around the $x$-axis}\label{fig.non-commutative1}
+\caption{Rotação em torno do eixo de $z$ seguido de rotação em torno do eixo de $x$}\label{fig.non-commutative1}
 \end{center}
 \end{figure}
 
-Now consider the commuted operation: a rotation of $90^\circ$ around the $x$-axis, followed by a rotation of $90^\circ$ around the $z$-axis (Fig.~\ref{fig.non-commutative2}). The result can be expressed as (\textit{out}, \textit{left}, \textit{down}), which is not the same as the previous orientation.
+Agora considere a operação comutada: uma rotação de $90^\circ$ em torno do eixo $x$, seguida por uma rotação de $90^\circ$ em torno do eixo $z$ (Fig.~\ref{fig.non-commutative2}). O resultado pode ser expresso como (\textit{out}, \textit{left}, \textit{down}), o que não é o mesmo que a orientação anterior.
 
 \begin{figure}
 \begin{center}
@@ -1048,17 +1041,15 @@ Now consider the commuted operation: a rotation of $90^\circ$ around the $x$-axi
 \draw [thick,blue,->] (0,0,0) -- (-2,0,0) node [black,left] {$y$};
 \draw [thick,green!60!black,->] (0,0,0) -- (0,-2,0) node [black,below] {$z$};
 \end{tikzpicture}
-\caption{Rotation around the $x$-axis followed by rotation around the $z$-axis}\label{fig.non-commutative2}
+\caption{Rotação em torno do eixo de $x$ seguido de rotação em torno do eixo de $z$}\label{fig.non-commutative2}
 \end{center}
 \end{figure}
 
-\subsection{Euler angles}
+\subsection{Ângulos de Euler}
 
-An arbitrary rotation can be obtained by three individual rotations around the three axes, so the matrix for an arbitrary rotation can be obtained by multiplying the matrices for each single rotation. The angles of the rotations are called \emph{Euler angles}. The formulas are somewhat complex and can be found in the references listed at the end of the chapter. Here we demonstrate Euler angles with an example.
+Uma rotação arbitrária pode ser obtida por três rotações individuais ao redor dos três eixos, de modo que a matriz para uma rotação arbitrária pode ser obtida multiplicando as matrizes para cada rotação individual. Os ângulos das rotações são chamados \emph{Euler angles}. As fórmulas são um tanto complexas e podem ser encontradas nas referências listadas no final do capítulo. Aqui demonstramos os ângulos de Euler com um exemplo.
 
-\smallskip
-
-\noindent\textbf{Example} Figure~\ref{fig.euler} shows a coordinate frame rotated sequentially $90^\circ$ around the $z$-axis, then the $y$-axis and finally the $x$-axis. This is called a $zyx$ Euler angle rotation. The final orientation is (\textit{in}, \textit{up}, \textit{right}).
+\noindent\textbf{Exemplo} A figura~\ref{fig.euler} mostra um quadro de coordenadas girado seqüencialmente $90^\circ$ em torno do eixo $z$, depois o eixo $y$- e finalmente o eixo $x$-. Isto é chamado de rotação do ângulo $zyx$ Euler. A orientação final é (\textit{in}, \textit{up}, \textit{right}).
 
 \begin{figure}
 \begin{center}
@@ -1088,11 +1079,11 @@ An arbitrary rotation can be obtained by three individual rotations around the t
 \draw [thick,green!60!black,->] (0,0,0) -- (2,0,0) node [black,right] {$z$};
 \draw [thick,red,->] (0,0,0) -- (0,0,-2.5) node [black,above right] {$x$};
 \end{tikzpicture}
-\caption{Euler angles $zyx$ of $(90^\circ,90^\circ,90^\circ)$}\label{fig.euler}
+\caption{Ângulos de Euler $zyx$ de $(90^\circ,90^\circ,90^\circ)$}\label{fig.euler}
 \end{center}
 \end{figure}
 
-Let us consider a robotic manipulator that consists of a single joint that can rotate around all three axes. A sequence of rotations is performed as shown in Fig.~\ref{fig.euler}. Consider the point at coordinates $(1,1,1)$ relative to the joint (Fig.~\ref{fig.rotate3}). After the rotations, what are the coordinates of this point in the original fixed frame?
+Consideremos um manipulador robótico que consiste em uma única junta que pode girar ao redor dos três eixos. Uma seqüência de rotações é realizada como mostrado na Fig.~\ref{fig.euler}. Considere o ponto nas coordenadas $(1,1,1)$ em relação à junta (Fig.~\ref{fig.rotate3}). Após as rotações, quais são as coordenadas deste ponto na moldura fixa original?
 
 \begin{figure}
 \begin{minipage}{.48\textwidth}
@@ -1147,7 +1138,7 @@ Let us consider a robotic manipulator that consists of a single joint that can r
 %\end{minipage}
 %\end{figure}
 
-This can be computed by leaving the vector fixed and considering the rotations of the coordinate frames. To reach the final position shown in Fig.~\ref{fig.rotate3} the frame was rotated around the $x$-axis from the orientation shown in Fig.~\ref{fig.rotate2}. By examining the figure we see that the coordinates in this frame are $(1,-1,1)$. Proceeding through the previous two frames (Figs.~\ref{fig.rotate1}, \ref{fig.rotate0}), the coordinates are $(1,-1,-1)$ and $(1,1,-1)$.
+Isto pode ser calculado deixando o vetor fixo e considerando as rotações dos quadros de coordenadas. Para alcançar a posição final mostrada na Fig.~\ref{fig.rotate3}, o quadro foi girado em torno do eixo $x$ da orientação mostrada na Fig.~\ref{fig.rotate2}. Examinando a figura, vemos que as coordenadas neste quadro são $(1,-1,1)$. Prosseguindo através dos dois quadros anteriores (Figs.~\ref{fig.rotate1}, \ref{fig.rotate0}), as coordenadas são $(1,-1,-1)$ e $(1,1,-1)$.
 
 \begin{figure}
 \begin{minipage}{.48\textwidth}
@@ -1205,79 +1196,78 @@ This can be computed by leaving the vector fixed and considering the rotations o
 %\end{minipage}
 %\end{figure}
 
-These coordinates can be computed from the rotation matrices for the rotations around the three axes. The coordinates of the final coordinate frame are $(1,1,1)$, so in the frame before the rotation around the $x$-axis the coordinates were:
+Estas coordenadas podem ser calculadas a partir das matrizes de rotação para as rotações em torno dos três eixos. As coordenadas do quadro de coordenadas final são $(1,1,1)$, portanto, no quadro antes da rotação em torno do eixo $x$- as coordenadas eram:
 \[
 \spacearray
 \left[\begin{array}{ccc}1&0&0\\0&0&-1\\0&1&0\\\end{array}\right]
 \left[\begin{array}{c}1\\1\\1\end{array}\right]=
 \left[\begin{array}{c}1\\-1\\1\end{array}\right]\,.
 \]
-The coordinates in the frame before the rotation around the $y$-axis were:
+As coordenadas no quadro antes da rotação em torno do eixo $y$-ei:
 \[
 \spacearray
 \left[\begin{array}{ccc}0&0&1\\0&1&0\\-1&0&0\\\end{array}\right]
 \left[\begin{array}{c}1\\-1\\1\end{array}\right]=
 \left[\begin{array}{c}1\\-1\\-1\end{array}\right]\,.
 \]
-Finally, the coordinates in the fixed frame before the rotation around the $z$-axis were:
+Finalmente, as coordenadas no quadro fixo antes da rotação em torno do eixo de $z$ foram:
 \[
 \spacearray
 \left[\begin{array}{ccc}0&-1&0\\1&0&0\\0&0&1\\\end{array}\right]
 \left[\begin{array}{c}1\\-1\\-1\end{array}\right]=
 \left[\begin{array}{c}1\\1\\-1\end{array}\right]\,.
 \]
-
-For three arbitrary $zyx$ Euler angle rotations: $\psi$ around the $z$-axis, then $\theta$ around the $y$-axis and finally $\phi$ around the $x$-axis the rotation matrix is:
+Para três rotações arbitrárias do ângulo $zyx$ Euler: $\psi$ em torno do eixo $z$, depois $\theta$ em torno do eixo $y$ e finalmente $\phi$ em torno do eixo $x$, a matriz de rotação é:
 \[
 R=R_{z(\psi)}R_{y(\theta)}R_{x(\phi)}\,.
 \]
-It may seem strange that the order of the matrix multiplication (which is always from right to left) is opposite the order of the rotations. This is because we are taking a vector in the final coordinate frame and transforming it back into the fixed frame to determine its coordinates in the fixed frame.
+Pode parecer estranho que a ordem da multiplicação da matriz (que é sempre da direita para a esquerda) seja oposta à ordem das rotações. Isto porque estamos tomando um vetor no quadro de coordenadas final e transformando-o de volta no quadro fixo para determinar suas coordenadas no quadro fixo.
 
 \begin{framed}
-\act{Multiple Euler angles}{euler-multiple}
+\act{Ângulos múltiplos de Euler}{euler-multiple}
 \begin{itemize}
-\item Multiply the three matrices to obtain a single matrix that directly transforms the coordinates from $(1,1,1)$ to $(1,1,-1)$.
-\item Perform the same computation for other rotations, changing the sequence of the axes and the angles of rotation.
+\item Multiplique as três matrizes para obter uma única matriz que transforme diretamente as coordenadas de $(1,1,1)$ para $(1,1,-1)$.
+\item Faça o mesmo cálculo para outras rotações, alterando a seqüência dos eixos e os ângulos de rotação.
 \end{itemize}
 \end{framed}
 
-\subsection{The number of distinct Euler angle rotations}
+\subsection{O número de rotações de ângulo Euler distintas}
 
-There are three axes so there should be $3^3=27$ sequences of Euler angles. However, there is no point in rotating around the same axis twice in succession because the same result can be obtained by rotating once by the sum of the angles, so there are only $3\cdot 2\cdot 2=12$ different Euler angles sequences.  The following activity asks you to explore different Euler angle sequences.
+Há três eixos, portanto deve haver $3^3=27$ seqüências de ângulos de Euler. Entretanto, não faz sentido girar duas vezes sucessivamente em torno do mesmo eixo porque o mesmo resultado pode ser obtido girando uma vez pela soma dos ângulos, de modo que há apenas $3\cdot 2\cdot 2=12$ diferentes seqüências de ângulos de Euler.  A seguinte atividade pede que você explore diferentes seqüências de ângulos de Euler.
 
 \begin{framed}
-\act{Distinct Euler angles}{euler-distinct}
+\act{Distintos ângulos de Euler}{euler-distinct}
 \begin{itemize}
-\item To experiment with three-dimensional rotations, it is helpful to construct a coordinate frame from three mutually perpendicular pencils or straws.
-\item Draw the coordinate frames for a $zyz$ Euler angle rotation, where each rotation is by $90^\circ$. %Answer: $(l,o,u)$
-\item What $zyz$ rotation gives the same result at the $zyx$ rotation shown in Fig.~\ref{fig.euler}? %Answer: $(0,90,0)$
-\item Experiment with other rotation sequences and with angles other than $90^\circ$.
+\item Para experimentar as rotações tridimensionais, é útil construir uma moldura coordenada a partir de três lápis ou palhetas mutuamente perpendiculares.
+\item Desenhar as armações de coordenadas para uma rotação angular de $zyz$ Euler, onde cada rotação é por $90^\circ$. %Answer: $(l,o,u)$
+\item A rotação de $zyz$ dá o mesmo resultado na rotação de $zyx$ mostrada em Fig.~\ref{fig.euler}? %Answer: $(0,90,0)$
+\item Experiência com outras seqüências de rotação e com outros ângulos que não $90^\circ$.
 \end{itemize}
 \end{framed}
 
 \section{Advanced topics in three-dimensional transforms}\label{s.advanced-three}
 
-Now that you have tasted three-dimensional rotations, we survey the next steps in learning this topic which you can study in the textbooks listed in the references.
+Agora que você já provou as rotações tridimensionais, pesquisamos os próximos passos no aprendizado deste tópico que você pode estudar nos livros didáticos listados nas referências.
 
-There are $12$ Euler angles and the choice of which to use depends on the intended application. Furthermore, there is a different way of defining rotations. Euler angles are \emph{moving axes} transforms, that is, each rotation is around the \emph{new} position of the axis after the previous rotation. In Fig.~\ref{fig.euler}, the second rotation is around the $y$-axis that now points left, not around the original $y$-axis that points up. It is also possible to define \emph{fixed axes} rotations in which subsequent rotations are around the original axes of the coordinate system. In three dimensions, homogeneous transforms that include translations in addition to rotations can be efficiently represented as $4\times 4$ matrices.
+Existem ângulos de Euler de $12$ e a escolha dos quais utilizar depende da aplicação pretendida. Além disso, há uma maneira diferente de definir as rotações. Os ângulos de Euler são \emph{eixos móveis} transformadas, isto é, cada um dos eixos  cada rotação está em torno da posição \emph{new} do eixo após a rotação anterior. Na Fig.~\ref{fig.euler}, a segunda rotação está em torno do eixo $y$- que agora aponta para a esquerda, não em torno do eixo $y$- original que aponta para cima. Também é possível definir as rotações \emph{eixos fixos} nas quais as rotações subseqüentes estão em torno dos eixos originais do sistema de coordenadas. Em três dimensões, as transformações homogêneas que incluem traduções além das rotações podem ser representadas de forma eficiente como matrizes de $4\times 4$.
 
-Euler angles are relatively inefficient to compute and suffer from computational instabilities. These can be overcome by using \emph{quaternions}, which are a generalization of complex numbers. Quaternions use three ``imaginary'' numbers $i,j,k$, where:
+Os ângulos de Euler são relativamente ineficientes para calcular e sofrem com as instabilidades computacionais. Estas podem ser superadas usando \emph{quaternions}, que são uma generalização de números complexos. Os Quaternions utilizam três números ``imaginários'', $i,j,k$, onde:
 \[
 i^2 = j^2 = k^2 = ij\,k = -1\,.
 \]
-Recall that a vector in the two-dimensional plane can be expressed as a complex number $x+\vec{i}\,y$. Rotating the vector by an angle $\theta$ can be performed by multiplying by the value $\cos \theta + \vec{i} \sin \theta$.  Similarly, in three dimensions, a vector can be expressed as a \emph{pure quaternion} with a zero real component: $p=0+x\,\vec{i} + y\,\vec{j} + z\,\vec{k}$. Given an axis and an angle, there exists a quaternion $q$ that rotates the vector around the axis by this angle using the formula $qpq^{-1}$. This computation is more efficient and robust than the equivalent computation with Euler angles and is used in a variety of contexts such as aircraft control and computer graphics.
+Lembre-se de que um vetor no plano bidimensional pode ser expresso como um número complexo $x+\vec{i},y$. A rotação do vetor por um ângulo $\theta$ pode ser realizada multiplicando pelo valor $\cos \theta + \vec{i} \sin\theta$.  Da mesma forma, em três dimensões, um vetor pode ser expresso como um quaternion com um componente real zero:$p=0+x\,\vec{i} + y\,\vec{j} + z\,\vec{k}$. Dado um eixo e um ângulo, existe um quaternion $q$ que gira o vetor em torno do eixo por este ângulo usando a fórmula $qpq^{-1}$. Este cálculo é mais eficiente e robusto do que o cálculo equivalente com ângulos Euler e é usado em uma variedade de contextos, como controle de aeronaves e computação gráfica.
 
 
-\section{Summary}
+\section{Sumário}
 
-Kinematics is the description of the motion of a robot. In forward kinematics, we are given a set of commands for the robot and we need to compute its final position relative to its initial position. In inverse kinematics, we are given a desired final position and need to compute the commands that will bring the robot to that position. This chapter has demonstrated kinematic computations for a simple two-dimensional robotic manipulator arm. In practice, manipulators move in three-dimensions and the computations are more difficult. Exact solutions for computing inverse kinematics usually cannot be found and approximate numerical solutions are used.
+A cinemática é a descrição do movimento de um robô. Na cinemática dianteira, recebemos um conjunto de comandos para o robô e precisamos computar sua posição final em relação à posição inicial. Na cinemática inversa, nos é dada uma posição final desejada e precisamos computar os comandos que levarão o robô a essa posição. Este capítulo demonstrou cálculos cinemáticos para um braço manipulador robótico bidimensional simples. Na prática, os manipuladores se movimentam em três dimensões e os cálculos são mais difíceis. Soluções exatas para computação da cinemática inversa geralmente não podem ser encontradas e são usadas soluções numéricas aproximadas.
 
-There are many ways of defining and computing arbitrary rotations. We mentioned the Euler angles where an arbitrary rotation is obtained by a sequence of three rotations around the coordinate axes. Quaternions, a generalization of complex numbers, are often used in practice because they are computationally more efficient and robust.
+Há muitas maneiras de definir e computar rotações arbitrárias. Mencionamos os ângulos de Euler onde uma rotação arbitrária é obtida por uma seqüência de três rotações em torno dos eixos coordenados. Quaternions, uma generalização de números complexos, são freqüentemente utilizados na prática porque são computacionalmente mais eficientes e robustos.
 
-\section{Further reading}
+\section{Outras leituras}
 
-Advanced textbooks on robotic kinematics and related topics are those by Craig \cite{craig} and Spong et al. \cite{spong}. See also Chapter~3 of Correll \cite{correll}. Appendix~B of \cite{craig} contains the rotation matrices for all the Euler angle sequences. The video lectures by Angela Sodemann are very helpful:\\
+Os livros didáticos avançados sobre cinemática robótica e tópicos relacionados são os de Craig \cite{craig} e Spong et al. \cite{spong}. Veja também o Capítulo 3 do Correll \cite{correll}. O Apêndice B de \cite{craig} contém as matrizes de rotação para todas as seqüências de ângulos de Euler. As vídeo-palestras de Angela Sodemann são muito úteis:\\
 \url{https://www.youtube.com/user/asodemann3},\\
 \url{http://www.robogrok.com/Flowchart.html}.
 
-Although not a book on robotics, Vince's monograph on quaternions \cite{vince} gives an excellent presentation of the mathematics of rotations.
+Embora não seja um livro sobre robótica, a monografia de Vince sobre quaternions \cite{vince} dá uma excelente apresentação da matemática das rotações.

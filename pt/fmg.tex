@@ -18,7 +18,7 @@ Os FSMs podem ser exibidos em diagramas de estados \emph{diagramas de estados}:
 \draw[->,bend left=15] (off) to node[above] {\p{alavanca para baixo $\leadsto $ liga o aquecimento}} (on);
 \draw[->,bend left=15] (on) to node[below] {\p{o temporizador expirou $\leadsto$ desliga o aquecimento}} (off);
 \draw[->] (-15mm,10mm) to (off);
-\node[draw,right=of on,xshift=-4cm] { \p{desligado = torradeira desligada} \\ \p{on = torradeira on}};
+\node[draw,below=of on,xshift=-30mm,yshift=-4mm] { \p{desligado = torradeira desligada} \\ \p{on = torradeira on}};
 \end{tikzpicture}
 \end{center}
 

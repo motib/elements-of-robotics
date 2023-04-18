@@ -43,7 +43,7 @@ Em contraste, espera-se que robôs móveis se movimentem e executem tarefas em a
 
 Não há uma linha divisória clara entre as tarefas executadas por robôs fixos e móveis - os humanos podem interagir com robôs industriais e os robôs móveis podem ser constrangidos a se moverem em pistas - mas é conveniente considerar as duas classes como fundamentalmente diferentes. Em particular, os robôs fixos estão presos a um suporte estável no chão, de modo que podem calcular sua posição com base em seu estado interno, enquanto os robôs móveis precisam confiar em sua percepção do ambiente a fim de calcular sua localização.
 
-Existem três ambientes principais\index{robô!ambientes} para robôs móveis que requerem princípios de projeto significativamente diferentes porque diferem no mecanismo de movimento: aquático (exploração submarina), terrestre (carros) e aéreo (zangões). Novamente, a classificação não é rigorosa, por exemplo, existem robôs anfíbios que se movimentam tanto na água quanto no solo. Os robôs para estes três ambientes podem ser ainda mais divididos em subclasses: robôs terrestres podem ter pernas ou rodas ou trilhos, e robôs aéreos podem ser mais leves que balões de ar ou aviões mais pesados que o ar, que por sua vez são divididos em asa fixa e asa rotativa (helicópteros).
+Existem três ambientes principais para robôs móveis que requerem princípios de projeto significativamente diferentes porque diferem no mecanismo de movimento: aquático (exploração submarina), terrestre (carros) e aéreo (zangões). Novamente, a classificação não é rigorosa, por exemplo, existem robôs anfíbios que se movimentam tanto na água quanto no solo. Os robôs para estes três ambientes podem ser ainda mais divididos em subclasses: robôs terrestres podem ter pernas ou rodas ou trilhos, e robôs aéreos podem ser mais leves que balões de ar ou aviões mais pesados que o ar, que por sua vez são divididos em asa fixa e asa rotativa (helicópteros).
 
 \begin{figure}
 \begin{center}
@@ -74,7 +74,7 @@ Existem três ambientes principais\index{robô!ambientes} para robôs móveis qu
 
 Os robôs podem ser classificados pelo campo de aplicação pretendido e pelas tarefas que executam (Fig.~\ref{fig.classification2}). Mencionamos os robôs industriais que trabalham em ambientes bem definidos nas tarefas de produção. Os primeiros robôs foram robôs industriais porque o ambiente bem definido simplificou seu projeto.  Os robôs de serviço, por outro lado, auxiliam os humanos em suas tarefas. Estes incluem tarefas em casa como limpeza a vácuo, transporte como carros de auto direção, e aplicações de defesa, como zangões de reconhecimento. A medicina também tem visto o uso crescente de robôs em cirurgia, reabilitação e treinamento. Estas são aplicações recentes que requerem sensores melhorados e uma interação mais próxima com o usuário.
 
-\section{Robôs industriais}\index{robot!industrial}
+\section{Robôs industriais}
 
 Os primeiros robôs foram robôs industriais que substituíram trabalhadores humanos executando tarefas simples e repetitivas. As linhas de montagem da fábrica podem operar sem a presença de humanos, em um ambiente bem definido onde o robô tem que executar tarefas em uma ordem especificada, atuando sobre objetos precisamente colocados à sua frente (Fig.~\ref{fig.assemblyline}). 
 
@@ -92,7 +92,6 @@ Entretanto, os robôs de hoje precisam de mais flexibilidade, por exemplo, a cap
 Uma flexibilidade adicional é necessária quando os robôs industriais interagem com humanos e isto introduz fortes exigências de segurança, tanto para os braços robóticos quanto para os robôs móveis. Em particular, a velocidade do robô deve ser reduzida e o projeto mecânico deve garantir que as peças móveis não sejam um perigo para o usuário. A vantagem dos humanos trabalhando com robôs é que cada um pode realizar o que faz de melhor: os robôs realizam tarefas repetitivas ou perigosas, enquanto os humanos realizam etapas mais complexas e definem as tarefas gerais do robô, já que são rápidos a reconhecer erros e oportunidades de otimização.
 
 \section{Robôs móveis autônomos}
-\index{robot!mobile}
 
 Muitos robôs móveis são controlados remotamente, executando tarefas como inspeção de tubulações, fotografia aérea e eliminação de bombas que dependem de um operador que controla o dispositivo. Estes robôs não são autônomos; eles usam seus sensores para dar ao operador acesso remoto a lugares perigosos, distantes ou inacessíveis. Alguns deles podem ser semi-autônomos, executando subtarefas automaticamente. O piloto automático de um drone estabiliza o vôo enquanto o humano escolhe a rota de vôo. Um robô em um cano pode controlar seu movimento dentro do cano enquanto o humano procura por defeitos que precisam ser reparados. Os \emph{robôs móveis totalmente autônomos} não dependem de um operador, mas tomam decisões por conta própria e executam tarefas, tais como transportar material enquanto navegam em terrenos incertos (paredes e portas dentro de edifícios, interseções nas ruas) e em um ambiente em constante mudança (pessoas andando por aí, carros movendo-se nas ruas).
 
@@ -113,7 +112,7 @@ Um ambiente ainda mais difícil e perigoso é o espaço. O Sojourner e o Curiosi
 
 Grande parte da pesquisa e desenvolvimento em robótica atualmente está focada em tornar os robôs mais autônomos, melhorando os sensores e permitindo um controle mais inteligente do robô. Melhores sensores podem perceber os detalhes de situações mais complexas, mas para lidar com estas situações, o controle do comportamento do robô deve ser muito flexível e adaptável. A visão, em particular, é um campo de pesquisa muito ativo porque as câmeras são baratas e a informação que elas podem adquirir é muito rica. Estão sendo feitos esforços para tornar os sistemas mais flexíveis, para que eles possam aprender com um humano ou adaptar-se a novas situações. Outro campo ativo de pesquisa aborda a interação entre humanos e robôs. Isto envolve tanto a detecção quanto a inteligência, mas também deve levar em conta a psicologia e a sociologia das interações.
 
-\section{Robôs humanóides}\index{robot!humanoid}
+\section{Robôs humanóides}
 
 A ficção científica e os meios de comunicação de massa gostam de representar os robôs de forma humanóide. Todos estamos familiarizados com o R2-D2 e o 3-CPO, os personagens robóticos dos filmes \emph{Star Wars}, mas o conceito tem uma longa história. No século XVIII, um grupo de relojoeiros suíços - Pierre e Henri-Louis Jaquet-Droz e Jean-Fr\'{e}d\'{e}ric Leschot - construíram autômatos humanóides para demonstrar suas habilidades mecânicas e anunciar seus relógios. Muitas empresas hoje constroem robôs humanóides por razões similares.
 
@@ -122,11 +121,10 @@ Os robôs humanóides são uma forma de robô móvel autônomo com um projeto me
 Os robôs humanóides podem ser muito difíceis de projetar e controlar. Eles são caros para construir com múltiplas articulações que podem se mover de muitas maneiras diferentes. Robôs que utilizam rodas ou esteiras são preferidos para a maioria das aplicações porque são mais simples, menos caros e robustos.
 
 \section{Robôs educacionais}\label{s.educational}
-\index{robot!educational}
 
 Os avanços na eletrônica e na mecânica tornaram possível a construção de robôs relativamente baratos. Os robôs educacionais são amplamente utilizados nas escolas, tanto em salas de aula quanto em atividades extracurriculares. O grande número de robôs educacionais torna impossível dar uma visão geral completa. Aqui damos poucos exemplos que são representativos dos robôs comumente usados na educação.
 
-\medskip
+\smallskip
 
 \noindent\textbf{Robôs móveis pré-montados}
 
@@ -165,7 +163,7 @@ Muitos robôs educacionais são projetados como robôs móveis pré-montados. Fi
 %\end{minipage}
 %\end{figure}
 %
-\medskip
+\smallskip
 
 \noindent\textbf{Kits de robótica}
 
@@ -207,7 +205,7 @@ Uma tendência recente é a de substituir coleções fixas de tijolos por peças
 %\rightcaption{Poppy Ergo Jr robotic arms (Courtesy of the Poppy Project)}\label{fig.poppy}
 %\end{figure}
 
-\medskip
+\smallskip
 
 \noindent\textbf{Armas robóticas}
 
@@ -215,7 +213,7 @@ Para agir em seu ambiente, o robô precisa de um \emph{actuator} que é um compo
 
 Robôs educacionais são geralmente robôs móveis cujos únicos atuadores são seus motores e dispositivos de exibição, tais como luzes, sons ou uma tela. Os efectores finais podem ser construídos com kits robóticos ou usando componentes adicionais com robôs pré-montados, embora existam braços robóticos educacionais (Fig.~\ref{fig.poppy}). A manipulação de objetos introduz complexidade no projeto; entretanto, uma vez que os algoritmos para os efetores finais são similares aos algoritmos para robôs móveis simples, a maioria das atividades do livro assumirá apenas que seu robô possui motores e dispositivos de exibição.
 
-\medskip
+\smallskip
 
 \noindent\textbf{Ambientes de desenvolvimento de software}
 
@@ -439,7 +437,7 @@ Um robô móvel autônomo deve de alguma forma navegar de uma posição inicial 
 
 Os capítulos seguintes apresentam tópicos avançados em robótica. Eles são independentes uns dos outros para que você possa selecionar quais deles estudar e em que ordem.
 \begin{description}
-\item [\textbf{Chapter \ref{ch.fuzzy} Controle de Lógica Fuzzy}] Os algoritmos de controle (Cap.~ref{ch.control}) exigem a especificação de um valor alvo preciso: um sistema de aquecimento precisa da temperatura alvo de uma sala e um sistema de cruise control precisa da velocidade alvo de um carro. Uma abordagem alternativa chamada lógica difusa usa especificações imprecisas como frio, frio, quente, quente, ou muito lento, lento, rápido, muito rápido. Este capítulo apresenta a lógica difusa e mostra como ela pode ser usada para controlar um robô que se aproxima de um objeto.
+\item [\textbf{Chapter \ref{ch.fuzzy} Controle de Lógica Fuzzy}] Os algoritmos de controle (Cap.~\ref{ch.control}) exigem a especificação de um valor alvo preciso: um sistema de aquecimento precisa da temperatura alvo de uma sala e um sistema de cruise control precisa da velocidade alvo de um carro. Uma abordagem alternativa chamada lógica difusa usa especificações imprecisas como frio, frio, quente, quente, ou muito lento, lento, rápido, muito rápido. Este capítulo apresenta a lógica difusa e mostra como ela pode ser usada para controlar um robô que se aproxima de um objeto.
 \smallskip
 \item [\textbf{Chapter \ref{ch.image} Processamento de imagem}] A maioria dos sensores robóticos medem distâncias e ângulos usando lasers, som ou luz infravermelha. Nós, humanos, confiamos principalmente em nossa visão. Câmeras digitais de alta qualidade são baratas e encontradas em todos os smartphones. A dificuldade é processar e interpretar as imagens tiradas pela câmera, algo que nosso cérebro faz instantaneamente. O processamento digital de imagens tem sido objeto de extensa pesquisa e seus algoritmos são usados em robôs avançados que podem proporcionar o poder computacional necessário. Neste capítulo pesquisamos os algoritmos de processamento de imagem e mostramos como um robô educacional pode demonstrar os algoritmos mesmo sem uma câmera.
 \smallskip

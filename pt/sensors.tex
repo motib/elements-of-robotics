@@ -1,7 +1,6 @@
 % !TeX root = er.tex
 
 \chapter{Sensores}\label{ch.sensors}
-\index{sensor}
 
 Um robô não pode mover uma distância específica em uma direção específica apenas ajustando a potência relativa dos motores das duas rodas e o período de tempo em que os motores funcionam. Suponhamos que queremos que o robô se mova em frente. Se ajustarmos a potência dos dois motores ao mesmo nível, mesmo pequenas diferenças nas características dos motores e rodas farão com que o robô gire ligeiramente para um lado. Desníveis na superfície sobre a qual o robô se move também farão com que as rodas girem em velocidades diferentes. O aumento ou diminuição do atrito entre as rodas e a superfície pode afetar a distância movimentada em um período de tempo específico. Portanto, se quisermos que o robô se mova em direção a uma parede a 1 m de distância e pare 20 cm à sua frente, o robô deve \emph{sentir} a existência da parede e parar quando ele \emph{detectar} que a parede está a 20 cm de distância.
 
@@ -16,7 +15,7 @@ A seção~\ref{s.classify} introduz a terminologia dos sensores. A seção~\ref{
 
 \section{Classification of sensors}\label{s.classify}
 
-Sensors are classified as \emph{proprioceptive}\index{sensor!proprioceptive} or \emph{exteroceptive}\index{sensor!exteroceptive}, and exteroceptive sensors are further classified as \emph{active} or \emph{passive} (Fig.~\ref{fig.sensor-classification}). A proprioceptive sensor measures something internal to the robot itself. The most familiar example is a car's speedometer which measures the car's speed by counting rotations of the wheels (Sect.~\ref{s.wheel}). An exteroceptive sensor measures something external to the robot such as the distance to an object. An active sensor affects the environment usually by emitting energy: a sonar range finder on a submarine emits sound waves and uses the reflected sound to determine range. A passive sensor does not affect the environment: a camera simply records the light reflected off an object. Robots invariably use some exteroceptive sensors to correct for errors that might arise from proprioceptive sensors or to take changes of the environment into account.
+Sensors are classified as \emph{proprioceptive} or \emph{exteroceptive}, and exteroceptive sensors are further classified as \emph{active} or \emph{passive} (Fig.~\ref{fig.sensor-classification}). A proprioceptive sensor measures something internal to the robot itself. The most familiar example is a car's speedometer which measures the car's speed by counting rotations of the wheels (Sect.~\ref{s.wheel}). An exteroceptive sensor measures something external to the robot such as the distance to an object. An active sensor affects the environment usually by emitting energy: a sonar range finder on a submarine emits sound waves and uses the reflected sound to determine range. A passive sensor does not affect the environment: a camera simply records the light reflected off an object. Robots invariably use some exteroceptive sensors to correct for errors that might arise from proprioceptive sensors or to take changes of the environment into account.
 
 \begin{figure}
 \begin{center}
@@ -36,7 +35,6 @@ Sensors are classified as \emph{proprioceptive}\index{sensor!proprioceptive} or 
 \end{figure}
 
 \section{Sensor de distâncias}\label{s.distance-sensors}
-\index{sensor!distance}
 
 Na maioria das aplicações, o robô precisa medir a distância entre o robô e um objeto usando um sensor de distância. Os sensores de distância são normalmente \emph{ativos}: eles transmitem um sinal e depois recebem sua reflexão (se houver) de um objeto (Fig.~\ref{fig.measure-d}). Uma maneira de determinar a distância é medir o tempo que decorre entre o envio de um sinal e sua recepção:
 \begin{equation}
@@ -73,14 +71,12 @@ A vantagem dos sensores de ultra-som é que eles não são sensíveis a mudança
 Os sensores de ultra-som são relativamente baratos e podem funcionar em ambientes externos. Eles são usados em carros para detectar distâncias curtas, como por exemplo, para auxiliar no estacionamento. Sua principal desvantagem é que a medição da distância é relativamente lenta, já que a velocidade do som é muito menor do que a velocidade da luz. Outra desvantagem é que eles não podem ser focalizados a fim de medir a distância até um objeto específico.
 
 \subsection{Sensores de proximidade infravermelhos}
-\index{sensor!infrared}\index{sensor!proximity}
 
 \emph{Luz infravermelha} é a luz cujo comprimento de onda é maior que a luz vermelha, que é a luz com o comprimento de onda mais longo que nossos olhos podem ver. O olho pode ver a luz com comprimentos de onda de cerca de $390$ a $700$ nanômetros (um nanômetro é um milionésimo de um milímetro). A luz infravermelha tem comprimentos de onda entre $700$ e $1000$ nanômetros. Ela é invisível ao olho humano e, portanto, é usada no controle remoto de aparelhos de TV e outros aparelhos eletrônicos.
 
 Os sensores de proximidade são dispositivos simples que utilizam a luz para detectar a presença de um objeto através da medição da intensidade da luz refletida. A intensidade da luz diminui com o quadrado da distância da fonte e esta relação pode ser usada para medir a distância aproximada ao objeto. A medição da distância não é muito precisa porque a intensidade refletida também depende da refletividade do objeto. Um objeto preto reflete menos luz do que um objeto branco colocado à mesma distância, portanto um sensor de proximidade não pode distinguir entre um objeto preto próximo e um objeto branco colocado um pouco mais distante. Esta é a razão pela qual estes sensores são chamados sensores de proximidade, não sensores de distância. A maioria dos robôs educacionais usa sensores de proximidade porque são muito mais baratos do que os sensores de distância.
 
 \subsection{Sensores óticos de distância}\label{s.optical-distance}
-\index{sensor!optical}
 
 A distância pode ser calculada a partir de uma medida do tempo decorrido entre o envio de um sinal luminoso e sua recepção. A luz pode ser luz comum ou luz de um laser. A luz produzida por um laser é \emph{coherent} (ver abaixo).  Mais comumente, os lasers para medir a distância usam luz infravermelha, embora a luz visível também possa ser usada. Os lasers têm várias vantagens em relação a outras fontes de luz. Primeiro, os lasers são mais potentes e podem detectar e medir a distância a objetos a longa distância. Em segundo lugar, um feixe laser é altamente focalizado, de modo que uma medição precisa do ângulo até o objeto pode ser feita (Fig.~\ref{fig.beam}).
 
@@ -337,7 +333,6 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 %\end{figure}
 
 \subsection{Laser scanners}
-\index{sensor!laser}
 
 Quando sensores de ultra-som ou proximidade são usados, um pequeno número de sensores pode ser colocado ao redor do robô a fim de detectar objetos em qualquer lugar nas proximidades do robô (Fig.~\ref{fig.separate-sensors}). Naturalmente, o ângulo do objeto não pode ser medido com precisão, mas pelo menos o objeto será detectado e o robô pode se aproximar ou evitar o objeto.
 
@@ -433,7 +428,7 @@ Com um sensor laser, a largura do feixe é tão pequena que seria necessário um
 \end{itemize}
 \end{framed}
 
-\medskip
+\smallskip
 
 \begin{framed}
 \act{Limiares}{threshold}
@@ -464,7 +459,6 @@ Com um sensor laser, a largura do feixe é tão pequena que seria necessário um
 \end{framed}
 
 \section{Câmeras}\label{s.cameras}
-\index{camera}
 
 As câmeras digitais são amplamente utilizadas na robótica porque uma câmera pode fornecer informações muito mais detalhadas do que apenas a distância e o ângulo a um objeto. As câmeras digitais utilizam um componente eletrônico chamado \emph{dispositivo acoplado à carga (CCD)} que detecta ondas de luz e retorna um conjunto de \emph{elementos de imagem}, ou \emph{pixels de imagem} para abreviar (Fig.~ref{fig.camera}).
 
@@ -553,7 +547,6 @@ Muito freqüentemente um sensor terá uma alta resolução, mas baixa precisão;
 \end{framed}
 
 \section{Não-linearidade}\label{s.nonlinearity}
-\index{nonlinearity}
 
 Os sensores retornam grandezas eletrônicas como potencial ou corrente, que são proporcionais ao que está sendo medido. Os valores analógicos são convertidos em valores digitais. Por exemplo, um sensor de proximidade pode retornar $8$ bits de dados (valores entre $0$ e $255$) que representam um intervalo de distâncias, talvez de $0$ a $50$ cm. Um sensor de $8$ bits não pode sequer retornar ângulos na faixa de $0^\circ$--$36^\circ$ com uma resolução de um grau. O computador deve traduzir os valores digitais em medidas de uma quantidade física. A descoberta do mapeamento para esta tradução é chamada de \emph{calibração}. No melhor caso, o mapeamento será linear e fácil de calcular; se não, se o mapeamento for não-linear, uma tabela ou função não-linear deve ser usada. As tabelas são mais eficientes porque procurar uma entrada é mais rápido do que calcular uma função, mas as tabelas requerem muita memória.
 
