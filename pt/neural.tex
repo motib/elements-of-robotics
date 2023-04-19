@@ -4,7 +4,7 @@
 
 O capítulo~\ref{ch.reactive} descreveu comportamentos reativos inspirados no trabalho de Valentino Braitenberg. O controle de veículos Braitenberg simples é muito semelhante ao controle de um organismo vivo por sua rede \emph{biológica neural}. Este termo se refere ao sistema nervoso de um organismo vivo, incluindo seu cérebro e os nervos que transmitem sinais através do corpo. Os modelos computadorizados de redes neurais são um tópico ativo de pesquisa em inteligência artificial. \emph{Artificial neural networks (ANNs)} permitem implementar um comportamento complexo usando um grande número de componentes abstratos relativamente simples que são modelados em neurônios, os componentes das redes neurais biológicas. Este capítulo apresenta o uso das ANNs para controlar o comportamento dos robôs.
 
-Seguindo uma breve visão geral do sistema nervoso biológico na Sect.~\ref{s.bio-nn}, Sect.~ref{s.ann} define o modelo de ANN e Sect.~\ref{s.braitenberg-ann} mostra como ele pode ser usado para implementar o comportamento de um veículo Braitenberg. A seção ~\ref{s.ann-topology} apresenta diferentes topologias de rede. A característica mais importante das ANNs é sua capacidade de aprendizagem que lhes permite adaptar seu comportamento. A seção~\ref{s.ann-learning} apresenta uma visão geral da aprendizagem nas ANNs usando a regra Hebbian.
+Seguindo uma breve visão geral do sistema nervoso biológico na Sect.~\ref{s.bio-nn}, Sect.~\ref{s.ann} define o modelo de ANN e Sect.~\ref{s.braitenberg-ann} mostra como ele pode ser usado para implementar o comportamento de um veículo Braitenberg. A seção ~\ref{s.ann-topology} apresenta diferentes topologias de rede. A característica mais importante das ANNs é sua capacidade de aprendizagem que lhes permite adaptar seu comportamento. A seção~\ref{s.ann-learning} apresenta uma visão geral da aprendizagem nas ANNs usando a regra Hebbian.
 
 \section{O sistema neural biológico}\label{s.bio-nn}
 
@@ -314,7 +314,7 @@ Os valores $x_1, x_2, x_3$ vêm dos sensores que retornam zero quando não há n
 
 Os sensores esquerdo e direito são conectados aos neurônios com um peso positivo para o neurônio que controla a roda próxima e um peso negativo para o neurônio que controla a roda distante. Isto assegura que o robô se afaste do obstáculo.
 
-The following activity asks you to think about the relative values of weights.
+A seguinte atividade pede que você pense sobre os valores relativos dos pesos.
 
 \begin{framed}
 \act{ANN para evitar obstáculos: design}{avoidance-design}
@@ -590,8 +590,8 @@ Uma rede neural artificial pode ter \emph{conexões recorrentes} desde a saída 
 \begin{framed}
 \act{ANN com memória}{memory}
 \begin{itemize}
-\item Considere a rede na Fig.~ref{fig.ann-memory} com uma função de saída que se satura a $0$ e $1$. As entradas e a maioria dos pesos também estão entre $0$ e $1$. O que acontece se o peso das conexões recorrentes na figura for maior que $1$? O que acontece se o peso estiver entre $0$ e $1$?
-\item Modificar a implementação da rede na Fig.~ref{fig.nn-avoidance} para adicionar conexões recorrentes nos dois neurônios de saída. Qual é o efeito deles no comportamento de obstáculo-evasão do robô?
+\item Considere a rede na Fig.~\ref{fig.ann-memory} com uma função de saída que se satura a $0$ e $1$. As entradas e a maioria dos pesos também estão entre $0$ e $1$. O que acontece se o peso das conexões recorrentes na figura for maior que $1$? O que acontece se o peso estiver entre $0$ e $1$?
+\item Modificar a implementação da rede na Fig.~\ref{fig.nn-avoidance} para adicionar conexões recorrentes nos dois neurônios de saída. Qual é o efeito deles no comportamento de obstáculo-evasão do robô?
 \end{itemize}
 \end{framed}
 
@@ -797,7 +797,7 @@ Para simplificar a apresentação do Algoritmo~\ref{alg.hebb-background} usamos 
 \[
 \vec{x} = \left[ \begin{array}{c} x_1\\x_2\\x_3\\x_4\\x_5 \end{array} \right].
 \]
-Referindo-se novamente à Fig.~ref{fig.hebbian-avoidance}, o cálculo das saídas é dado por:
+Referindo-se novamente à Fig.~\ref{fig.hebbian-avoidance}, o cálculo das saídas é dado por:
 \begin{eqnarray}
 y_1 & \leftarrow & w_{1l}x_1 + w_{2l}x_2 + w_{3l}x_3 + w_{4l}x_4 + w_{5l}x_5\label{eqn.yl}\\
 y_2 & \leftarrow & w_{1r}x_1 + w_{2r}x_2 + w_{3r}x_3 + w_{4r}x_4 + w_{5r}x_5\label{eqn.yr}\,.

@@ -8,7 +8,7 @@ Para nós, a forma óbvia de fazer sentido ao nosso ambiente é usar a visão. T
 
 Por quase duzentos anos foi possível gravar imagens automaticamente usando uma câmera, mas a interpretação das imagens continuou sendo uma tarefa para os humanos. Com o advento dos computadores, tornou-se possível processar e interpretar as imagens automaticamente. As imagens digitais são familiares: mapas meteorológicos de satélites, imagens médicas (raios X, tomografias e ressonâncias magnéticas, imagens de ultra-som) e as fotos que tiramos com nossos smartphones. O campo de \emph{digital image processing} é um dos campos mais intensamente estudados da ciência da computação e engenharia, mas os sistemas de processamento de imagens ainda não atingiram a capacidade do sistema visual humano.
 
-Neste capítulo, apresentamos um gosto dos algoritmos para processamento digital de imagens e descrevemos como eles são usados em sistemas robóticos. As seções~\ref{s.obtaining-images}--ref{s.image-overview} fornecem uma visão geral dos sistemas de processamento de imagem e processamento de imagem digital. As seções~\ref{s.enhance}--\ref{s.blob} descrevem algoritmos para processamento de imagem: aprimoramento por filtros digitais e manipulação de histograma, segmentação (detecção de bordas) e reconhecimento de características (detecção de cantos e blobs, identificação de múltiplas características).
+Neste capítulo, apresentamos um gosto dos algoritmos para processamento digital de imagens e descrevemos como eles são usados em sistemas robóticos. As seções~\ref{s.obtaining-images}--\ref{s.image-overview} fornecem uma visão geral dos sistemas de processamento de imagem e processamento de imagem digital. As seções~\ref{s.enhance}--\ref{s.blob} descrevem algoritmos para processamento de imagem: aprimoramento por filtros digitais e manipulação de histograma, segmentação (detecção de bordas) e reconhecimento de características (detecção de cantos e blobs, identificação de múltiplas características).
 
 Por razões de custo e poder computacional, poucos robôs educacionais usam câmeras, portanto, para estudar algoritmos de processamento de imagem é possível implementar os algoritmos em um computador pessoal usando imagens capturadas com uma câmera digital. No entanto, propomos algumas atividades que demonstram algoritmos de processamento de imagem em um robô educacional. O robô se move sobre uma imagem unidimensional e as amostras são lidas por um sensor de terra. Isto resulta em uma matriz unidimensional de pixels que pode ser processada usando versões simplificadas dos algoritmos que apresentamos.
 
@@ -36,7 +36,7 @@ Os sensores são capazes de medir a luz de comprimentos de onda fora do alcance 
 
 O problema com a cor é que ela triplica os requisitos para o armazenamento e processamento de imagens. Todas as cores podem ser formadas tomando quantidades variáveis das três \emph{primárias cores}: vermelho, verde e azul (RGB). Portanto, uma imagem colorida requer três bytes para cada pixel. Uma única imagem colorida de resolução de $1920\times 1080$ requer mais de $6$ MB de memória para ser armazenada e o processamento da imagem leva pelo menos três vezes mais tempo.
 
-\section{Uma visão geral do processamento de imagens digitais}\label{s.image-overview}
+\section[processamento de imagens digitais]{Uma visão geral do processamento de imagens digitais}\label{s.image-overview}
 
 O sistema óptico de um robô captura imagens como matrizes retangulares de pixels, mas as tarefas de um robô são expressas em termos de objetos do ambiente: entrar em uma sala através de uma porta, pegar um item de uma prateleira, parar se um pedestre caminhar na frente do carro. Como podemos passar de pixels a objetos?
 
@@ -52,7 +52,7 @@ A fase final do processamento da imagem é o reconhecimento de objetos. Em Sect.
 
 \section{Melhoria de imagem}\label{s.enhance}
 
-A figura~\ref{fig.no-noise} mostra uma imagem de um retângulo cuja intensidade é uniforme horizontalmente e sombreada de cima para baixo de escuro à luz. A representação da imagem como uma matriz retangular de pixels de $6,00\times 10$ é mostrada na Fig.~\ref{fig.pixel-noise}, onde cada pixel é representado por um nível de intensidade de luz na faixa de $0$--$100$. Agora veja a Fig.~\ref{fig.noise}: a imagem não é mais \emph{smooth} no sentido de que há três pontos cuja intensidade não é similar às intensidades de seus vizinhos. Compare a matriz de pixels na Fig.~ref{fig.pixel-noise} com a da Fig.~\ref{fig.pixel-noise}: as intensidades dos pixels nos locais $(2,3)$, $(3,6)$, $(4,4)$ são diferentes. Isto é provavelmente o resultado de ruído e não uma característica real do objeto que está sendo fotografado. 
+A figura~\ref{fig.no-noise} mostra uma imagem de um retângulo cuja intensidade é uniforme horizontalmente e sombreada de cima para baixo de escuro à luz. A representação da imagem como uma matriz retangular de pixels de $6,00\times 10$ é mostrada na Fig.~\ref{fig.pixel-noise}, onde cada pixel é representado por um nível de intensidade de luz na faixa de $0$--$100$. Agora veja a Fig.~\ref{fig.noise}: a imagem não é mais \emph{smooth} no sentido de que há três pontos cuja intensidade não é similar às intensidades de seus vizinhos. Compare a matriz de pixels na Fig.~\ref{fig.pixel-noise} com a da Fig.~\ref{fig.pixel-noise}: as intensidades dos pixels nos locais $(2,3)$, $(3,6)$, $(4,4)$ são diferentes. Isto é provavelmente o resultado de ruído e não uma característica real do objeto que está sendo fotografado. 
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -162,7 +162,7 @@ Considere a linha $4$ na matriz de pixels em Fig.~\ref{fig.pixel-noise}:
 \[
 50,\, 50,\, 50,\,50,\, 90,\, 50,\, 50,\, 50,\, 50,\, 50\,.
 \]
-Figura~\ref{fig.before-average} é um gráfico da intensidade da luz $f$ para os pixels naquela linha. É claro que um dos pixels tem um valor improvável porque seu valor é muito diferente do de seus vizinhos. Um programa pode tornar cada pixel mais parecido com seus vizinhos, substituindo a intensidade do pixel pela média de sua intensidade e as intensidades de seus vizinhos. Para a maioria dos pixels da linha, isto não muda seus valores: $(50+50+50)/3=50$, mas o pixel de ruído e seus dois vizinhos recebem novos valores: $(50+90+50)/3\approx 60$ (Fig.~ref{fig.after-average}). A média fez com que dois pixels recebessem valores "errados", mas em geral a imagem será visualmente melhorada porque a intensidade do ruído será reduzida.
+Figura~\ref{fig.before-average} é um gráfico da intensidade da luz $f$ para os pixels naquela linha. É claro que um dos pixels tem um valor improvável porque seu valor é muito diferente do de seus vizinhos. Um programa pode tornar cada pixel mais parecido com seus vizinhos, substituindo a intensidade do pixel pela média de sua intensidade e as intensidades de seus vizinhos. Para a maioria dos pixels da linha, isto não muda seus valores: $(50+50+50)/3=50$, mas o pixel de ruído e seus dois vizinhos recebem novos valores: $(50+90+50)/3\approx 60$ (Fig.~\ref{fig.after-average}). A média fez com que dois pixels recebessem valores "errados", mas em geral a imagem será visualmente melhorada porque a intensidade do ruído será reduzida.
 
 \begin{figure}
 \begin{minipage}{.47\textwidth}
@@ -253,7 +253,7 @@ g(r,c) = &(\\
 & ) \; / \; 9\,.
 \end{array}
 \]
-O resultado da aplicação do filtro de caixa à imagem ruidosa na Fig.~\ref{fig.pixel-noise} é mostrado na Fig.~\ref{fig.box-filter}..\footnote{O filtro não é aplicado aos pixels no limite da imagem para evitar exceder os limites da matriz. Alternativamente, a imagem pode ser acolchoada com filas e colunas extras.} Os valores de intensidade não são mais uniformes, mas estão bastante próximos dos valores originais, exceto quando havia um pixel de ruído. A segunda linha do fundo mostra que o valor do ruído de $90$ não aparece mais; em vez disso, todos os valores na linha estão próximos uns dos outros na faixa $46$--$54$.
+O resultado da aplicação do filtro de caixa à imagem ruidosa na Fig.~\ref{fig.pixel-noise} é mostrado na Fig.~\ref{fig.box-filter}.\footnote{O filtro não é aplicado aos pixels no limite da imagem para evitar exceder os limites da matriz. Alternativamente, a imagem pode ser acolchoada com filas e colunas extras.} Os valores de intensidade não são mais uniformes, mas estão bastante próximos dos valores originais, exceto quando havia um pixel de ruído. A segunda linha do fundo mostra que o valor do ruído de $90$ não aparece mais; em vez disso, todos os valores na linha estão próximos uns dos outros na faixa $46$--$54$.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -330,7 +330,7 @@ Seria apropriado usar este filtro se pensarmos que um pixel quase certamente tem
 \begin{framed}
 \act{Melhoria de imagem: suavização}{smoothing}
 \begin{itemize}
-\item Imprimir uma folha de papel com um padrão de nível de cinza como o mostrado na Fig.~ref{fig.one-enhance}. O padrão tem duas linhas pretas que desejamos detectar, mas também três áreas cinza-escuras (indicadas pelas setas) que provavelmente serão detectadas incorretamente como linhas.
+\item Imprimir uma folha de papel com um padrão de nível de cinza como o mostrado na Fig.~\ref{fig.one-enhance}. O padrão tem duas linhas pretas que desejamos detectar, mas também três áreas cinza-escuras (indicadas pelas setas) que provavelmente serão detectadas incorretamente como linhas.
 \item Programar o robô de modo que ele se mova da esquerda para a direita sobre o padrão, amostrando a saída do sensor de terra. Examine a saída e defina um limite para que o robô detecte tanto as linhas pretas quanto as áreas de cinza escuro. Modifique o programa para que em sua segunda passagem, indique (por luz ou som) quando tiver detectado uma linha preta e uma área escura.
 \item Modificar o programa para que ele substitua cada amostra pela média da intensidade da amostra e de seus dois vizinhos. O robô deve agora detectar as duas linhas pretas, mas não as áreas cinzentas.
 \item Experimentar com pesos diferentes para a média.
@@ -419,7 +419,7 @@ $\scriptstyle 5$ & $10$ & $34$ & $29$ & $14$ & $35$ & $31$ & $26$ & $42$ & $15$ 
 %\end{minipage}
 %\end{figure}
 
-Vamos agora construir um \emph{histograma} das intensidades (Fig.~\ref{fig.hist}). Um histograma é construído de \emph{bins}, onde cada contentor armazena uma contagem dos pixels com uma gama de intensidades. O histograma na figura contém dez caixas para intensidades nas faixas de $0$--$9$, $10$--$19$, \ldots, $91$--$99$. Se assumirmos que o retângulo branco é pequeno em relação ao fundo, é fácil ver pelo histograma que existem dois grupos de pixels, aqueles que são relativamente escuros e aqueles que são relativamente brilhantes. Um limiar de $50$ ou $60$ deve ser capaz de distinguir entre o retângulo e o fundo, mesmo na presença de ruído. De fato, um limiar de $50$ restaura a imagem original, enquanto um limiar de $60$ restaura corretamente $13$ dos $15$ pixels do retângulo.
+Vamos agora construir um \emph{histograma} das intensidades (Fig.~\ref{fig.hist}). Um histograma é construído de \emph{silos}, onde cada contentor armazena uma contagem dos pixels com uma gama de intensidades. O histograma na figura contém dez caixas para intensidades nas faixas de $0$--$9$, $10$--$19$, \ldots, $91$--$99$. Se assumirmos que o retângulo branco é pequeno em relação ao fundo, é fácil ver pelo histograma que existem dois grupos de pixels, aqueles que são relativamente escuros e aqueles que são relativamente brilhantes. Um limiar de $50$ ou $60$ deve ser capaz de distinguir entre o retângulo e o fundo, mesmo na presença de ruído. De fato, um limiar de $50$ restaura a imagem original, enquanto um limiar de $60$ restaura corretamente $13$ dos $15$ pixels do retângulo.
 
 \begin{figure}
 \begin{center}
@@ -438,7 +438,7 @@ A vantagem da manipulação de histogramas é que é muito eficiente computar at
 \hspace*{2em}\p{bin\_number} $\leftarrow$ \p{intensity(p) / number\_of\_bins}\\
 \hspace*{2em}\p{bins[bin\_number]} $\leftarrow$ \p{bins[bin\_number] + 1}
 \end{quote}
-Compare esta operação com a aplicação de um $3\times 3$ filtro espacial que requer multiplicações de $9$, adições de $8$ e uma divisão em cada pixel. Além disso, é necessária pouca memória. Escolhemos caixas de $10$ para que Fig.~ref{fig.hist} pudesse exibir todo o histograma, mas um histograma completo de $8$-bits em escala de cinza requer apenas caixas de $256$.
+Compare esta operação com a aplicação de um $3\times 3$ filtro espacial que requer multiplicações de $9$, adições de $8$ e uma divisão em cada pixel. Além disso, é necessária pouca memória. Escolhemos caixas de $10$ para que Fig.~\ref{fig.hist} pudesse exibir todo o histograma, mas um histograma completo de $8$-bits em escala de cinza requer apenas caixas de $256$.
 
 Escolher um limiar examinando uma trama do histograma é fácil, e se você souber aproximadamente a fração de fundo coberta pelos objetos, a seleção do limiar pode ser feita automaticamente.
 
@@ -667,7 +667,7 @@ $\scriptstyle 3$ &    \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ &   $
 $\scriptstyle 4$ &    \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ &   $30$ & $30$ \\
 $\scriptstyle 5$ &    \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ &   \boldmath $50$ & $30$ \\
 \end{tabular}
-\caption{Diagonal edge}\label{fig.diagonal-edge}
+\caption{Borda diagonal}\label{fig.diagonal-edge}
 \end{figure}
 
 \begin{figure}
@@ -748,7 +748,7 @@ $\scriptstyle 5$ &    $0$ &   $0$ &   $0$ &   $0$ &   $0$ &   $0$ \\
 \draw[fill,color=gray]  (-.5,0) rectangle +(3,3);
 \draw[fill,color=black] (2.5,0) rectangle +(3,3);
 \end{tikzpicture}
-\caption{Edge detection activity}\label{fig.edge-activity}
+\caption{Atividade de detecção de bordas}\label{fig.edge-activity}
 \end{figure}
 
 \section{Detecção de cantos}\label{s.corners}
@@ -1034,7 +1034,7 @@ Verifique se o Algoritmo~\ref{alg.blob} não é sensível ao nível de intensida
 \begin{framed}
 \act{Detectando uma bolha}{blob}
 \begin{itemize}
-\item Escreva um programa que faz com que o robô experimente o sensor do solo enquanto ele se move da esquerda para a direita sobre o padrão na Fig.~ref{fig.blob-for-activity}.
+\item Escreva um programa que faz com que o robô experimente o sensor do solo enquanto ele se move da esquerda para a direita sobre o padrão na Fig.~\ref{fig.blob-for-activity}.
 \item Calcule a intensidade média e defina o limite para a média.
 \item Em uma segunda passagem sobre o padrão, após detectar a primeira amostra do retângulo preto que está abaixo do limite, o robô fornece uma indicação (por luz ou som) desde que ele se mova sobre o retângulo.
 \item O robô deve considerar o segundo retângulo preto como um artefato e ignorá-lo.
@@ -1044,7 +1044,7 @@ Verifique se o Algoritmo~\ref{alg.blob} não é sensível ao nível de intensida
 \begin{framed}
 \act{Reconhecendo uma porta}{recognize}
 \begin{itemize}
-\item Na Fig.~ref{fig.door}, o retângulo cinza representa uma porta aberta em uma parede escura representada pelos retângulos pretos. Fig.~\ref{fig.not-a-door} representa uma parede escura entre duas portas cinzas abertas. Se você executar o programa a partir de Activity~\ref{act.edge-detection}, você verá que duas bordas são detectadas para ambos os padrões. Modifique o programa de modo que o robô possa distinguir entre os dois padrões.
+\item Na Fig.~\ref{fig.door}, o retângulo cinza representa uma porta aberta em uma parede escura representada pelos retângulos pretos. Fig.~\ref{fig.not-a-door} representa uma parede escura entre duas portas cinzas abertas. Se você executar o programa a partir de Activity~\ref{act.edge-detection}, você verá que duas bordas são detectadas para ambos os padrões. Modifique o programa de modo que o robô possa distinguir entre os dois padrões.
 \end{itemize}
 \end{framed}
 

@@ -4,7 +4,7 @@
 
 Os algoritmos robóticos dos capítulos anteriores reagem aos dados de seus sensores mudando a velocidade e a direção de seu movimento, mas as mudanças não foram quantitativas. Não exigimos que os robôs se movessem duas vezes mais rápido ou que girassem $90^\circ$ à direita. Os robôs no mundo real têm que se mover para locais específicos e podem ter restrições de engenharia sobre quão rápido ou lento eles podem se mover ou virar. Este capítulo apresenta a matemática do movimento robótico.
 
-As seções~~ref{s.distance-velocity}--ref{s.acceleration} revisam os conceitos de distância, tempo, velocidade e aceleração que devem ser familiares da física introdutória. A física do movimento é geralmente ensinada usando cálculo, mas um computador não pode lidar com funções contínuas; em vez disso, devem ser usadas aproximações discretas, como descrito na Seção ~ref{s.continuous}.
+As seções~\ref{s.distance-velocity}--\ref{s.acceleration} revisam os conceitos de distância, tempo, velocidade e aceleração que devem ser familiares da física introdutória. A física do movimento é geralmente ensinada usando cálculo, mas um computador não pode lidar com funções contínuas; em vez disso, devem ser usadas aproximações discretas, como descrito na seção~\ref{s.continuous}.
 
 As seções~\ref{s.odometry}--\ref{s.odometry-turns} apresentam {odometry}, o algoritmo fundamental para computar o movimento robótico. Uma aproximação da localização de um robô pode ser obtida calculando repetidamente a distância movida e a direção de mudança da velocidade das rodas em um curto período de tempo. Infelizmente, a odometria está sujeita a erros graves, como mostrado na seção Sect.~\ref{s.odometry-errors}. É importante entender que os erros de direção são muito mais significativos do que os erros de distância.
 
@@ -14,7 +14,7 @@ A seção~\ref{s.imu} apresenta uma visão geral da \emph{navegação por inérc
 
 Os carros não podem subir e descer, ao contrário dos helicópteros e submarinos que têm maior liberdade de movimento. Isto se expressa no conceito de \emph{degrees of freedom (DOF)} que é o tema da seção~\ref{s.dof}. A seção ~\ref{s.num-actuators} discute a relação entre o DOF e o número de DOF \emph{atuadores} (motores) em um sistema robótico.
 
-O número de DOF de um sistema não significa que um sistema como um veículo possa se mover livremente em todas essas direções. Um carro pode se mover para qualquer ponto do plano e se orientar em qualquer direção, mas não pode se mover para os lados, portanto, é necessária uma manobra difícil durante o estacionamento paralelo. Isto se deve à diferença entre o DOF e os \emph{degrees of mobility (DOM)}, um assunto explorado em Sect.~\ref{s.holonomic}, juntamente com o conceito de {sect.holonomic motion} que relaciona o DOF e o DOM.
+O número de DOF de um sistema não significa que um sistema como um veículo possa se mover livremente em todas essas direções. Um carro pode se mover para qualquer ponto do plano e se orientar em qualquer direção, mas não pode se mover para os lados, portanto, é necessária uma manobra difícil durante o estacionamento paralelo. Isto se deve à diferença entre o DOF e os \emph{degrees of mobility (DOM)}, um assunto explorado em Sect.~\ref{s.holonomic}, juntamente com o conceito de \emph{holonomic motion} que relaciona o DOF e o DOM.
 
 \section{Distância, velocidade e tempo}\label{s.distance-velocity}
 
@@ -71,12 +71,12 @@ Para obter uma imagem real do movimento de um robô, precisamos dividir seu movi
 e medir a distância e o tempo para cada segmento individualmente. Em seguida, podemos calcular as velocidades para cada segmento. Em símbolos, se denotarmos o comprimento do segmento $s_i$ por $\Delta s_i = x_{i+1}-x_i$ e o tempo que o robô leva para cruzar o segmento $s_i$ por $\Delta t_i = t_{i+1}-t_i$, então $v_i$, a velocidade no segmento $s_i$ é dada por:
 \[v_i = \frac{\Delta s_i}{\Delta t_i}\,.\]
 
-Figura~\ref{fig.instant-v} é um gráfico de distância vs. tempo para um robô em aceleração. O eixo do tempo foi dividido em segmentos e as inclinações $ \displaystyle \frac{Delta s_i}{Delta t_i}$ mostram a velocidade média em cada segmento que aumenta com o tempo.
+Figura~\ref{fig.instant-v} é um gráfico de distância vs. tempo para um robô em aceleração. O eixo do tempo foi dividido em segmentos e as inclinações $ \displaystyle \frac{\Delta s_i}{\Delta t_i}$ mostram a velocidade média em cada segmento que aumenta com o tempo.
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[scale=1.2,samples=20,domain=0:4]
-\draw[<->] (4,0) -- node[below] {\textsf{time} ($t$)} (0,0) -- node[sloped,above] {\textsf{distance} ($s$)} (0,4);
+\draw[<->] (4,0) -- node[below] {\textsf{tempo} ($t$)} (0,0) -- node[sloped,above] {\textsf{distância} ($s$)} (0,4);
 \draw plot (\x,{\x*\x/4});
 \draw[mark=*] plot coordinates {(0,0) (1,.25) (2,1) (3,2.25) (4,4)};
 \draw[dashed] (1,0) -- (1,.25);
@@ -137,8 +137,8 @@ Assumindo aceleração constante, $v_{\textit{max}} = 27,8 = a = 10a$, então a 
 \item Escrever um programa que aplica a configuração de potência máxima a um robô.
 \item Colocar o robô sobre uma superfície e executar o programa.
 \item Quando o robô parece ter atingido o recorde de velocidade máxima do tempo desde o início da execução.
-\item Compare a distância medida com $s = at^2/2$ (Fig.~ ~ref{fig.acc-distance}).
-\item Executar novamente e medir as distâncias em intervalos fixos de tempo. Calcule as velocidades das distâncias divididas pelo tempo e compare com $v=at$ (Fig.~ref{fig.acc-velocity}).
+\item Compare a distância medida com $s = at^2/2$ (Fig.~ ~\ref{fig.acc-distance}).
+\item Executar novamente e medir as distâncias em intervalos fixos de tempo. Calcule as velocidades das distâncias divididas pelo tempo e compare com $v=at$ (Fig.~\ref{fig.acc-velocity}).
 \item Em alguns robôs você pode definir uma velocidade alvo e ler a velocidade real. Se seu robô puder fazer isso, compare as velocidades medidas com as velocidades computadas.
 \end{itemize}
 \end{framed}
@@ -211,7 +211,7 @@ Quando uma relação entre potência do motor e velocidade $v$ foi determinada, 
 
 Esta atividade deve demonstrar que é possível medir a distância por odometria com precisão e exatidão razoáveis. Um carro que dirige sozinho pode usar a odometria para determinar sua posição de modo que não tenha que analisar continuamente os dados de seus sensores para verificar se a rua necessária foi alcançada. Dadas as incertezas de movimento e da estrada, o carro não deve depender apenas da odometria para decidir quando virar, mas o erro não será grande e os dados do sensor podem ser analisados para detectar a curva quando a odometria indicar que o carro está nas proximidades do cruzamento.
 
-Atividade~\ref{act.odometry1} pediu que você medisse a distância movida em uma dimensão. Três itens de informação precisam ser computados se o movimento estiver em duas dimensões: o robô tem uma \emph{posição} $(x,y)$ relativa a uma origem fixa e sua \emph{cabeçalho} $\theta$, a direção na qual o robô está apontando (Fig.~\ref{fig.pos-head}). O triplo $(x,y,theta)$ é chamado de Índex de objetivo do robô. Se o robô começa na origem $(0,0)$ e se movimenta em linha reta no ângulo $\theta$ com velocidade $v$ para o tempo $t$, a distância movida é $s=vt$. Sua nova posição $(x,y)$ é:
+Atividade~\ref{act.odometry1} pediu que você medisse a distância movida em uma dimensão. Três itens de informação precisam ser computados se o movimento estiver em duas dimensões: o robô tem uma \emph{posição} $(x,y)$ relativa a uma origem fixa e sua \emph{cabeçalho} $\theta$, a direção na qual o robô está apontando (Fig.~\ref{fig.pos-head}). O triplo $(x,y,\theta)$ é chamado de Índex de objetivo do robô. Se o robô começa na origem $(0,0)$ e se movimenta em linha reta no ângulo $\theta$ com velocidade $v$ para o tempo $t$, a distância movida é $s=vt$. Sua nova posição $(x,y)$ é:
 \begin{eqnarray*}
 x &=& vt \cos \theta\\
 y &=& vt \sin \theta\,.
@@ -279,7 +279,7 @@ A tarefa é determinar a nova pose do robô após as rodas terem movido essas di
 
 A figura~\ref{fig.small-turn} mostra o robô inicialmente na pose $(x,y,\phi)$, onde o robô está voltado para o norte ($\phi=\pi/2$). Depois de girar $\theta$ radians, qual é a nova pose $(x',y',\phi')$? Claramente, o título do robô agora é $\phi'=\phi+\theta$, mas também temos que computar $x',y'$.
 
-O comprimento de um arco de ângulo $\theta$ radianos é dado por sua fração da circunferência do círculo: $2,ppp r,(theta/2\pi)=theta r$. Para ângulos pequenos, as distâncias $d_l,d_c,d_r$ são aproximadamente iguais ao comprimento dos arcos correspondentes, portanto temos:
+O comprimento de um arco de ângulo $\theta$ radianos é dado por sua fração da circunferência do círculo: $2\pi r,(\theta/2\pi)=\theta r$. Para ângulos pequenos, as distâncias $d_l,d_c,d_r$ são aproximadamente iguais ao comprimento dos arcos correspondentes, portanto temos:
 \begin{eqnarray}
 \theta &=& d_l/r_l = d_c/r_c = d_r/r_r\,,\label{eqn.theta}
 \end{eqnarray}
@@ -335,7 +335,7 @@ Assim, a pose do robô após a vez é:
 \caption{Mudança no título}\label{fig.heading}
 \end{figure}
 
-As fórmulas mostram como computar as mudanças \textit{dx}, \textit{ddd} e $\theta$ quando o robô se move a uma curta distância. Para computar a odometria em distâncias maiores, este cálculo deve ser feito com freqüência. Há duas razões pelas quais os intervalos entre os cálculos devem ser curtos: (a) a suposição de velocidade constante se mantém apenas para distâncias curtas, e (b) o cálculo trigonométrico é simplificado ao supor que a distância movida é curta.
+As fórmulas mostram como computar as mudanças \textit{dx}, \textit{dy} e $\theta$ quando o robô se move a uma curta distância. Para computar a odometria em distâncias maiores, este cálculo deve ser feito com freqüência. Há duas razões pelas quais os intervalos entre os cálculos devem ser curtos: (a) a suposição de velocidade constante se mantém apenas para distâncias curtas, e (b) o cálculo trigonométrico é simplificado ao supor que a distância movida é curta.
 
 \begin{framed}
 \act{Odometria em duas dimensões}{odometry2}
@@ -346,7 +346,7 @@ As fórmulas mostram como computar as mudanças \textit{dx}, \textit{ddd} e $\th
 \end{itemize}
 \end{framed}
 
-\section{Errors in odometry}\label{s.odometry-errors}
+\section{Erros na odometria}\label{s.odometry-errors}
 
 Já observamos que a odometria não é precisa porque medições inconsistentes e irregularidades na superfície podem causar erros. Nesta seção mostramos que mesmo pequenas mudanças na direção do movimento do robô podem causar erros muito maiores do que aqueles causados por mudanças em seu movimento linear.
 
@@ -372,7 +372,7 @@ portanto, o desvio esquerda-direita é:
 \Delta y \leq \pm 10 \sin (3.6p)\,.
 \]
 
-As tabelas a seguir comparam a diferença entre um erro linear de $p\,\%$ (esquerda) e um erro no título de $p\,\%$ (right):
+As tabelas a seguir comparam a diferença entre um erro linear de $p\,\%$ (esquerda) e um erro no título de $p\,\%$ (à direita):
 \begin{displaymath}
 \setlength{\arraycolsep}{2ex}
 \renewcommand{\arraystretch}{1.1}
@@ -456,7 +456,7 @@ Como o erro é inevitável, periodicamente a pose do robô como computada pela o
 
 A odometria em um veículo com rodas como um carro pode ser melhorada medindo a rotação das rodas ao invés de mapear a potência do motor em velocidade. A circunferência de uma roda é de $2\pi r$, onde $r$ é o raio da roda em cm, portanto, se as rotações de $n$ forem contadas, sabemos que o robô moveu $2\pi n r$ cm. Os codificadores de roda podem ser construídos para medir as frações de uma revolução. Se um sinal é gerado $8$ vezes por revolução, a distância movida é $2\pi nr /8$ cm, que $n$ é agora o número de sinais contados pelo computador.
 
-Há muitas maneiras diferentes de implementar codificadores de roda. Um projeto popular é usar uma fonte de luz como um diodo emissor de luz (LED), um sensor de luz e um disco codificador que é anexado ao eixo da roda (Fig.~ \ref{fig.wheel}). O disco é perfurado com furos (Fig.~\ref{fig.encoding-disk}) para que sempre que o furo for oposto à fonte de luz, o sensor gere um sinal.
+Há muitas maneiras diferentes de implementar codificadores de roda. Um projeto popular é usar uma fonte de luz como um diodo emissor de luz (LED), um sensor de luz e um disco codificador que é anexado ao eixo da roda (Fig.~\ref{fig.wheel}). O disco é perfurado com furos (Fig.~\ref{fig.encoding-disk}) para que sempre que o furo for oposto à fonte de luz, o sensor gere um sinal.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
@@ -655,7 +655,7 @@ Um \emph{giroscópio} ("gyro") utiliza o princípio da força de Coriolis para m
 \item Os giroscópios vibratórios Coriolis (CVG) fabricados com técnicas MEMS são encontrados em smartphones e robôs. Eles são baratos e extremamente robustos, embora sua precisão não seja tão boa quanto os giroscópios discutidos anteriormente. Agora damos uma visão geral de como eles funcionam.
 \end{itemize}
 
-A figura~\ref{fig.tuning-gyro-image} mostra um CVG chamado \emph{tuning fork giroscópio}. Duas massas quadradas são fixadas por vigas flexíveis a âncoras que são montadas na base do componente. Os condutores forçam as massas a vibrar para a esquerda e para a direita. Se o componente girar, as massas se movem para cima e para baixo a uma distância proporcional à velocidade angular. As massas e os eletrodos formam as placas de condensadores cuja capacitância aumenta ou diminui conforme as placas se juntam ou se afastam.
+A figura~\ref{fig.tuning-gyro-image} mostra um CVG chamado \emph{garfo oscilador giroscópio}. Duas massas quadradas são fixadas por vigas flexíveis a âncoras que são montadas na base do componente. Os condutores forçam as massas a vibrar para a esquerda e para a direita. Se o componente girar, as massas se movem para cima e para baixo a uma distância proporcional à velocidade angular. As massas e os eletrodos formam as placas de condensadores cuja capacitância aumenta ou diminui conforme as placas se juntam ou se afastam.
 
 \begin{figure}
 \begin{center}
@@ -723,9 +723,9 @@ O braço robótico de duas ligações em Fig.~\ref{fig.two-link} tem apenas duas
 \draw[fill] (origin) circle [radius=2pt] node[below] {$(0,0)$};
 \draw[fill] (prime) circle [radius=2pt];
 \draw[fill] (point) circle [radius=2pt] node[right] {$(x,y)$};
-\node[above,yshift=1mm] at (point) {\p{end effector}};
-\node[above left,xshift=-5pt] at (origin) {\p{fixed}\\\p{rotating joint}};
-\node[below right] at (prime) {\p{movable}\\\p{rotating joint}};
+\node[above,yshift=1mm] at (point) {\p{efeito final}};
+\node[above left,xshift=-5pt] at (origin) {\p{fixo}\\\p{junta rotativa}};
+\node[below right] at (prime) {\p{móvel}\\\p{junta rotativa}};
 \end{tikzpicture}
 \end{center}
 \caption{Um braço robótico de dois elos com dois DOF}\label{fig.two-link}
@@ -776,7 +776,7 @@ Um trem tem um atuador (seu motor) que move o trem ao longo de seu único DOF. O
 
 \subsubsection*{O número de atuadores é menor do que o número de DOF}
 
-Os robôs móveis geralmente terão menos atuadores do que o DOF. Um robô com acionamento diferencial e um carro têm apenas dois atuadores, mas podem alcançar todas as poses tridimensionais possíveis no plano. Ter menos atuadores torna o sistema menos caro, mas os problemas de planejamento e controle de movimento são muito mais difíceis. O estacionamento paralelo de um carro é notório por sua dificuldade: são necessárias duas rotações e uma tradução para realizar um simples movimento lateral (Figs.\~ref{fig.parallel-diff}--\ref{fig.parallel-car}).
+Os robôs móveis geralmente terão menos atuadores do que o DOF. Um robô com acionamento diferencial e um carro têm apenas dois atuadores, mas podem alcançar todas as poses tridimensionais possíveis no plano. Ter menos atuadores torna o sistema menos caro, mas os problemas de planejamento e controle de movimento são muito mais difíceis. O estacionamento paralelo de um carro é notório por sua dificuldade: são necessárias duas rotações e uma tradução para realizar um simples movimento lateral (Figs.~\ref{fig.parallel-diff}--\ref{fig.parallel-car}).
 
 Um exemplo extremo é um balão de ar quente que tem apenas um único atuador (um aquecedor) que injeta mais ou menos ar quente no balão e assim controla sua altitude. Entretanto, os ventos podem fazer com que o balão se mova em qualquer uma das três direções espaciais e até mesmo girar (pelo menos parcialmente) em três orientações, de modo que o operador do balão nunca pode controlar com precisão o balão. Portanto, um balão de ar quente difere de um elevador: ambos têm um único atuador, mas o elevador é obrigado por seu eixo a se mover em apenas um DOF.
 
@@ -966,7 +966,7 @@ Uma vantagem importante dos sistemas redundantes surge de atuadores com caracter
 
 \subsubsection*{Um exemplo de um sistema com mais atuadores do que o DOF}
 
-A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração com \emph{dois atuadores e um DOF}. O sistema modela um guindaste robótico que move um peso pesado para uma posição vertical específica. A figura ~\ref{fig.crane} mostra um guindaste construído a partir de um robô Thymio e componentes de \lego.\footnote{Nota de rodapé O guincho está à direita do robô e não à esquerda como na figura~\ref{fig.act-dof}.}
+A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração com \emph{dois atuadores e um DOF}. O sistema modela um guindaste robótico que move um peso pesado para uma posição vertical específica. A figura ~\ref{fig.crane} mostra um guindaste construído a partir de um robô Thymio e componentes de \lego.\footnote{O guincho está à direita do robô e não à esquerda como na figura~\ref{fig.act-dof}.}
 
 \begin{figure}
 \begin{center}
@@ -1263,15 +1263,15 @@ Os robôs móveis que podem acessar diretamente os três DOF ($\delta_m=3$) são
 	  \draw[raxis] (0,0) -- +(\r:\len);
   \end{scope}
 }
-\draw[->] (-3.75,1) -- +(0,.5) node[right] {\p{driven motion}};
-\draw[->,thick] (-4,0) -- +(-1,0) node[above,xshift=-2mm] {\p{free motion}};
+\draw[->] (-3.75,1) -- +(0,.5) node[right] {\p{movimento movido}};
+\draw[->,thick] (-4,0) -- +(-1,0) node[above,xshift=-2mm] {\p{livre movimento}};
 \node[xshift=-1.6cm,yshift=.2cm] at (0,0) {\p{motor}};
 \end{tikzpicture}
 \end{center}
 \caption{Robô omnidirecional com três rodas suecas}\label{fig.omni3}
 \end{figure}
 
-Os valores relativos do DOF e do DOM de um robô definem o conceito de movimento holonômico. Um robô tem \emph{movimento holonómico} se $\delta_m = \#\textrm{DOF}$ e tem um movimento {não-holonômico} se $\delta_m < \#\textrm{DOF}$. Um robô holonômico como o da Fig.~ref{fig.omni-robot} pode controlar diretamente todo seu DOF sem manobras difíceis. A Figura~\ref{fig.parallel-omni} mostra como é fácil para o robô omnidirecional com rodas suecas (Fig.~\ref{fig.omni3}) realizar o estacionamento paralelo.
+Os valores relativos do DOF e do DOM de um robô definem o conceito de movimento holonômico. Um robô tem \emph{movimento holonómico} se $\delta_m = \#\textrm{DOF}$ e tem um movimento {não-holonômico} se $\delta_m < \#\textrm{DOF}$. Um robô holonômico como o da Fig.~\ref{fig.omni-robot} pode controlar diretamente todo seu DOF sem manobras difíceis. A Figura~\ref{fig.parallel-omni} mostra como é fácil para o robô omnidirecional com rodas suecas (Fig.~\ref{fig.omni3}) realizar o estacionamento paralelo.
 
 \begin{figure}
 \begin{center}
@@ -1361,7 +1361,7 @@ Um carro e um robô com acionamento diferencial são não-holonômicos porque se
 \begin{framed}
 \act{Movimento holonômico e não-holonômico}{holonomic}
 \begin{itemize}
-\item Olhe novamente para o robô móvel que é limitado apenas ao movimento rotacional (Fig.~ref{fig.rot-dof}). Qual é o seu grau de mobilidade $\delta_m$? É holonômico ou não?
+\item Olhe novamente para o robô móvel que é limitado apenas ao movimento rotacional (Fig.~\ref{fig.rot-dof}). Qual é o seu grau de mobilidade $\delta_m$? É holonômico ou não?
 \item O Fig.~\ref{fig.wallcleaning} mostra um robô para a limpeza das paredes de um edifício. Há duas âncoras das quais descem os cabos, passando pelos olhos fixados ao corpo do robô e depois pelos guinchos alimentados pelas rodas do robô. Ao rolar e desenrolar os cabos, o robô se move para cima e para baixo da parede. Entretanto, se os dois motores não fizerem com que as rodas se movimentem precisamente à mesma velocidade de rotação, o robô irá balançar de um lado para o outro. Quantos DOF e quantos DOM este robô tem? É ou não holonômico?
 \end{itemize}
 \end{framed}

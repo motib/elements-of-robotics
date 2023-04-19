@@ -23,7 +23,7 @@ Angle & $\theta$ & radian & rad\\
 \end{table}
 
 \begin{table}
-\caption{Prefixes}
+\caption{Prefixos}
 \label{tab.prefixes}
 \begin{tabular}{p{1.5cm}p{2.2cm}p{1.7cm}}
 \hline\noalign{\smallskip}
@@ -66,7 +66,10 @@ Os ângulos, como o rumo de um robô e a direção para um objeto, são medidos 
 % Dot at origin
 \fill (origin) circle [radius=1pt];
 \end{tikzpicture}
-\hspace{\fill}
+
+\bigskip
+\bigskip
+
 % The unit circle with radians divided into pi/4 segments
 \begin{tikzpicture}[scale=1.8]
 \coordinate (origin) at (0,0);
@@ -84,16 +87,17 @@ Os ângulos, como o rumo de um robô e a direção para um objeto, são medidos 
 \fill (origin) circle [radius=1pt];
 \end{tikzpicture}
 \end{center}
-\caption{Ângulos em graus (esquerda) e radianos (direita)}\label{fig.angles}
+
+\caption{Ângulos em graus (acima) e radianos (abaixo)}\label{fig.angles}
 \end{figure}
 
 \chapter{Derivações matemáticas e tutoriais}\label{ch.math}
 
 Este apêndice reúne as derivações matemáticas utilizadas no texto, bem como pequenos tutoriais de conceitos que podem não ser familiares.
 
-\section{Conditional probability and Bayes rule}\label{a.bayes}
+\section{Probabilidade condicional e Bayes governam}\label{a.bayes}
 
-Dada uma leitura de $z$ do sensor, qual é a probabilidade de que estejamos na posição $x_i$? Isto é expresso como uma probabilidade {probabilidade condicional!condicional} $p(x_i)mid z)$. Os dados que temos disponíveis são a probabilidade \emph{current} $p(x_i)$ de estarmos a $x_i$, e $p(zmid x_i)$, a probabilidade condicional de o sensor ler $z$ se estivermos de fato a $x_i$. Vamos multiplicar estas duas probabilidades:
+Dada uma leitura de $z$ do sensor, qual é a probabilidade de que estejamos na posição $x_i$? Isto é expresso como uma \emph{probabilidade condicional} $p(x_i)\mid z)$. Os dados que temos disponíveis são a probabilidade \emph{current} $p(x_i)$ de estarmos a $x_i$, e $p(z\mid x_i)$, a probabilidade condicional de o sensor ler $z$ se estivermos de fato a $x_i$. Vamos multiplicar estas duas probabilidades:
 \[
 p(z\mid x_i)\, p(x_i)\,.
 \]
@@ -113,9 +117,9 @@ Dividir por $p(z)$ dá:
 \[
 p(x_i\mid z)= \frac{p(z\mid x_i)\, p(x_i)}{p(z)}\,,
 \]
-que é conhecido como \emph{Bayes rule}index{probability!Bayes rule}.
+que é conhecido como \emph{Bayes rule}.
 
-Se soubermos $p(z)mid x_i)$ e $p(x_i)$ para cada $i$, $p(z)$, a \emph{probabilidade total} do evento $z$, pode ser calculada pela soma das probabilidades individuais conhecidas:
+Se soubermos $p(z)\mid x_i)$ e $p(x_i)$ para cada $i$, $p(z)$, a \emph{probabilidade total} do evento $z$, pode ser calculada pela soma das probabilidades individuais conhecidas:
 \begin{displaymath}
 p(z) = \sum_i p(z\mid x_i)\, p(x_i)\,.
 \end{displaymath}
@@ -139,12 +143,12 @@ O conjunto de probabilidades dos possíveis resultados de um evento deve somar a
 \[
 .1125 + .1125 + .0125 + .0125 + .1125 + .1125 + .1125 + .0125 = .575\,.
 \]
-As probabilidades devem ser {normalizadas} através da divisão pela soma de $,575$ para que a soma seja de $1$. As probabilidades normalizadas são de $.1125/.575 aprox .19$ e $.0125/.575 approx .02$, que somam até $1$:
+As probabilidades devem ser {normalizadas} através da divisão pela soma de $,575$ para que a soma seja de $1$. As probabilidades normalizadas são de $.1125/.575 \approx .19$ e $.0125/.575 \approx .02$, que somam até $1$:
 \[.19 + .19 + .02 + .02 + .19 + .19 + .19 + .02 \approx 1\,.\]
 
 \section{Média e variância}\label{a.mean}
 
-O \emph{média}\footnote{\textit{Mean} é o termo técnico para a média.} $mu$ de um conjunto de valores $\{x_1,\ldots,x_n\}$ é:
+O \emph{média}\footnote{\textit{Mean} é o termo técnico para a média.} $\mu$ de um conjunto de valores $\{x_1,\ldots,x_n\}$ é:
 \[
 \mu = \frac{1}{n}\sum^n_{i=1} x_i\,.
 \]
@@ -162,7 +166,7 @@ A média é significativamente influenciada por \emph{outliers}: valores que sã
 \]
 Um político saltaria a oportunidade de afirmar que, durante seu mandato, o salário médio havia subido em $180\%$!
 
-\emph{Variância} é uma medida da propagação de um conjunto de valores. Quanto mais próximos estiverem os valores, mais baixa será a variância. Medidas como a média são mais confiáveis se os valores estiverem agrupados e, portanto, tiverem uma baixa variância. A fórmula para a variância de um conjunto de valores $\{x_1,ldots,x_n\}$ é:\footnote{$n-1$ conta os \emph{graus de liberdade}. Como a média é calculada antes da variância, não podemos escolher os valores $n$ arbitrariamente; o último valor escolhido é obrigado a ser o valor que faz com que o cálculo produza a média dada.}
+\emph{Variância} é uma medida da propagação de um conjunto de valores. Quanto mais próximos estiverem os valores, mais baixa será a variância. Medidas como a média são mais confiáveis se os valores estiverem agrupados e, portanto, tiverem uma baixa variância. A fórmula para a variância de um conjunto de valores $\{x_1,\ldots,x_n\}$ é:\footnote{$n-1$ conta os \emph{graus de liberdade}. Como a média é calculada antes da variância, não podemos escolher os valores $n$ arbitrariamente; o último valor escolhido é obrigado a ser o valor que faz com que o cálculo produza a média dada.}
 \[
 s^2 = \frac{1}{n-1}\sum^n_{i=1} (x_i-\mu)^2\,.
 \]

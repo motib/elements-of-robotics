@@ -13,7 +13,7 @@ Um conhecimento mais amplo do ambiente pode ser obtido através da análise de i
 A seção~\ref{s.classify} introduz a terminologia dos sensores. A seção~\ref{s.distance-sensors} apresenta os sensores de distância, os sensores mais usados por robôs educacionais. Em seguida, a seção ~\ref{s.cameras} sobre câmeras e, em seguida, uma pequena seção sobre outros sensores que os robôs usam (seção~\ref{s.other-sensors}). A seção ~\ref{s.range} define as características dos sensores: alcance, resolução, precisão, precisão. O capítulo conclui com uma discussão sobre a não-linearidade dos sensores (Sect.~\ref{s.nonlinearity}).
 
 
-\section{Classification of sensors}\label{s.classify}
+\section{Classificação dos sensores}\label{s.classify}
 
 Sensors are classified as \emph{proprioceptive} or \emph{exteroceptive}, and exteroceptive sensors are further classified as \emph{active} or \emph{passive} (Fig.~\ref{fig.sensor-classification}). A proprioceptive sensor measures something internal to the robot itself. The most familiar example is a car's speedometer which measures the car's speed by counting rotations of the wheels (Sect.~\ref{s.wheel}). An exteroceptive sensor measures something external to the robot such as the distance to an object. An active sensor affects the environment usually by emitting energy: a sonar range finder on a submarine emits sound waves and uses the reflected sound to determine range. A passive sensor does not affect the environment: a camera simply records the light reflected off an object. Robots invariably use some exteroceptive sensors to correct for errors that might arise from proprioceptive sensors or to take changes of the environment into account.
 
@@ -96,7 +96,7 @@ A distância pode ser calculada a partir de uma medida do tempo decorrido entre 
 \begin{center}
 \textbf{Luz coerente}
 \end{center}
-Três tipos de luz são mostrados na Fig.~\ref{fig.coherent}. A luz do sol ou uma lâmpada é chamada \emph{white light} porque é composta de luz de muitas cores diferentes (freqüências), emitida em diferentes momentos (fases) e emitida em diferentes direções. Os diodos emissores de luz (LED) emitem \emph{luz monocromática} (luz de uma única cor), mas não são coerentes porque suas fases são diferentes e são emitidos em diferentes direções. Os lasers emitem \emph{ luz coerente}: todas as ondas são da mesma freqüência e da mesma fase (o início de cada onda é ao mesmo tempo). Toda a energia de uma luz é concentrada em um feixe estreito e a distância pode ser calculada medindo o tempo de vôo e a diferença de fase da luz refletida.
+Três tipos de luz são mostrados na Fig.~\ref{fig.coherent}. A luz do sol ou uma lâmpada é chamada \emph{luz branca} porque é composta de luz de muitas cores diferentes (freqüências), emitida em diferentes momentos (fases) e emitida em diferentes direções. Os diodos emissores de luz (LED) emitem \emph{luz monocromática} (luz de uma única cor), mas não são coerentes porque suas fases são diferentes e são emitidos em diferentes direções. Os lasers emitem \emph{luz coerente}: todas as ondas são da mesma freqüência e da mesma fase (o início de cada onda é ao mesmo tempo). Toda a energia de uma luz é concentrada em um feixe estreito e a distância pode ser calculada medindo o tempo de vôo e a diferença de fase da luz refletida.
 \end{quote}
 
 \begin{figure}
@@ -341,20 +341,20 @@ Quando sensores de ultra-som ou proximidade são usados, um pequeno número de s
 \begin{tikzpicture}
 \draw pic { robot };
 \draw[fill,blue] (10mm,5mm) circle[radius=2pt];
-\draw[thin,blue] (10mm,5mm) -- +(45:10mm);
+\draw[thin,blue] (10mm,5mm) -- +(35:10mm);
 \draw[thin,blue] (10mm,5mm) -- +(-15:10mm);
 \draw[fill,blue] (10mm,-5mm) circle[radius=2pt];
 \draw[thin,blue] (10mm,-5mm) -- +(15:10mm);
-\draw[thin,blue] (10mm,-5mm) -- +(-45:10mm);
+\draw[thin,blue] (10mm,-5mm) -- +(-35:10mm);
 \draw[fill,blue] (11mm,0mm) circle[radius=2pt];
 \draw[thin,blue] (11mm,0mm) -- +(30:10mm);
-\draw[thin,blue] (11mm,0mm) -- +(-30:10mm);
+\draw[thin,blue] (11mm,0mm) -- +(-20:10mm);
 \draw[fill,blue] (-2mm,5mm) circle[radius=2pt];
-\draw[thin,blue] (-2mm,5mm) -- +(140:10mm);
+\draw[thin,blue] (-2mm,5mm) -- +(150:10mm);
 \draw[thin,blue] (-2mm,5mm) -- +(200:10mm);
 \draw[fill,blue] (-2mm,-5mm) circle[radius=2pt];
 \draw[thin,blue] (-2mm,-5mm) -- +(160:10mm);
-\draw[thin,blue] (-2mm,-5mm) -- +(220:10mm);
+\draw[thin,blue] (-2mm,-5mm) -- +(200:10mm);
 \end{tikzpicture}
 \caption{Cinco sensores separados}\label{fig.separate-sensors}
 \end{minipage}
@@ -414,7 +414,7 @@ Com um sensor laser, a largura do feixe é tão pequena que seria necessário um
 \begin{center}
 \includegraphics[width=.7\textwidth]{map-scanner}
 \end{center}
-\caption{A map of the environment obtained by a laser scanner}\label{fig.laser-scanner}
+\caption{Um mapa do ambiente obtido por um scanner a laser}\label{fig.laser-scanner}
 \end{figure}
 
 \begin{framed}
@@ -427,8 +427,6 @@ Com um sensor laser, a largura do feixe é tão pequena que seria necessário um
 \item Quantos sensores você precisaria para detectar um objeto colocado em qualquer lugar ao redor de seu robô?
 \end{itemize}
 \end{framed}
-
-\smallskip
 
 \begin{framed}
 \act{Limiares}{threshold}
@@ -460,7 +458,7 @@ Com um sensor laser, a largura do feixe é tão pequena que seria necessário um
 
 \section{Câmeras}\label{s.cameras}
 
-As câmeras digitais são amplamente utilizadas na robótica porque uma câmera pode fornecer informações muito mais detalhadas do que apenas a distância e o ângulo a um objeto. As câmeras digitais utilizam um componente eletrônico chamado \emph{dispositivo acoplado à carga (CCD)} que detecta ondas de luz e retorna um conjunto de \emph{elementos de imagem}, ou \emph{pixels de imagem} para abreviar (Fig.~ref{fig.camera}).
+As câmeras digitais são amplamente utilizadas na robótica porque uma câmera pode fornecer informações muito mais detalhadas do que apenas a distância e o ângulo a um objeto. As câmeras digitais utilizam um componente eletrônico chamado \emph{dispositivo acoplado à carga (CCD)} que detecta ondas de luz e retorna um conjunto de \emph{elementos de imagem}, ou \emph{pixels de imagem} para abreviar (Fig.~\ref{fig.camera}).
 
 \begin{figure}
 \includegraphics[width=.6\textwidth]{camera-image2}
@@ -557,7 +555,7 @@ Se um sensor de distância horizontal for \emph{linear}, há um mapeamento $x = 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}
-\draw[<->] (0,3) -- node[sloped,above,rotate=180] {\p{sensor ($x$)}} (0,0) node[left] {\p{0}} -- node[below] {\p{distance ($s$)}} (7,0);
+\draw[<->] (0,3) -- node[sloped,above,rotate=180] {\p{sensor ($x$)}} (0,0) node[left] {\p{0}} -- node[below] {\p{distância ($s$)}} (7,0);
 \draw[dashed] (.4,0) node[below] {\p{2}} -- (.4,2.5) -- (0,2.5) node[left] {\p{100}};
 \draw[domain=2:30] plot (\x/5,{(-3.57*\x+107)/40}) node[below] {\p{30}};
 \end{tikzpicture}
@@ -591,7 +589,7 @@ A Figura~\ref{fig.nonlinear} mostra um possível resultado das medições em Act
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}
-\draw[<->] (0,3) -- node[sloped,above,rotate=180] {\p{sensor ($x$)}} (0,0) node[left] {\p{0}} -- node[below] {\p{distance ($s$)}} (7,0);
+\draw[<->] (0,3) -- node[sloped,above,rotate=180] {\p{sensor ($x$)}} (0,0) node[left] {\p{0}} -- node[below] {\p{distância ($s$)}} (7,0);
 \draw[dashed] (.4,0) node[below] {\p{2}} -- (.4,2.5) -- (0,2.5) node[left] {\p{100}};
 \draw[domain=2:30] plot (\x/5,{(-3.57*\x+107)/40}) node[below] {\p{30}};
 \foreach \x/\y in {0.5/2.5, 1/2.4, 1.5/2.3, 2/2.2, 2.5/2, 3/1.8, 3.5/1.6, 4/1.4, 4.5/1.1, 5/0.7, 5.5/0.4}
@@ -626,7 +624,7 @@ s \textrm{(cm)} & x & x_l\\
 \end{table}
 Obviamente, seria melhor se tivéssemos uma entrada em tabela para cada um dos valores possíveis devolvidos pelo sensor. Entretanto, isto levaria muita memória e pode ser impraticável se a faixa de valores retornados pelo sensor for muito maior, digamos, de $0$ a $4095$ ($12$ bits). Uma solução é pegar o valor mais próximo, de modo que se o valor $27$ for retornado pelo sensor cujo mapeamento é dado na Tabela~\ref{tab.nonlinear}, a distância seria de $12$.
 
-Uma solução melhor é usar a interpolação indexada. Se você olhar novamente para o gráfico na Fig.~\ref{fig.nonlinear}, você pode ver que os segmentos da curva são mais ou menos lineares, embora suas inclinações mudem de acordo com a curva. Portanto, podemos obter uma boa aproximação da distância correspondente a um valor do sensor tomando a distância relativa em uma linha reta entre dois pontos (Fig.~\ref{fig.interpolation}). Dadas as distâncias $s_1$ e $s_2$ correspondentes aos valores do sensor $x_1$ e $x_2$, respectivamente, para um valor $x_1<x<x_2$, sua distância $s$:
+Uma solução melhor é usar a interpolação. Se você olhar novamente para o gráfico na Fig.~\ref{fig.nonlinear}, você pode ver que os segmentos da curva são mais ou menos lineares, embora suas inclinações mudem de acordo com a curva. Portanto, podemos obter uma boa aproximação da distância correspondente a um valor do sensor tomando a distância relativa em uma linha reta entre dois pontos (Fig.~\ref{fig.interpolation}). Dadas as distâncias $s_1$ e $s_2$ correspondentes aos valores do sensor $x_1$ e $x_2$, respectivamente, para um valor $x_1<x<x_2$, sua distância $s$:
 \[
 s = s_1 + \frac{s_2-s_1}{x_2-x_1}(x-x_1)\,.
 \]

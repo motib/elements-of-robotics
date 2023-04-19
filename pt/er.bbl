@@ -20,7 +20,7 @@ Alfred~V. Aho, John~E. Hopcroft, and Jeffrey~D. Ullman.
 
 \bibitem{slam-tutorial2}
 Tim Bailey and Hugh Durrant-Whyte.
-\newblock Simultaneous localization and mapping: Part ii.
+\newblock Simultaneous localization and mapping: {Part II}.
 \newblock {\em IEEE Robotics \& Automation Magazine}, 13(3):108--117, 2006.
 
 \bibitem{pcdp2}
@@ -33,7 +33,7 @@ M.~Ben-Ari.
 Michael Bodi, Ronald Thenius, Martina Szopek, Thomas Schmickl, and Karl
   Crailsheim.
 \newblock Interaction of robot swarms using the honeybee-inspired control
-  algorithm beeclust.
+  algorithm {BEECLUST}.
 \newblock {\em Mathematical and Computer Modelling of Dynamical Systems},
   18(1):87--100, 2012.
 
@@ -86,7 +86,7 @@ Gregory Dudek and Michael Jenkin.
 
 \bibitem{slam-tutorial1}
 Hugh Durrant-Whyte and Tim Bailey.
-\newblock Simultaneous localization and mapping: Part i.
+\newblock Simultaneous localization and mapping: {Part I}.
 \newblock {\em IEEE Robotics \& Automation Magazine}, 13(2):99--110, 2006.
 
 \bibitem{everett}
@@ -101,7 +101,7 @@ Rafael~C. Gonzalez and Richard~E. Woods.
 
 \bibitem{slam-graph}
 Giorgio Grisetti, Rainer K\"{u}mmerle, Cyrill Stachniss, and Wolfram Burgard.
-\newblock A tutorial on graph-based slam.
+\newblock A tutorial on graph-based {SLAM}.
 \newblock {\em IEEE Intelligent Transportation Systems Magazine}, 2(4):31--43,
   2010.
 
@@ -117,7 +117,7 @@ Simon~O. Haykin.
 
 \bibitem{herculano2009human}
 Suzana Herculano-Houzel.
-\newblock The human brain in numbers: a linearly scaled-up primate brain.
+\newblock The human brain in numbers: A linearly scaled-up primate brain.
 \newblock {\em Frontiers in human neuroscience}, 3:31, 2009.
 
 \bibitem{creatures}
@@ -164,7 +164,7 @@ David Kriesel.
 
 \bibitem{kubat2015machinelearning}
 Miroslav Kubat.
-\newblock {\em An introduction to machine learning}.
+\newblock {\em An Introduction to Machine Learning}.
 \newblock Springer, 2015.
 
 \bibitem{kumar}

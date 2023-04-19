@@ -8,7 +8,7 @@ Apresentamos três algoritmos para planejar o caminho mais curto desde uma posi�
 
 \section{Algoritmo de Dijkstra para um mapa de grade}\label{s.dijkstra-grid}
 
-Dijkstra descreveu seu algoritmo para um gráfico discreto de nós e bordas. Aqui nós o descrevemos para um mapa de células em grade (Fig.~ ~ref{fig.dijkstra-grid}). A célula {S} é a célula inicial do robô e sua tarefa é mover-se para a célula de objetivo \p{G}. As células que contêm obstáculos são mostradas em preto. O robô pode sentir e mover-se para um \emph{vizinho} da célula \p{c} que ele ocupa. Para simplificar, especificamos que os vizinhos da cela são as quatro células próximas a ela horizontal e verticalmente, mas não diagonalmente. A figura~\ref{fig.dijkstra-path} mostra um trajeto mais curto de {S] para {G}:
+Dijkstra descreveu seu algoritmo para um gráfico discreto de nós e bordas. Aqui nós o descrevemos para um mapa de células em grade (Fig.~\ref{fig.dijkstra-grid}). A célula {S} é a célula inicial do robô e sua tarefa é mover-se para a célula de objetivo \p{G}. As células que contêm obstáculos são mostradas em preto. O robô pode sentir e mover-se para um \emph{vizinho} da célula \p{c} que ele ocupa. Para simplificar, especificamos que os vizinhos da cela são as quatro células próximas a ela horizontal e verticalmente, mas não diagonalmente. A figura~\ref{fig.dijkstra-path} mostra um trajeto mais curto de \p{S} para \p{G}:
 \[
 \begin{array}{ll}
 (4,0) \rightarrow &(4,1)\rightarrow (3,1) \rightarrow (2,1) \rightarrow (2,2) \rightarrow \\
@@ -227,7 +227,7 @@ Algoritmo~\ref{alg.dijkstra-grid} e o exemplo na Fig.~\ref{fig.dijkstra} assumem
 \caption{algoritmo de Dijkstra com um custo variável por célula (diagrama esquerdo, custo=$4$, diagrama direito, custo=$2$)}\label{fig.path-sand}
 \end{figure}
 
-A grade à esquerda da Fig.~ref{fig.path-sand} tem algumas células marcadas com uma linha diagonal para indicar que estão cobertas de areia e que o custo de movimentação através delas é de $4$ e não de $1$. O caminho mais curto, marcado em cinza, tem degraus de $17$ e também custa $17$ desde que contorna a areia.
+A grade à esquerda da Fig.~\ref{fig.path-sand} tem algumas células marcadas com uma linha diagonal para indicar que estão cobertas de areia e que o custo de movimentação através delas é de $4$ e não de $1$. O caminho mais curto, marcado em cinza, tem degraus de $17$ e também custa $17$ desde que contorna a areia.
 
 O trajeto mais curto depende do custo atribuído a cada célula. O diagrama à direita mostra o caminho mais curto se o custo de movimentação através de uma célula com areia for de apenas $2$. O trajeto é de $12$ passos longos, embora seu custo seja de $14$ para levar em conta o movimento de dois passos através da areia.
 
@@ -285,12 +285,12 @@ A figura~\ref{fig.map-graph-bt} mostra outra abordagem para o planejamento de ca
 
 É fácil ver que os caminhos no gráfico representam caminhos no ambiente, já que o robô pode simplesmente mover-se de canto a canto. Estes caminhos são os caminhos mais curtos porque nenhum caminho, digamos de $A$ a $B$, pode ser mais curto que a linha reta de $A$ a $B$. O algoritmo de Dijkstra dá o caminho mais curto como $S\rightarrow D\rightarrow F\rightarrow H\rightarrow G$. Neste caso, o caminho mais curto em termos de número de arestas é também o caminho geometricamente mais curto.
 
-Embora este seja o caminho mais curto, um verdadeiro robô não pode seguir este caminho porque tem um tamanho finito, então seu centro não pode seguir a fronteira de um obstáculo. O robô deve manter uma distância mínima de cada obstáculo, o que pode ser implementado expandindo o tamanho dos obstáculos pelo tamanho do robô (diagrama à direita da Fig.~ref{fig.map-graph-bb}). O caminho resultante é ótimo e pode ser percorrido pelo robô.
+Embora este seja o caminho mais curto, um verdadeiro robô não pode seguir este caminho porque tem um tamanho finito, então seu centro não pode seguir a fronteira de um obstáculo. O robô deve manter uma distância mínima de cada obstáculo, o que pode ser implementado expandindo o tamanho dos obstáculos pelo tamanho do robô (diagrama à direita da Fig.~\ref{fig.map-graph-bb}). O caminho resultante é ótimo e pode ser percorrido pelo robô.
 
 \begin{framed}
 \act{Algoritmo do Dijkstra para mapas contínuos}{dijkstra-continuous}
 \begin{itemize}
-\item Desenhe uma versão maior do mapa em Fig.~ref{fig.map-graph-bt}. Meça o comprimento de cada segmento. Agora aplique o algoritmo de Dijkstra para determinar o caminho mais curto.
+\item Desenhe uma versão maior do mapa em Fig.~\ref{fig.map-graph-bt}. Meça o comprimento de cada segmento. Agora aplique o algoritmo de Dijkstra para determinar o caminho mais curto.
 \item Crie seu próprio mapa contínuo, extraia o gráfico de visibilidade e aplique o algoritmo de Dijkstra.
 \end{itemize}
 \end{framed}
@@ -303,7 +303,7 @@ O algoritmo de \emph{\astar{}} (pronuncia-se ``Uma estrela'') é semelhante ao a
 \[
 f(x,y) = g(x,y) + h(x,y)\,.
 \]
-Demonstramos o algoritmo \astar{} usando como função heurística o número de passos da célula de objetivo \p{G} para a célula de $(x,y)$ (sem levar em conta os obstáculos). Esta função pode ser pré-computada e permanece disponível durante toda a execução do algoritmo. Para o mapa da grade na Fig.~\ref{fig.dijkstra-simple}, a função heurística é mostrada na Fig.~\ref{fig.heuristic}.
+Demonstramos o algoritmo \astar{} usando como função heurística o número de passos da célula de objetivo \p{G} para a célula de $(x,y)$ \emph{sem levar em conta os obstáculos}. Esta função pode ser pré-computada e permanece disponível durante toda a execução do algoritmo. Para o mapa da grade na Fig.~\ref{fig.dijkstra-simple}, a função heurística é mostrada na Fig.~\ref{fig.heuristic}.
 
 \begin{figure}
 \begin{minipage}{.48\textwidth}
@@ -487,13 +487,13 @@ Este capítulo e os anteriores discutiram duas tarefas diferentes, mas relaciona
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[scale=.8,node distance = 2cm and 4cm,align=left,minimum size=16mm]
-\node[draw,circle] (plan)  {\p{plan}\\\p{path}};
-\node[draw,circle] (drive) [right=of plan] {\p{drive}};
-\draw[->] (plan) to node[above,yshift=-4mm] {\p{true }$\leadsto$ \\ \p{move to goal}} (drive);
+\node[draw,circle] (plan)  {\p{plano}\\\p{caminho}};
+\node[draw,circle] (drive) [right=of plan] {\p{dirigir}};
+\draw[->] (plan) to node[above,yshift=-4mm] {\p{verdadeiro}$\leadsto$ \\ \p{passar ao objetivo}} (drive);
 \draw[<-] (plan) to (180:15mm);
-\node[draw,circle] (avoid) [below=of drive] {\p{avoid}\\\p{obstacle}};
-\draw[->] (drive) to node[left,yshift=2mm] {\p{obstacle detected} $\leadsto$ \\ \p{move around obstacle}} (avoid);
-\draw[->,bend left=20] (avoid) to node[left,xshift=-6mm] {\p{obstacle passed} $\leadsto$\\\p{[no action]}} (plan);
+\node[draw,circle] (avoid) [below=of drive] {\p{evite}\\\p{obstáculo}};
+\draw[->] (drive) to node[left,yshift=2mm] {\p{obstáculo detectado} $\leadsto$ \\ \p{movimentar-se em torno de um obstáculo}} (avoid);
+\draw[->,bend left=20] (avoid) to node[left,xshift=-6mm] {\p{obstáculo passou} $\leadsto$\\\p{[nenhuma ação]}} (plan);
 \end{tikzpicture}
 \caption{Integrando o planejamento de caminhos e evitando obstáculos}\label{fig.integrate-pp}
 \end{center}

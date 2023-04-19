@@ -4,7 +4,7 @@
 
 Estamos agora prontos para escrever nossos primeiros algoritmos para robôs. Estes algoritmos demonstram o comportamento reativo: um evento (como a detecção de um objeto próximo pelo robô) faz com que o robô reaja realizando uma ação que altera seu comportamento (como a parada dos motores). Comportamento puramente reativo ocorre quando a ação está relacionada apenas à ocorrência de um evento e não depende de dados armazenados na memória (estado).
 
-Os comportamentos reativos são aqueles dos veículos \emph{Braitenberg} que são apropriados para introduzir a robótica porque o comportamento complexo surge a partir de algoritmos simples. As seções~\ref{s.braitenberg}--ref{s.turning} descrevem veículos Braitenberg que demonstram comportamento reativo; no capítulo ~ref{ch.fmg} apresentamos veículos Braitenberg que têm comportamento não reativo com estados. A seção~\ref{s.line} apresenta vários algoritmos para o comportamento reativo clássico dos seguidores de linha. O seguimento de linha é uma tarefa interessante porque os algoritmos são sensíveis às características dos sensores e das linhas. A calibração é necessária para determinar os limites ideais para o movimento rápido e robusto do robô. A seção~\ref{s.abstract-vehicles} dá uma breve visão geral da formulação original dos veículos de Braitenberg em uma abordagem biológica com sensores conectados diretamente aos motores, e não através de um computador. Mais tarde no livro (Sect.~\ref{s.braitenberg-ann}) discutimos a implementação de veículos Braitenberg usando redes neurais.
+Os comportamentos reativos são aqueles dos veículos \emph{Braitenberg} que são apropriados para introduzir a robótica porque o comportamento complexo surge a partir de algoritmos simples. As seções~\ref{s.braitenberg}--\ref{s.turning} descrevem veículos Braitenberg que demonstram comportamento reativo; no capítulo~\ref{ch.fmg} apresentamos veículos Braitenberg que têm comportamento não reativo com estados. A seção~\ref{s.line} apresenta vários algoritmos para o comportamento reativo clássico dos seguidores de linha. O seguimento de linha é uma tarefa interessante porque os algoritmos são sensíveis às características dos sensores e das linhas. A calibração é necessária para determinar os limites ideais para o movimento rápido e robusto do robô. A seção~\ref{s.abstract-vehicles} dá uma breve visão geral da formulação original dos veículos de Braitenberg em uma abordagem biológica com sensores conectados diretamente aos motores, e não através de um computador. Mais tarde no livro (Sect.~\ref{s.braitenberg-ann}) discutimos a implementação de veículos Braitenberg usando redes neurais.
 
 \section{Veículos Braitenberg}\label{s.braitenberg}
 
@@ -112,7 +112,7 @@ Se usarmos a declaração de \p{while}, \emph{enfatizaremos que enquanto} o obje
 
 \section{Reagindo e virando}\label{s.turning}
 
-Um carro gira mudando o ângulo de suas rodas dianteiras em relação à estrutura do veículo. A potência do motor não é alterada. Um robô com tração diferencial não tem mecanismo de direção (como o volante de um carro ou o guidão de uma bicicleta). Ao invés disso, ele gira ajustando diferentes níveis de potência para as rodas esquerda e direita. Se uma roda gira mais rápido do que a outra, o robô gira na direção oposta à da roda mais rápida (Fig.~\ref{fig.left-gentle}). Se uma roda gira para trás enquanto a outra gira para frente, a curva é muito mais afiada (Fig.~ref{fig.left-sharp}). Nas figuras, as setas denotam a direção e velocidade de cada roda. O emph{raio de giro} é o raio do círculo que é o caminho do robô. Dizemos que uma volta é mais apertada se o raio for menor. No extremo, se uma roda gira para frente e a segunda gira para trás à mesma velocidade, o robô gira no lugar e o raio de giro é zero.
+Um carro gira mudando o ângulo de suas rodas dianteiras em relação à estrutura do veículo. A potência do motor não é alterada. Um robô com tração diferencial não tem mecanismo de direção (como o volante de um carro ou o guidão de uma bicicleta). Ao invés disso, ele gira ajustando diferentes níveis de potência para as rodas esquerda e direita. Se uma roda gira mais rápido do que a outra, o robô gira na direção oposta à da roda mais rápida (Fig.~\ref{fig.left-gentle}). Se uma roda gira para trás enquanto a outra gira para frente, a curva é muito mais afiada (Fig.~\ref{fig.left-sharp}). Nas figuras, as setas denotam a direção e velocidade de cada roda. O emph{raio de giro} é o raio do círculo que é o caminho do robô. Dizemos que uma volta é mais apertada se o raio for menor. No extremo, se uma roda gira para frente e a segunda gira para trás à mesma velocidade, o robô gira no lugar e o raio de giro é zero.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -138,7 +138,7 @@ Um carro gira mudando o ângulo de suas rodas dianteiras em relação à estrutu
 \draw[->] (9.6mm,-3.6mm) -- +(45:15mm);
 \draw[->] (-9.5mm,3.7mm) -- +(-135:5mm);
 \end{tikzpicture}
-\caption{Sharp left turn}\label{fig.left-sharp}
+\caption{Curva à esquerda afiada}\label{fig.left-sharp}
 \end{minipage}
 \end{figure}
 %
@@ -256,7 +256,7 @@ Considere um armazém com carrinhos robóticos que tragam objetos para uma área
 
 \subsection{Seguimento de linha com um par de sensores de terra}
 
-Para seguir uma linha, um par de sensores de terra pode ser utilizado (Fig.~ref{fig.ground-on-a-line}).\footnote{A figura mostra uma vista de cima embora os sensores de terra estejam na parte inferior do robô.} Um sensor de terra em um piso de cor clara detectará muita luz refletida. Se uma linha escura for pintada no chão, o sensor detectará muito pouca luz refletida quando estiver sobre a linha. \footnote{Se seu piso for de cor escura, uma linha branca deve ser usada.} A linha deve ser preta para maior contraste com o piso branco, mas a figura exibe a linha em cinza claro para não obscurecer o robô e seus sensores. Os limites são usados para determinar quando ocorre o evento de um sensor passando da detecção da linha para a detecção do chão ou vice-versa.
+Para seguir uma linha, um par de sensores de terra pode ser utilizado (Fig.~\ref{fig.ground-on-a-line}).\footnote{A figura mostra uma vista de cima embora os sensores de terra estejam na parte inferior do robô.} Um sensor de terra em um piso de cor clara detectará muita luz refletida. Se uma linha escura for pintada no chão, o sensor detectará muito pouca luz refletida quando estiver sobre a linha.\footnote{Se seu piso for de cor escura, uma linha branca deve ser usada.} A linha deve ser preta para maior contraste com o piso branco, mas a figura exibe a linha em cinza claro para não obscurecer o robô e seus sensores. Os limites são usados para determinar quando ocorre o evento de um sensor passando da detecção da linha para a detecção do chão ou vice-versa.
 
 \begin{figure}
 \begin{center}
@@ -487,7 +487,7 @@ Números~\ref{fig.coward}--\ref{fig.aggressive} mostram robôs que demonstram a 
 \draw[blue] (4.5, -1.5) arc[start angle=270, end angle=90, radius=.2cm];
 \draw[->,blue] (right-sensor) to [bend right=15] (right-wheel);
 \end{tikzpicture}
-\caption{Coward vehicle}\label{fig.coward}
+\caption{Veículo covarde}\label{fig.coward}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.45\textwidth}

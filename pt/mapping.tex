@@ -93,7 +93,6 @@ A figura~\ref{fig.cont} mostra um \emph{mapa contínuo} do mesmo objeto. Em vez 
 \[
 A = (6,3),\, B = (3,7),\, C = (6,7)\,.
 \]
-
 Os mapas discretos não são muito precisos: é difícil reconhecer o objeto na Fig.~\ref{fig.disc} como um triângulo. Para melhorar a precisão, uma grade mais fina deve ser usada: $16\times 16$ ou até $256\times 256$. Naturalmente, à medida que o número de pontos da grade aumenta, o tamanho da memória no robô também deve aumentar. Além disso, um computador mais potente deve ser usado para processar as células da grade. Os robôs móveis têm restrições de peso, custo, capacidade da bateria, e assim por diante, portanto, grades muito finas podem não ser práticas. 
 
 Se os objetos no ambiente são poucos e têm uma forma simples, um mapa contínuo é mais eficiente, além de ser mais preciso. Na Fig.~\ref{fig.cont}, três pares de números representam o triângulo com muito mais precisão do que os sete pares do mapa discreto. Além disso, é fácil de calcular se um ponto está no objeto ou não está usando geometria analítica. Entretanto, se houver muitos objetos ou se eles tiverem formas muito complexas, os mapas contínuos não são mais eficientes nem na memória nem na quantidade de computação necessária. O objeto na Fig.~\ref{fig.cont} é limitado por linhas retas, mas se o limite fosse descrito por curvas de alta ordem, o cálculo se tornaria difícil. Considere um mapa com objetos de $32$ do tamanho um, nenhum deles tocando um no outro. O mapa discreto teria coordenadas de $32$, enquanto o mapa contínuo precisaria armazenar as coordenadas dos quatro cantos de cada objeto.
@@ -344,7 +343,7 @@ Mesmo com má odometria, o robô pode construir um mapa melhor se ele tiver algu
 \begin{tikzpicture}[scale=1.2]
 \pic[rotate=90,scale=.5] at (0,0) { robot };
 \draw (-6mm,2mm)  to (-6mm,25mm);
-\node at (-8mm,0mm) {\p{écart}};
+\node at (-8mm,0mm) {\p{lacuna}};
 \draw (-6mm,25mm) to (20mm,25mm);
 \draw (20mm,25mm) to (20mm,-4mm);
 \draw (20mm,-4mm) to (-6mm,-4mm);
@@ -390,13 +389,13 @@ Considere um cortador de grama robótico, dada a tarefa de cortar um gramado and
 \begin{center}
 % Robotic lawnmower
 \begin{tikzpicture}[align=left]
-\node at (2.5,2.6) {\p{return to charging station}};
+\node at (2.5,2.6) {\p{retornar à estação de carga}};
 \draw[->] (.6,2.5) -- +(-4mm,-2mm);
 \draw (0,0) -- (6,0) -- (6,1) -- (1,1) -- (1,2) -- (6,2) -- (6,3) -- (0,3);
 \draw[->] (0,0) -- (1,0);
 \draw[->] (0,3) -- (0,4pt);
 \draw[fill,gray] (-1mm,-1mm) rectangle +(2mm,2mm);
-\node at (1.7,.5) {\p{charging station}};
+\node at (1.7,.5) {\p{estação de carga}};
 \draw[->] (.5,.4) -- +(-3mm,-2mm);
 \end{tikzpicture}
 \end{center}
@@ -434,13 +433,13 @@ A construção de mapas pode ser significativamente melhorada usando dados de se
 \begin{center}
 % Robotic lawnmower with landmarks
 \begin{tikzpicture}[align=left]
-\node at (2.5,2.6) {\p{return to charging station}};
+\node at (2.5,2.6) {\p{retornar à estação de carga}};
 \draw[->] (.6,2.5) -- +(-4mm,-2mm);
 \draw (0,0) -- (6,0) -- (6,1) -- (1,1) -- (1,2) -- (6,2) -- (6,3) -- (0,3);
 \draw[->] (0,0) -- (1,0);
 \draw[->] (0,3) -- (0,4pt);
 \draw[fill,gray] (-1mm,-1mm) rectangle +(2mm,2mm);
-\node at (1.7,.5) {\p{charging station}};
+\node at (1.7,.5) {\p{estação de carga}};
 \draw[->] (.5,.4) -- +(-3mm,-2mm);
 \draw[fill,black] (-.6,-.4) rectangle +(2mm,3.6);
 \draw[fill,black] (-.6,-.5) rectangle +(9mm,2mm);
@@ -584,7 +583,7 @@ Entretanto, devido ao erro na odometria, a percepção \emph{real} do robô é d
 
 Há um claro descasamento entre o mapa atual e os dados do sensor, que deve corresponder à parte conhecida do mapa. Obviamente, o robô não está onde se espera que esteja baseado na odometria. Como este descasamento pode ser corrigido? Assumimos que a odometria dá uma estimativa razoável da posição (posição e direção) do robô. Para cada erro relativamente pequeno possível na postura, calculamos qual seria a percepção do mapa atual e o comparamos com a percepção real computada a partir dos dados do sensor. A posição que dá a melhor combinação é escolhida como a posição real do robô e o mapa atual é atualizado de acordo.
 
-No exemplo, suponha que o robô esteja na célula esperada ou em um de seus quatro vizinhos (esquerda, direita, cima, baixo) e que o cabeçalho do robô esteja correto ou ligeiramente virado para a direita ($15^\circ$ no sentido horário (CW)) ou ligeiramente para a esquerda ($15^\circ$ no sentido anti-horário (CCW)). Os $5\times 3=15$ possíveis poses são mostrados na Fig.~ref{fig.pos-explore} e a Fig.~ref{fig.mapping4} mostra a percepção do mapa computado a partir do mapa atual para cada poses. (Para economizar espaço, apenas um fragmento de $8,00\times 5$ do mapa de $12,00\times 8$ é exibido).
+No exemplo, suponha que o robô esteja na célula esperada ou em um de seus quatro vizinhos (esquerda, direita, cima, baixo) e que o cabeçalho do robô esteja correto ou ligeiramente virado para a direita ($15^\circ$ no sentido horário (CW)) ou ligeiramente para a esquerda ($15^\circ$ no sentido anti-horário (CCW)). Os $5\times 3=15$ possíveis poses são mostrados na Fig.~\ref{fig.pos-explore} e a Fig.~\ref{fig.mapping4} mostra a percepção do mapa computado a partir do mapa atual para cada poses. (Para economizar espaço, apenas um fragmento de $8,00\times 5$ do mapa de $12,00\times 8$ é exibido).
 
 \begin{figure}
 \begin{center}

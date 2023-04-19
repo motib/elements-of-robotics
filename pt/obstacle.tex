@@ -2,13 +2,13 @@
 
 \chapter{Navegação local: Prevenção de Obstáculos}\label{ch.obstacle}
 
-Um robô móvel deve {navigar} de um ponto a outro de seu ambiente. Esta pode ser uma tarefa simples, por exemplo, se um robô pode seguir uma linha desobstruída no chão de um armazém (Sect.~\ref{s.line}), mas a tarefa torna-se mais difícil em ambientes desconhecidos e complexos como um rover explorando a superfície de Marte ou um submersível explorando uma cadeia de montanhas submarinas. Mesmo um carro que viaja por uma estrada precisa lidar com outros carros, obstáculos na estrada, passadeiras para pedestres, construção de estradas, e assim por diante. 
+Um robô móvel deve \emph{navigar} de um ponto a outro de seu ambiente. Esta pode ser uma tarefa simples, por exemplo, se um robô pode seguir uma linha desobstruída no chão de um armazém (Sect.~\ref{s.line}), mas a tarefa torna-se mais difícil em ambientes desconhecidos e complexos como um rover explorando a superfície de Marte ou um submersível explorando uma cadeia de montanhas submarinas. Mesmo um carro que viaja por uma estrada precisa lidar com outros carros, obstáculos na estrada, passadeiras para pedestres, construção de estradas, e assim por diante. 
 
 A navegação de um carro que se auto dirige pode ser dividida em duas tarefas: Há a tarefa de alto nível de encontrar um caminho entre uma posição de partida e uma posição de objetivo. Antes do desenvolvimento de sistemas modernos de computador, encontrar um caminho exigia o estudo de um mapa ou a pergunta de direções. Agora existem aplicativos smartphone que tomam uma posição inicial e uma posição de objetivo e computam os caminhos entre as duas posições. Se o aplicativo receber dados em tempo real sobre as condições de tráfego, ele pode sugerir qual caminho o levará ao seu objetivo no menor tempo possível. O caminho pode ser computado offline, ou, se você tiver um sistema GPS que possa determinar sua posição atual, o caminho pode ser encontrado em tempo real e atualizado para levar em conta as condições de mudança.
 
 Um carro que dirige sozinho também deve realizar a tarefa de nível inferior de adaptar seu comportamento ao ambiente: parar para um pedestre em uma faixa de pedestres, virar em cruzamentos, evitar obstáculos na estrada, etc. Embora a busca de caminhos de alto nível possa ser feita uma vez antes da viagem (ou a cada poucos minutos), a tarefa de evitar obstáculos de baixo nível deve ser realizada com freqüência, pois o carro nunca sabe quando um pedestre irá pular na estrada ou quando o carro que está seguindo irá frear de repente.
 
-A seção~\ref{s.obstacle-avoidance} examina a tarefa de baixo nível de evitar obstáculos. A seção~\ref{s.no-localization} mostra como um robô pode reconhecer marcas enquanto segue uma linha para que ele saiba quando atingiu seu objetivo. As seções~\{sref{s.ants}--\ref{s.fsm-ants} demonstram um comportamento de nível superior: encontrar um caminho sem um mapa do ambiente. Isto é feito por analogia com uma colônia de formigas que localiza uma fonte de alimento e comunica sua localização a todos os membros da colônia.
+A seção~\ref{s.obstacle-avoidance} examina a tarefa de baixo nível de evitar obstáculos. A seção~\ref{s.no-localization} mostra como um robô pode reconhecer marcas enquanto segue uma linha para que ele saiba quando atingiu seu objetivo. As seções~\ref{s.ants}--\ref{s.fsm-ants} demonstram um comportamento de nível superior: encontrar um caminho sem um mapa do ambiente. Isto é feito por analogia com uma colônia de formigas que localiza uma fonte de alimento e comunica sua localização a todos os membros da colônia.
 
 \section{Evitar obstáculos}\label{s.obstacle-avoidance}
 
@@ -25,7 +25,7 @@ Os algoritmos utilizarão as expressões condicionais abstratas \p{wall-ahead} e
 \begin{itemize}
 \item Implemente a expressão condicional \p{wall-ahead} usando uma proximidade horizontal ou um sensor de toque.
 \item Implemente a expressão condicional \p{wall-right}. Isto é fácil de fazer com um sensor montado à direita do robô, ou com um sensor de distância rotativo. Se você tiver apenas um sensor de proximidade voltado para frente, você pode fazer o robô girar ligeiramente para a direita, detectar a parede, se houver, e então girar novamente para trás.
-\item Implemente a expressão condicional \p{corner-direita}. Isto pode ser implementado como uma extensão da \p{wall-direita}. Quando o valor da palavra \p{parede direita} mudar de verdadeiro para falso, faça uma curva curta à direita e verifique se a palavra "parede direita" se torna verdadeira novamente.
+\item Implemente a expressão condicional \p{corner-direita}. Isto pode ser implementado como uma extensão da \p{wall-direita}. Quando o valor da palavra \p{parede direita} mudar de verdadeiro para falso, faça uma curva curta à direita e verifique se a palavra p{parede direita} se torna verdadeira novamente.
 \end{itemize}
 \end{framed}
 
@@ -94,7 +94,7 @@ Infelizmente, o Algorithm~\ref{alg.wall-following-simple} nem sempre funciona co
 
 \subsection{Parede seguindo com direção}
 
-O problema com o Algorithm~\ref{alg.wall-following-simple} é que ele é um algoritmo local que só olha para seu ambiente imediato e não leva em conta o fato de que o algoritmo de navegação de nível superior sabe aproximadamente a direção que o robô deve tomar para alcançar o objetivo. A figura~\ref{fig.wall-following-direction} mostra o comportamento de um robô que "sabe" que o objetivo está em algum lugar ao norte, então o robô se move a uma direção de $0^\circ$ em relação ao norte. O algoritmo de seguir a parede só é utilizado se o robô não puder se mover para o norte.
+O problema com o Algorithm~\ref{alg.wall-following-simple} é que ele é um algoritmo local que só olha para seu ambiente imediato e não leva em conta o fato de que o algoritmo de navegação de nível superior sabe aproximadamente a direção que o robô deve tomar para alcançar o objetivo. A figura~\ref{fig.wall-following-direction} mostra o comportamento de um robô que ``sabe'' que o objetivo está em algum lugar ao norte, então o robô se move a uma direção de $0^\circ$ em relação ao norte. O algoritmo de seguir a parede só é utilizado se o robô não puder se mover para o norte.
 
 \begin{figure}
 \begin{center}
@@ -138,7 +138,7 @@ Algoritmo~\ref{alg.wall-follow} é semelhante ao algoritmo anterior, exceto por 
 \end{alg}
 \end{figure}
 
-Infelizmente, o algoritmo pode falhar quando confrontado com um obstáculo em forma de "grifo" (Fig.~\ref{fig.wall-direction-bug}). Depois de fazer quatro voltas à esquerda, seu título é $360^\circ$ (também ao norte, um múltiplo de $360^\circ$) e continua avançando, encontrando e seguindo a parede uma e outra vez.
+Infelizmente, o algoritmo pode falhar quando confrontado com um obstáculo em forma de \emph{G} (Fig.~\ref{fig.wall-direction-bug}). Depois de fazer quatro voltas à esquerda, seu título é $360^\circ$ (também ao norte, um múltiplo de $360^\circ$) e continua avançando, encontrando e seguindo a parede uma e outra vez.
 
 \begin{figure}
 \begin{center}
@@ -532,7 +532,7 @@ Um FSM para encontrar caminhos pelas formigas é mostrado na Fig.~\ref{fig.fsm-a
 \path[->] (nest) edge [loop below] node[left,xshift=-8mm,yshift=4mm] {\p{frente do ninho} $\leadsto$\\\p{fwd}} ();
 \end{tikzpicture}
 \end{center}
-\caption{Máquina de estado para traçar um caminho entre uma fonte de alimento e um ninho\newline Veja a Tabela ~ref{tab.abbrev} para explicações sobre as abreviações}\label{fig.fsm-ant}
+\caption{Máquina de estado para traçar um caminho entre uma fonte de alimento e um ninho\newline Veja a Tabela ~\ref{tab.abbrev} para explicações sobre as abreviações}\label{fig.fsm-ant}
 \end{figure}
 
 \begin{table}[bt]
@@ -561,7 +561,7 @@ Abreviação & Explicação \\
 
 \smallskip
 
-\noindent\textbf{\p{siga}:} As duas auto-transições acima e à direita deste estado são transições que implementam a linha seguinte (Sect.~ref{s.line}). Há três outras transições: Caso um \p{timeout} ocorra sem detectar o cinza, o robô não está mais seguindo uma linha e deve retornar ao estado de \p (busca). Se o robô encontrar uma parede, queremos que ele se afaste, mas primeiro pedimos que ele faça uma volta completa de $360^\circ$ para verificar se há uma marca de cinza em sua vizinhança. Portanto, a transição inclui a ação $450$--$360$. Como o ninho está ao lado de uma parede, esta condição também é verdadeira quando o robô retorna ao ninho. Se o robô sentir uma marcação de alta densidade (preto), ele conclui que alcançou a fonte de alimento e faz a transição para o estado de alimento.
+\noindent\textbf{\p{siga}:} As duas auto-transições acima e à direita deste estado são transições que implementam a linha seguinte (Sect.~\ref{s.line}). Há três outras transições: Caso um \p{timeout} ocorra sem detectar o cinza, o robô não está mais seguindo uma linha e deve retornar ao estado de \p (busca). Se o robô encontrar uma parede, queremos que ele se afaste, mas primeiro pedimos que ele faça uma volta completa de $360^\circ$ para verificar se há uma marca de cinza em sua vizinhança. Portanto, a transição inclui a ação $450$--$360$. Como o ninho está ao lado de uma parede, esta condição também é verdadeira quando o robô retorna ao ninho. Se o robô sentir uma marcação de alta densidade (preto), ele conclui que alcançou a fonte de alimento e faz a transição para o estado de alimento.
 
 \smallskip
 
@@ -569,7 +569,7 @@ Abreviação & Explicação \\
 
 \smallskip
 
-\noindent\textbf{\p{goto nest}:} Este estado é semelhante ao estado {seguinte} em que o robô avança em direção ao ninho, virando à direita ou à esquerda conforme necessário para se mover na direção do ninho. Quando atinge o ninho, ele retorna ao estado de "pesquisa".
+\noindent\textbf{\p{goto nest}:} Este estado é semelhante ao estado {seguinte} em que o robô avança em direção ao ninho, virando à direita ou à esquerda conforme necessário para se mover na direção do ninho. Quando atinge o ninho, ele retorna ao estado de \p{search}.
 
 \smallskip
 

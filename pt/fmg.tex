@@ -1,6 +1,6 @@
 % !TeX root = er.tex
 
-\chapter{Finite State Machines}\label{ch.fmg}
+\chapter{Máquinas de Estado Finitoh}\label{ch.fmg}
 
 Os veículos Braitenberg e os algoritmos de linha seguintes (Cap.~\ref{ch.reactive}) demonstram comportamento reativo, onde a ação do robô depende dos valores \emph{current} retornados pelos sensores do robô, e não de eventos que aconteceram anteriormente. Na seção Sect.~\ref{s.sm} apresentamos o conceito de máquinas de estado e estado finito (FSM). As seções ~\ref{s.reactive-state}--\ref{s.search-and-approach} mostram como certos veículos Braitenberg podem ser implementados com FSMs. A seção~\ref{s.fsm-implementation} discute a implementação de FSMs usando variáveis de estado.
 
@@ -22,7 +22,7 @@ Os FSMs podem ser exibidos em diagramas de estados \emph{diagramas de estados}:
 \end{tikzpicture}
 \end{center}
 
-Um estado é denotado por um círculo etiquetado com o nome do estado. Os estados recebem nomes curtos para economizar espaço e seus nomes completos são indicados em uma caixa ao lado do diagrama de estados. A seta de entrada denota o estado inicial. Uma transição é mostrada como uma seta do estado \emph{source} para o estado \emph{target}. A seta é rotulada com a condição e a ação da transição. A ação não é continuada; por exemplo, a ação \p{volta à esquerda} significa ajustar os motores de modo que o robô gire para a esquerda, mas a transição para o próximo estado é feita sem esperar que o robô chegue a uma posição específica.
+Um estado é denotado por um círculo etiquetado com o nome do estado. Os estados recebem nomes curtos para economizar espaço e seus nomes completos são indicados em uma caixa ao lado do diagrama de estados. A seta de entrada denota o estado inicial. Uma transição é mostrada como uma seta do estado \emph{fonte} para o estado \emph{alvo}. A seta é rotulada com a condição e a ação da transição. A ação não é continuada; por exemplo, a ação \p{volta à esquerda} significa ajustar os motores de modo que o robô gire para a esquerda, mas a transição para o próximo estado é feita sem esperar que o robô chegue a uma posição específica.
 
 \section{Comportamento reativo com o estado}\label{s.reactive-state}
 
@@ -37,11 +37,11 @@ A figura~\ref{fig.persistent} mostra o diagrama de estado para este comportament
 \begin{center}
 \begin{tikzpicture}[node distance = 2cm and 6cm,align=left]
 \node[draw,circle,minimum size=12mm] (forwards)  {\textsf{\small fwd}};
-\node[draw,circle,minimum size=12mm] (backwards) [right=of forwards] {\textsf{\small back}};
+\node[draw,circle,minimum size=12mm] (backwards) [right=of forwards] {\textsf{\small voltar}};
 \draw[->,bend left=15] (forwards) to node[above] {\textsf{\small detectado $\leadsto$}\\\p{ajustar os motores para trás, ajustar o timer}} (backwards);
 \draw[->,bend left=15] (backwards) to node[below] {\textsf{\small temporizador expirou $\leadsto $ set motores para frente}} (forwards);
 \draw[->] (-15mm,15mm) to  (forwards);
-\node at (0mm,18mm) {\textsf{\small verdadeiros motores de $\leadsto $ set forwards}};
+\node at (0mm,18mm) {\textsf{\small verdadeiros motores de $\leadsto $ avançar}};
 \node[draw,above=of backwards,yshift=-1cm,xshift=-1cm] {\textsf{\small fwd = robô movendo-se para a frente}\\\textsf{\small para trás=robô a andar para trás}};
 \end{tikzpicture}
 \caption{FSM para o persistente veículo Braitenberg}\label{fig.persistent}
@@ -78,10 +78,10 @@ O veículo Persistent Braitenberg (Fig.~\ref{fig.persistent}) tem comportamento 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[node distance = 2.2cm and 5.5cm,align=left]
-\node[draw,circle,minimum size=12mm] (left) {\p{left}};
-\node[draw,circle,minimum size=12mm] (right) [right=of left] {\p{right}};
+\node[draw,circle,minimum size=12mm] (left) {\p{esquerda}};
+\node[draw,circle,minimum size=12mm] (right) [right=of left] {\p{à direita}};
 \node[draw,circle,minimum size=12mm] (detected) [below=of left] {\p{appr}};
-\node[draw,circle,minimum size=12mm,yshift=-1mm] (near1) [below=of right] {\p{found}};
+\node[draw,circle,minimum size=12mm,yshift=-1mm] (near1) [below=of right] {\p{encon.}};
 \node[draw,circle,minimum size=14mm] (near) [below=of right] {};
 \draw[->,bend left=15] (left) to node[above] {\p{em $+45^\circ$} $\leadsto$ \p{virar à direita}} (right);
 \draw[->,bend left=15] (right) to node[below] {\p{em $-45^\circ$} $\leadsto$ \p{vire à esquerda}} (left);

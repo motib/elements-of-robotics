@@ -1,6 +1,6 @@
 % !TeX root = er.tex
 
-\chapter{Localization}\label{ch.local}
+\chapter{Localização}\label{ch.local}
 
 A navegação por odometria (Sect.~\ref{s.odometry}) é propensa a erros e só pode dar uma estimativa da real pose do robô. Além disso, quanto mais o robô se move, maior é o erro na estimativa da pose, especialmente no cabeçalho. A odometria em um robô pode ser comparada a caminhar de olhos fechados, contando passos até chegarmos ao nosso destino. Como na odometria, quanto mais avançamos, mais incertos estamos quanto à nossa localização. Mesmo ao contar passos, devemos abrir nossos olhos de vez em quando para reduzir a incerteza de nossa localização. Para um robô, o que significa "contar passos" e "abrir nossos olhos de tempos em tempos"? Significa que para mover distâncias curtas a odometria é suficientemente boa, mas ao mover distâncias maiores o robô deve determinar sua posição em relação a uma referência externa chamada marco. Este processo é chamado de \emph{localização}.
 
@@ -78,7 +78,7 @@ Os comprimentos $a$ e $b$ são computados usando a \emph{law of sines}:
 \begin{displaymath}
 \frac{a}{\sin\alpha'} = \frac{b}{\sin\beta'} = \frac{c}{\sin\gamma}\,,
 \end{displaymath}
-onde $\alpha' = 90^\circ{} - \alpha, \beta' = 90^\circ{} \beta$ são os ângulos interiores do triângulo. Para usar a lei, precisamos $c$, que foi medido, e $gamma$, que é:
+onde $\alpha' = 90^\circ{} - \alpha, \beta' = 90^\circ{} \beta$ são os ângulos interiores do triângulo. Para usar a lei, precisamos $c$, que foi medido, e $\gamma$, que é:
 \begin{displaymath}
 \gamma = 180^{\circ}-\alpha'-\beta' = 180^{\circ} - (90^{\circ} -
 \alpha) - (90^{\circ} - \beta) = \alpha + \beta\,.
@@ -287,7 +287,7 @@ norm    &$0.07$ & $0.07$ & $0.07$ & $0.01$ & $0.01$ & $0.07$ & $0.63$ & $0.07$\\
 \end{tabular}
 \end{table}
 
-Inicialmente, depois de sentir o cinza escuro em uma posição onde há uma porta, só sabemos com probabilidade $,125 por 0,9 = 0,1125$ que uma porta foi detectada corretamente; no entanto, ainda há uma probabilidade de $,125 por 0,1= 0,0125$ de ter detectado erroneamente uma parede. Depois de normalizar (Apêndice~\ref{a.normalize}), a matriz de crenças é:
+Inicialmente, depois de sentir o cinza escuro em uma posição onde há uma porta, só sabemos com probabilidade $,125\times 0,9 = 0,1125$ que uma porta foi detectada corretamente; no entanto, ainda há uma probabilidade de $,125 \times 0,1= 0,0125$ de ter detectado erroneamente uma parede. Depois de normalizar (Apêndice~\ref{a.normalize}), a matriz de crenças é:
 \begin{center}
 \begin{tikzpicture}
 \draw (0,3) node[left] {\p{1.0}} -- node[left] {$p$} (0,0) node[left] {\p{0.0}} -- node[below,yshift=-4mm] {$b$} (8,0);

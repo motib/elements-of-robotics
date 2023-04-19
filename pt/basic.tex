@@ -5,15 +5,15 @@
 Embora todos pareçam saber o que é um robô, é difícil dar uma definição precisa. O Oxford English Dictionary dá a seguinte definição: ``Uma máquina capaz de realizar automaticamente uma série complexa de ações, especialmente uma programável por um computador''. Esta definição inclui alguns elementos interessantes:
 \begin{itemize}
 \item ``Atualização automática das ações''. Este é um elemento chave na robótica, mas também em muitas outras máquinas mais simples chamadas autômatos. A diferença entre um robô e um simples autômato como uma máquina de lavar louça está na definição do que é uma "série complexa de ações". A lavagem de roupas é ou não composta de uma série complexa de ações? Pilotar um avião em um piloto automático é uma ação complexa? Cozinhar pão é uma ação complexa? Para todas estas tarefas existem máquinas que estão na fronteira entre autômatos e robôs.
-\O item "Programável por computador" é outro elemento chave de um robô, pois alguns autômatos são programados mecanicamente e não são muito flexíveis. Por outro lado, os computadores são encontrados em todos os lugares, portanto é difícil utilizar este critério para distinguir um robô de outra máquina.
+\item O item "Programável por computador" é outro elemento chave de um robô, pois alguns autômatos são programados mecanicamente e não são muito flexíveis. Por outro lado, os computadores são encontrados em todos os lugares, portanto é difícil utilizar este critério para distinguir um robô de outra máquina.
 \end{itemize}
 Um elemento crucial dos robôs que não é mencionado explicitamente na definição é o uso de sensores. A maioria dos autômatos não tem sensores e não podem adaptar suas ações ao seu ambiente. Os sensores são o que permite que um robô execute tarefas complexas. 
 
-Em Sects.~ref{s.classification}--ref{s.educacional} deste capítulo introdutório, fazemos um pequeno levantamento dos diferentes tipos de robôs. A seção ~ref{s.generic} descreve o robô genérico que usamos e a seção Sect.~ref{s.alg-formalism} apresenta o pseudocódigo usado para formalizar os algoritmos. A seção~\ref{s.overview} dá uma visão detalhada do conteúdo do livro.
+Em Sects.~\ref{s.classification}--\ref{s.educational} deste capítulo introdutório, fazemos um pequeno levantamento dos diferentes tipos de robôs. A seção ~\ref{s.generic} descreve o robô genérico que usamos e a seção Sect.~\ref{s.alg-formalism} apresenta o pseudocódigo usado para formalizar os algoritmos. A seção~\ref{s.overview} dá uma visão detalhada do conteúdo do livro.
 
 \section{Classificação dos robôs}\label{s.classification}
 
-Os robôs podem ser classificados de acordo com o ambiente em que operam (Fig.~ref{fig.classification1}). A distinção mais comum é entre os robôs de telefonia móvel e os robôs de telefonia móvel. Estes dois tipos de robôs têm ambientes de trabalho muito diferentes e, portanto, requerem capacidades muito diferentes. Os robôs fixos são em sua maioria manipuladores robóticos industriais que trabalham em ambientes bem definidos e adaptados para robôs. Os robôs industriais executam tarefas repetitivas específicas como soldagem ou pintura de peças em fábricas de automóveis. Com o aperfeiçoamento dos sensores e dispositivos para interação homem-robô, os manipuladores robóticos são cada vez mais utilizados em ambientes menos controlados, como cirurgia de alta precisão.
+Os robôs podem ser classificados de acordo com o ambiente em que operam (Fig.~\ref{fig.classification1}). A distinção mais comum é entre os robôs de telefonia móvel e os robôs de telefonia móvel. Estes dois tipos de robôs têm ambientes de trabalho muito diferentes e, portanto, requerem capacidades muito diferentes. Os robôs fixos são em sua maioria manipuladores robóticos industriais que trabalham em ambientes bem definidos e adaptados para robôs. Os robôs industriais executam tarefas repetitivas específicas como soldagem ou pintura de peças em fábricas de automóveis. Com o aperfeiçoamento dos sensores e dispositivos para interação homem-robô, os manipuladores robóticos são cada vez mais utilizados em ambientes menos controlados, como cirurgia de alta precisão.
 
 \begin{figure}
 \begin{center}
@@ -69,7 +69,7 @@ Existem três ambientes principais para robôs móveis que requerem princípios 
 \draw (service.south east |- 0,-15mm) -- (military.north west);
 \end{tikzpicture}
 \end{center}
-\caption{Classification of robots by application field}\label{fig.classification2}
+\caption{Classificação dos robôs por campo de aplicação}\label{fig.classification2}
 \end{figure}
 
 Os robôs podem ser classificados pelo campo de aplicação pretendido e pelas tarefas que executam (Fig.~\ref{fig.classification2}). Mencionamos os robôs industriais que trabalham em ambientes bem definidos nas tarefas de produção. Os primeiros robôs foram robôs industriais porque o ambiente bem definido simplificou seu projeto.  Os robôs de serviço, por outro lado, auxiliam os humanos em suas tarefas. Estes incluem tarefas em casa como limpeza a vácuo, transporte como carros de auto direção, e aplicações de defesa, como zangões de reconhecimento. A medicina também tem visto o uso crescente de robôs em cirurgia, reabilitação e treinamento. Estas são aplicações recentes que requerem sensores melhorados e uma interação mais próxima com o usuário.
@@ -374,7 +374,7 @@ Os manipuladores de eventos são diferentes dos programas seqüenciais que têm 
 
 O computador inclui um \emph{temer} que funciona como um cronômetro em um smartphone. Um temporizador é uma variável que é \emph{set} para um período de tempo, por exemplo, $0,5$ segundo, que é representado como um número inteiro de milissegundos ou microssegundos ($0,5$ segundo é $500$ milissegundos). O relógio de hardware do computador causa uma interrupção em intervalos fixos e o sistema operacional decreta o valor do temporizador. Quando seu valor chega a zero, dizemos que o temporizador tem \emph{expirado}; ocorre uma interrupção.
 
-Os temporizadores são usados para implementar eventos repetidos como acender e apagar uma luz. Eles também são usados para \emph{polling}index{polling}, uma alternativa aos manipuladores de eventos: em vez de realizar um cálculo quando um evento ocorre, os sensores são lidos e armazenados periodicamente. Mais precisamente, a sondagem ocorre como um manipulador de eventos quando um timer expira, mas o projeto de software usando sondagem pode ser bem diferente do projeto de software baseado em eventos.
+Os temporizadores são usados para implementar eventos repetidos como acender e apagar uma luz. Eles também são usados para \emph{polling}, uma alternativa aos manipuladores de eventos: em vez de realizar um cálculo quando um evento ocorre, os sensores são lidos e armazenados periodicamente. Mais precisamente, a sondagem ocorre como um manipulador de eventos quando um timer expira, mas o projeto de software usando sondagem pode ser bem diferente do projeto de software baseado em eventos.
 
 \section{O formalismo algorítmico}\label{s.alg-formalism}
 
@@ -410,51 +410,50 @@ Definimos nossos sensores de proximidade como retornando a distância a um objet
 Os primeiros seis capítulos formam o núcleo dos conceitos e algoritmos de robótica.
 \begin{description}
 \item [\textbf{Capítulo \ref{ch.basic} Robôs e suas aplicações}] Este capítulo pesquisa e classifica os robôs. Também especifica os robôs genéricos e os formalismos usados para apresentar algoritmos neste livro.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.sensors} Sensores}] Os robôs são mais do que aparelhos controlados remotamente, como um aparelho de televisão. Eles mostram um comportamento autônomo baseado na detecção de objetos em seu ambiente usando sensores. Este capítulo dá uma visão geral dos sensores usados pelos robôs e explica os conceitos de alcance, resolução, precisão e exatidão. Também discute a não-linearidade dos sensores e como lidar com ela.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.reactive} Comportamento reativo}] Quando um robô autônomo detecta um objeto em seu ambiente, ele reage alterando seu comportamento. Este capítulo introduz algoritmos robóticos onde o robô muda diretamente seu comportamento com base na entrada de seus sensores. Os veículos Braitenberg são exemplos simples, porém elegantes, de comportamento reativo. O capítulo apresenta várias variantes de algoritmos de linha que seguem os algoritmos.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.fmg} Máquinas de Estado Finito}] Um robô pode estar em diferentes estados, onde sua reação à entrada de seus sensores depende não só destes valores, mas também do estado atual. Máquinas de estado finito são um formalismo para descrever estados e as transições entre eles que dependem da ocorrência de eventos.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.motion} Movimento Robótico e Odometria}] Robôs autônomos exploram seu ambiente, executando ações. Dificilmente passa um dia sem um relatório sobre a experiência com carros automotores. Este capítulo revisa conceitos relacionados ao movimento (distância, tempo, velocidade, aceleração), e depois apresenta a odometria, o método fundamental que um robô utiliza para se mover de uma posição para outra. A odometria está sujeita a erros significativos e é importante entender sua natureza.
 
 A segunda parte do capítulo dá uma visão geral dos conceitos avançados de movimento robótico: codificadores de roda e sistemas de navegação inercial que podem melhorar a precisão da odometria, e graus de liberdade e holonomia que afetam o planejamento do movimento robótico.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.control} Controle}] Um robô autônomo é um sistema de controle de circuito fechado porque a entrada de dados de seus sensores afeta seu comportamento que, por sua vez, afeta o que é medido pelos sensores. Por exemplo, um carro que se aproxima de um semáforo pode frear mais forte à medida que se aproxima do semáforo. Este capítulo descreve a matemática dos sistemas de controle que garantem um comportamento ideal: o carro realmente pára no semáforo e a frenagem é gradual e suave.
 \end{description}
 
 Um robô móvel autônomo deve de alguma forma navegar de uma posição inicial a uma posição de objetivo, por exemplo, para levar medicamentos da farmácia de um hospital ao paciente. A navegação é um problema fundamental na robótica que é difícil de resolver. Os quatro capítulos seguintes apresentam algoritmos de navegação em vários contextos.
 \begin{description}
 \item [\textbf{Capítulo \ref{ch.obstacle} Navegação local: Prevenção de Obstáculos}] O requisito mais básico de um robô móvel é que ele não bata em paredes, pessoas e outros obstáculos. Isto é chamado de navegação \emph{local} porque trata da vizinhança imediata do robô e não de objetivos que o robô está tentando alcançar. O capítulo começa com algoritmos de parede que permitem que um robô se mova em torno de um obstáculo; estes algoritmos são similares aos algoritmos para navegar em um labirinto. O capítulo descreve um algoritmo probabilístico que simula a navegação por uma colônia de formigas em busca de uma fonte de alimento.
-\smallskip
 \item [\textbf{Capítulo \ref{ch.local} Localização}] Era uma vez antes de cada smartphone incluir a navegação por GPS, nós costumávamos navegar com mapas impressos em papel. Um problema difícil é a localização: você pode determinar sua posição atual no mapa? Os robôs móveis devem resolver o mesmo problema de localização, muitas vezes sem o benefício da visão. O capítulo descreve a localização através de cálculos trigonométricos a partir de posições conhecidas. A isto se seguem seções sobre a localização probabilística: Um robô pode detectar um ponto de referência, mas pode haver muitos pontos de referência similares no mapa. Ao atribuir probabilidades e atualizá-las à medida que o robô se move através do ambiente, ele pode eventualmente determinar sua posição com relativa certeza.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.mapping} Mapeamento}] Mas de onde vem o mapa? Mapas de ruas precisos estão prontamente disponíveis, mas um aspirador robótico não tem um mapa de seu apartamento. Um robô subaquático é usado para explorar um ambiente desconhecido. Para realizar a localização o robô precisa de um mapa, mas para criar um mapa de um ambiente desconhecido o robô precisa se localizar, no sentido de que tem que saber até onde se deslocou de um ponto do ambiente para outro. A solução é realizar a localização e o mapeamento simultâneos. A primeira parte do capítulo descreve um algoritmo para explorar um ambiente para determinar a localização de obstáculos. Em seguida, é apresentado um algoritmo simplificado para localização e mapeamento simultâneos.
-\smallskip
+
 \item [\textbf{Capítulo \ref{ch.map-based} Navegação com base em mapeamento}] Agora que o robô tem um mapa, suponha que lhe seja atribuída uma tarefa que requeira que ele passe de uma posição inicial para uma posição de objetivo. Que rota ele deve tomar? Este capítulo apresenta dois algoritmos para o planejamento do caminho: O algoritmo de Dijkstra, um algoritmo clássico para encontrar o caminho mais curto em um gráfico, e o algoritmo \astar{}, uma versão mais eficiente do algoritmo de Dijkstra que usa informações heurísticas.
 \end{description}
 
 Os capítulos seguintes apresentam tópicos avançados em robótica. Eles são independentes uns dos outros para que você possa selecionar quais deles estudar e em que ordem.
 \begin{description}
 \item [\textbf{Chapter \ref{ch.fuzzy} Controle de Lógica Fuzzy}] Os algoritmos de controle (Cap.~\ref{ch.control}) exigem a especificação de um valor alvo preciso: um sistema de aquecimento precisa da temperatura alvo de uma sala e um sistema de cruise control precisa da velocidade alvo de um carro. Uma abordagem alternativa chamada lógica difusa usa especificações imprecisas como frio, frio, quente, quente, ou muito lento, lento, rápido, muito rápido. Este capítulo apresenta a lógica difusa e mostra como ela pode ser usada para controlar um robô que se aproxima de um objeto.
-\smallskip
+
 \item [\textbf{Chapter \ref{ch.image} Processamento de imagem}] A maioria dos sensores robóticos medem distâncias e ângulos usando lasers, som ou luz infravermelha. Nós, humanos, confiamos principalmente em nossa visão. Câmeras digitais de alta qualidade são baratas e encontradas em todos os smartphones. A dificuldade é processar e interpretar as imagens tiradas pela câmera, algo que nosso cérebro faz instantaneamente. O processamento digital de imagens tem sido objeto de extensa pesquisa e seus algoritmos são usados em robôs avançados que podem proporcionar o poder computacional necessário. Neste capítulo pesquisamos os algoritmos de processamento de imagem e mostramos como um robô educacional pode demonstrar os algoritmos mesmo sem uma câmera.
-\smallskip
+
 \item [\textbf{Chapter \ref{ch.neural} Redes Neurais}] Os robôs autônomos em ambientes altamente complexos não podem ter algoritmos para todas as situações possíveis. Um carro que dirige sozinho não pode conhecer antecipadamente todos os diferentes veículos e configurações de veículos que ele encontra na estrada. Os robôs autônomos devem aprender com sua experiência e este é um tópico fundamental na inteligência artificial que vem sendo estudado há muitos anos. Este capítulo apresenta uma abordagem do aprendizado: redes neurais artificiais modeladas nos neurônios de nossos cérebros. Uma rede neural usa algoritmos de aprendizagem para modificar seus parâmetros internos de modo a se adaptar continuamente a novas situações que encontra.
-\smallskip
+
 \item [\textbf{Chapter \ref{ch.machine} Aprendizagem da máquina}] Outra abordagem da aprendizagem é uma técnica estatística chamada aprendizagem de máquina. Este capítulo descreve dois algoritmos para distinguir entre duas alternativas, por exemplo, distinguir entre um semáforo que é vermelho e um que é verde. O primeiro algoritmo, chamado análise linear discriminante, é baseado nos meios e variações de um conjunto de amostras. O segundo algoritmo usa perceptrons, uma forma de rede neural que pode distinguir entre alternativas mesmo quando as amostras não satisfazem as suposições estatísticas necessárias para a análise linear discriminante.
-\smallskip
+
 \item [\textbf{Chapter \ref{ch.swarm} Robótica de enxame}] Se você precisa melhorar o desempenho de um sistema, muitas vezes é mais fácil usar múltiplas instâncias de um componente em vez de tentar melhorar o desempenho de um componente individual. Considere um problema como o levantamento de uma área para medir os níveis de poluição. Você pode usar um único robô muito rápido (e caro), mas pode ser mais fácil usar vários robôs, cada um dos quais mede a poluição em uma área pequena. Isto é chamado de robótica de enxame por analogia com um enxame de insetos que pode encontrar o melhor caminho entre seu ninho e uma fonte de alimento. O problema fundamental na robótica de enxame, como em todos os sistemas concorrentes, é desenvolver métodos de coordenação e comunicação entre os robôs. Este capítulo apresenta duas dessas técnicas: troca de informações e interações físicas.
-\smallskip
+
 \item [\textbf{Chapter \ref{ch.kinematics} Cinemática de um Manipulador Robótico}] Os robôs educacionais são pequenos robôs móveis que se movem em uma superfície bidimensional. Há robôs móveis que se movem em três dimensões: aeronaves robóticas e submarinos. A matemática e os algoritmos para o movimento tridimensional foram desenvolvidos em outro campo central da robótica: os manipuladores que são usados extensivamente na fabricação. Este capítulo apresenta um tratamento simplificado dos conceitos fundamentais dos manipuladores robóticos (cinemática dianteira e inversa, rotações, transformações homogêneas) em duas dimensões, bem como um sabor de rotações tridimensionais.
 \end{description}
 
 Há dois apêndices:
 \begin{description}
 \item [\textbf{Anexo \ref{ch.units} Unidades de medida}] Este apêndice contém a Tabela A.1 com unidades de medidas. A Tabela A.2 fornece prefixos que são usados com essas unidades.
-\smallskip
-\item [\textbf{Anexo \ref{ch.math} Derivações matemáticas e tutoriais}]]. Este capítulo contém tutoriais que revisam alguns dos conceitos matemáticos utilizados no livro. Além disso, algumas das derivações matemáticas detalhadas foram coletadas aqui para não quebrar o fluxo do texto.
+
+\item [\textbf{Anexo \ref{ch.math} Derivações matemáticas e tutoriais}]. Este capítulo contém tutoriais que revisam alguns dos conceitos matemáticos utilizados no livro. Além disso, algumas das derivações matemáticas detalhadas foram coletadas aqui para não quebrar o fluxo do texto.
 \end{description}
 
 \section{Sumário}

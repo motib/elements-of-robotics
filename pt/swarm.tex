@@ -2,7 +2,7 @@
 
 \chapter{Robótica de enxame}\label{ch.swarm}
 
-As fábricas utilizam vários robôs para alcançar objetivos como pintar e soldar um carro (Fig.\ref{fig.assemblyline}). O uso de vários robôs encurta o tempo de fabricação ao realizar diferentes tarefas simultaneamente, tais como soldar peças em ambos os lados de um carro. Estas tarefas são normalmente projetadas para serem independentes, sem nenhuma colaboração estreita entre os robôs. Mais tarde, os robôs, especialmente os robôs móveis, foram projetados para colaborar uns com os outros \emph{directly} para executar múltiplas ações simultaneamente em locais diferentes.
+As fábricas utilizam vários robôs para alcançar objetivos como pintar e soldar um carro (Fig.\ref{fig.assemblyline}). O uso de vários robôs encurta o tempo de fabricação ao realizar diferentes tarefas simultaneamente, tais como soldar peças em ambos os lados de um carro. Estas tarefas são normalmente projetadas para serem independentes, sem nenhuma colaboração estreita entre os robôs. Mais tarde, os robôs, especialmente os robôs móveis, foram projetados para colaborar uns com os outros \emph{diretamente} para executar múltiplas ações simultaneamente em locais diferentes.
 
 Aqui estão alguns exemplos de tarefas que requerem a colaboração de vários robôs:
 \begin{itemize}
@@ -109,15 +109,15 @@ A figura~\ref{fig.beeclust} mostra uma máquina estatal implementando o algoritm
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm and 5cm,align=left,minimum size=16mm,every loop/.style={min distance=16mm}]
 % Nodes
-\node[draw,circle] (moving) {\p{moving}};
-\node[draw,circle] (waiting) [right=of moving] {\p{waiting}};
+\node[draw,circle] (moving) {\p{em movimento}};
+\node[draw,circle] (waiting) [right=of moving] {\p{esperando}};
 % Initial state arrow
-\draw[->] (-15mm,10mm) to node [above left,yshift=-3mm] {\p{true} $\leadsto$ \p{fwd}} (moving);
+\draw[->] (-15mm,10mm) to node [above left,yshift=-3mm] {\p{verdadeiro} $\leadsto$ \p{fwd}} (moving);
 % Transitions from moving
-\path[->] (moving) edge [loop above] node [above,yshift=-4mm] {\p{collision with wall} $\leadsto$ \p{turn randomly, fwd}} ();
-\path[->] (moving) edge node[above] {\p{collision with robot} $\leadsto$\\ \p{measure temperature,}\\\p{calculate waiting time}} (waiting);
+\path[->] (moving) edge [loop above] node [above,yshift=-4mm] {\p{colisão com parede} $\leadsto$ \p{virar aleatoriamente, fwd}} ();
+\path[->] (moving) edge node[above] {\p{colisão com robô} $\leadsto$\\ \p{medir temperatura,}\\\p{calcular o tempo de espera}} (waiting);
 % Transitions from waiting
-\path[->,bend left=20] (waiting) edge node[below,yshift=3mm] {\p{wait expired} $\leadsto$ \p{turn randomly, fwd}} (moving);
+\path[->,bend left=20] (waiting) edge node[below,yshift=3mm] {\p{espera expirou} $\leadsto$ \p{virar aleatoriamente, fwd}} (moving);
 \end{tikzpicture}
 \end{center}
 \caption{Algoritmo BeeClust}\label{fig.beeclust}
@@ -311,7 +311,7 @@ Consideremos outro exemplo de combinação da força de vários robôs. Em vez d
 
 A figura~\ref{fig.swarm-pushing} mostra um grupo de pequenos robôs empurrando um objeto grande representado pelo círculo em direção a um objetivo. Uma abordagem seria determinar a direção para o objetivo, compartilhar esta informação entre todos os robôs e fazer com que cada robô compute a direção que deve empurrar. Isto não é tão simples quanto parece, já que um simples robô pode não ser capaz de determinar sua posição e direção absoluta.
 
-Uma abordagem robótica de enxame é chamada de \emph{occlusion-based pushing}, que assume que os robôs têm apenas conhecimento local, não conhecimento global do que os outros robôs estão fazendo. Os robôs são capazes de determinar se eles podem ou não detectar o objetivo. Por exemplo, uma luz brilhante poderia ser montada sobre a meta e os robôs equipados com um sensor de luz. 
+Uma abordagem robótica de enxame é chamada de \emph{empurrões baseados na oclusão}, que assume que os robôs têm apenas conhecimento local, não conhecimento global do que os outros robôs estão fazendo. Os robôs são capazes de determinar se eles podem ou não detectar o objetivo. Por exemplo, uma luz brilhante poderia ser montada sobre a meta e os robôs equipados com um sensor de luz. 
 
 \begin{figure}
 \begin{center}
@@ -347,16 +347,16 @@ A figura~\ref{fig.FSM-swarm-pushing} mostra a máquina de estado finito para est
 \begin{center}
 \begin{tikzpicture}[node distance = 4cm and 5cm,align=left,minimum size=16mm,every loop/.style={min distance=16mm}]
 % Nodes
-\node[draw,circle] (searching) {\p{searching}\\\p{for object}}; and their fit to the required performances of the system.
-\node[draw,circle] (pushing) [right=of searching] {\p{pushing}};
+\node[draw,circle] (searching) {\p{pesquisando}\\\p{para objeto}}; 
+\node[draw,circle] (pushing) [right=of searching] {\p{empurrando}};
 % Initial state arrow
-\draw[->] (-5mm,12mm) to node [above left,yshift=-2mm,xshift=6mm] {\p{true} $\leadsto$\\\p{move randomly}} (searching);
+\draw[->] (-5mm,12mm) to node [above left,yshift=-2mm,xshift=6mm] {\p{verdadeiro} $\leadsto$\\\p{mover-se aleatoriamente}} (searching);
 % Transitions from searching
-\path[->,bend left=30] (searching) edge node [above,yshift=-4mm] {\p{object found and goal occluded} $\leadsto$\\\p{push object}} (pushing);
+\path[->,bend left=30] (searching) edge node [above,yshift=-4mm] {\p{objeto encontrado e objetivo ocluído} $\leadsto$\\\p{objeto de empurrar}} (pushing);
 % Transitions from pushing
-\path[->] (pushing) edge [loop right] node[below,xshift=-2mm] {\p{goal occluded} $\leadsto$} (pushing);
-\path[->,bend left=30] (pushing) edge node[below,yshift=4mm] {\p{goal visible} $\leadsto$\p{move randomly}} (searching);
-\path[->] (pushing) edge node[above,yshift=-6mm] {\p{object lost} $\leadsto$\p{move randomly}} (searching);
+\path[->] (pushing) edge [loop right] node[below,xshift=-2mm] {\p{objetivo ocluído} $\leadsto$} (pushing);
+\path[->,bend left=30] (pushing) edge node[below,yshift=4mm] {\p{objetivo visível} $\leadsto$\p{mover-se aleatoriamente}} (searching);
+\path[->] (pushing) edge node[above,yshift=-6mm] {\p{objeto perdido} $\leadsto$\p{mover-se aleatoriamente}} (searching);
 \end{tikzpicture}
 \end{center}
 \caption{Algoritmo para a coordenação baseada na oclusão}\label{fig.FSM-swarm-pushing}

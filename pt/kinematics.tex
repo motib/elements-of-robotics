@@ -37,9 +37,9 @@ Um sistema de coordenadas bidimensionais é atribuído com a primeira junta a $(
 \draw[fill] (origin) circle [radius=1pt] node[below] {$(0,0)$};
 \draw[fill] (prime) circle [radius=1pt] node[left] {$(x',y')$};
 \draw[fill] (point) circle [radius=1pt] node[right] {$(x,y)$};
-\node[above,yshift=1mm] at (point) {\p{end}\\\p{effector}};
-\node[above left] at (origin) {\p{fixed}\\\p{joint}};
-\node[below right] at (prime) {\p{movable}\\\p{joint}};
+\node[above,yshift=1mm] at (point) {\p{fim}\\\p{effector}};
+\node[above left] at (origin) {\p{fixo}\\\p{conjunto}};
+\node[below right] at (prime) {\p{móvel}\\\p{conjunto}};
 \draw[dashed] (prime) |- (origin);
 \draw[dashed] (prime) -| (point);
 \path (origin) -- node[below] {$x'$} (prime |- origin);
@@ -102,7 +102,7 @@ Vamos verificar se este resultado faz sentido. A figura~\ref{fig.kinematics-tria
 \begin{framed}
 \act{Cinemática frontal}{forward-kinematics}
 \begin{itemize}
-\item Programe seu robô para que ele trace o caminho do braço na Fig.~ref{fig.forward-kinematics}: vire à esquerda $60^{\circ}$, avance uma unidade ($1$m ou alguma outra distância conveniente), vire à direita $30^{\circ}$, avance uma unidade.
+\item Programe seu robô para que ele trace o caminho do braço na Fig.~\ref{fig.forward-kinematics}: vire à esquerda $60^{\circ}$, avance uma unidade ($1$m ou alguma outra distância conveniente), vire à direita $30^{\circ}$, avance uma unidade.
 \item Medir os $x$- e $y$-distâncias do robô desde a origem e compará-las com os valores computados pelas equações da cinemática de avanço.
 \end{itemize}
 \end{framed}
@@ -265,7 +265,7 @@ As rotações podem ser confusas porque uma matriz de rotação pode ter três i
 
 \subsection{Girando um vetor}
 
-Considere um vetor com coordenadas cartesianas $(x,y)$ e coordenadas polares $(r,\phi)$ (Fig.~\ref{fig.one-vector}). Agora, gire o vetor por um ângulo $(x,y)$ e coordenadas polares $(r,y)$ (Fig.~\ref{fig.rotated-vector}). Suas coordenadas polares são $(r,\phi+theta)$. Quais são suas coordenadas cartesianas?
+Considere um vetor com coordenadas cartesianas $(x,y)$ e coordenadas polares $(r,\phi)$ (Fig.~\ref{fig.one-vector}). Agora, gire o vetor por um ângulo $(x,y)$ e coordenadas polares $(r,y)$ (Fig.~\ref{fig.rotated-vector}). Suas coordenadas polares são $(r,\phi+\theta)$. Quais são suas coordenadas cartesianas?
 \begin{figure}
 \begin{minipage}{.48\textwidth}
 \begin{tikzpicture}[scale=1.2]
@@ -388,7 +388,7 @@ Como a multiplicação matricial é associativa, a multiplicação também poder
 \begin{framed}
 \act{Matrizes de rotação}{rotation-matrix}
 \begin{itemize}
-\item Demonstrar a associatividade da multiplicação da matriz mostrando que a multiplicação em Eq.~ref{eq.rotate2} dá o mesmo resultado que a multiplicação em Eq.~\ref{eq.rotate1}.
+\item Demonstrar a associatividade da multiplicação da matriz mostrando que a multiplicação em Eq.~\ref{eq.rotate2} dá o mesmo resultado que a multiplicação em Eq.~\ref{eq.rotate1}.
 \item Calcular a matriz para uma rotação de $-30^{\circ}$ e mostrar que a multiplicação desta matriz pela matriz para uma rotação de $30^{\circ}$ dá a matriz para uma rotação de $0^{\circ}$.
 \item Este item é uma multiplicação comutativa?
 \item A multiplicação de matrizes de rotação bidimensionais é comutativa?
@@ -606,11 +606,11 @@ para obter a matriz de rotação:
 \left[\begin{array}{cc}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{array}\right]
 \left[\begin{array}{c}\bx\\\by\end{array}\right]\,.\label{eq.frame-to-frame}
 \end{equation}
-A matriz é chamada de matriz de rotação $b$ emoldurada para $a$ emoldurada e designada por $leftidx{^a_b}{R}$. A pré-multiplicação do ponto $bp$ na moldura $b$ pela matriz de rotação dá $ap$ suas coordenadas na moldura $a$:
+A matriz é chamada de matriz de rotação $b$ emoldurada para $a$ emoldurada e designada por $\leftidx{^a_b}{R}{}$. A pré-multiplicação do ponto $bp$ na moldura $b$ pela matriz de rotação dá $ap$ suas coordenadas na moldura $a$:
 \[
 \ap = \leftidx{^a_b}{R}{} \; \bp\,.
 \]
-\noindent\textbf{Exemplo} Que $\bp$ seja o ponto na moldura $b$ na ponta de um vetor de comprimento $r=1$ que forma um ângulo de $\phi=30^{\circ}$ com o positivo $x$-eixo. As coordenadas de $\bp$ são $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suponha que o quadro de coordenadas $b$ (juntamente com o ponto $p$) seja girado por $theta=30^{\circ}$ para obter o quadro de coordenadas $a$. Quais são as coordenadas de $ap$? Usando Eq.~ref{eq.frame-to frame}:
+\noindent\textbf{Exemplo} Que $\bp$ seja o ponto na moldura $b$ na ponta de um vetor de comprimento $r=1$ que forma um ângulo de $\phi=30^{\circ}$ com o positivo $x$-eixo. As coordenadas de $\bp$ são $\left(\frac{\sqrt{3}}{2},\,\frac{1}{2}\right)$. Suponha que o quadro de coordenadas $b$ (juntamente com o ponto $p$) seja girado por $theta=30^{\circ}$ para obter o quadro de coordenadas $a$. Quais são as coordenadas de $ap$? Usando Eq.~\ref{eq.frame-to-frame}:
 \[
 \spacearray
 \ap=
@@ -648,13 +648,13 @@ Dada uma seqüência de rotações, a pré-multiplicação de suas matrizes de r
 
 \section{Rotação e tradução de um quadro de coordenadas}\label{s.rotate-translate}
 
-As juntas nos manipuladores robóticos são conectadas por links, de modo que os sistemas de coordenadas são relacionados não apenas por rotações, mas também por traduções. O ponto $p$ na Fig.~\ref{fig.before-rotate} representa um ponto no quadro de coordenadas (vermelho) $b$, mas relativo ao quadro de coordenadas (azul tracejado) $a$, o quadro $b$ é girado pelo ângulo $theta$ e sua origem é traduzida por $Delta x$ e $Delta y$. Se $\bp=(\bx,\by)$, as coordenadas do ponto na moldura $b$, são conhecidas, quais são suas coordenadas $\ap=(\ax,\ay)$ na moldura $a$?
+As juntas nos manipuladores robóticos são conectadas por links, de modo que os sistemas de coordenadas são relacionados não apenas por rotações, mas também por traduções. O ponto $p$ na Fig.~\ref{fig.before-rotate} representa um ponto no quadro de coordenadas (vermelho) $b$, mas relativo ao quadro de coordenadas (azul tracejado) $a$, o quadro $b$ é girado pelo ângulo $theta$ e sua origem é traduzida por $\Delta x$ e $\Delta y$. Se $\bp=(\bx,\by)$, as coordenadas do ponto na moldura $b$, são conhecidas, quais são suas coordenadas $\ap=(\ax,\ay)$ na moldura $a$?
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[scale=1.3]
 \begin{scope}[yshift=1cm,xshift=3cm,rotate around={30:(0,0)}]
-\draw[thick,red] (0,0) coordinate (origin) -- node[black,near end,xshift=8mm,yshift=-2mm] {\p{frame b}} (4,0);
+\draw[thick,red] (0,0) coordinate (origin) -- node[black,near end,xshift=8mm,yshift=-2mm] {\p{quadro b}} (4,0);
 \draw[thick,red] (origin) -- (0,3);
 \path (origin) -- node[above,xshift=-1mm] {$r$} ++(30:4) coordinate (point) node[above right] {$p$};
 \draw[->] (origin) -- ++(30:3.96);
@@ -663,7 +663,7 @@ As juntas nos manipuladores robóticos são conectadas por links, de modo que os
 \path (origin) -- node[below,xshift=5mm,yshift=2mm] {$\bx$} (point |- origin);
 \draw (1,0) arc (0:30:1) node[midway,xshift=3mm,yshift=2mm] {$\phi$};
 \end{scope}
-\draw[dashed,thick,blue] (0,0) coordinate (origina) -- node[black,below,midway,yshift=-1mm] {\p{frame a}} (6,0);
+\draw[dashed,thick,blue] (0,0) coordinate (origina) -- node[black,below,midway,yshift=-1mm] {\p{quadro a}} (6,0);
 \draw[dashed,thick,blue] (origina) -- (0,3);
 \draw[->] (origina) -- ($ (origina) ! .985 ! (point) $);
 \draw[dashed] (origin) -- (point |- origin);
@@ -696,18 +696,18 @@ Agora que temos as coordenadas do ponto em $a1$, é fácil obter as coordenadas 
 \begin{center}
 \begin{tikzpicture}[scale=1.3]
 \begin{scope}[yshift=1cm,xshift=3cm,rotate around={30:(0,0)}]
-\draw[thick,red] (0,0) coordinate (origin) -- node[black,near end,xshift=8mm,yshift=-2mm] {\p{frame b}} (4,0);
+\draw[thick,red] (0,0) coordinate (origin) -- node[black,near end,xshift=8mm,yshift=-2mm] {\p{quadro b}} (4,0);
 \draw[thick,red] (origin) -- (0,3);
 \path (origin) -- ++(30:4) coordinate (point) node[above right] {$p$};
 \draw[->] (origin) -- ++(30:3.96);
 \draw[fill] (point) circle [radius=1pt];
 \draw (1,0) arc (0:30:1) node[midway,xshift=3mm,yshift=2mm] {$\phi$};
 \end{scope}
-\draw[thick,green!60!black] (origin) -- node[black,below,midway,xshift=4mm] {\p{frame a1}} +(4,0);
+\draw[thick,green!60!black] (origin) -- node[black,below,midway,xshift=4mm] {\p{quadro a1}} +(4,0);
 \draw[thick,green!60!black] (origin) -- +(0,4);
 \draw[dotted,thick] (point) -- node [right,midway] {$\aprimey$} (point |- origin);
 \draw[dotted,thick] (point) -- node [above,midway] {$\aprimex$} (origin |- point);
-\draw[dashed,thick,blue] (0,0) coordinate (origina) -- node[black,below,midway,yshift=-1mm] {\p{frame a}} (6,0);
+\draw[dashed,thick,blue] (0,0) coordinate (origina) -- node[black,below,midway,yshift=-1mm] {\p{quadro a}} (6,0);
 \draw[dashed,thick,blue] (origina) -- (0,3);
 \draw[->] (origina) -- ($ (origina) ! .985 ! (point) $);
 \draw (4.5,1) arc (0:30:1.45) node[midway,xshift=2mm] {$\theta$};
@@ -793,7 +793,7 @@ Uma estrutura de coordenadas bidimensional de $x$-$y$ pode ser considerada embut
 \end{center}
 \end{figure}
 
-Gire o quadro de coordenadas no sentido anti-horário em torno do eixo $z$, de modo que o eixo $z$ permaneça inalterado (Figs.~\ref{fig.standard-axis1}--\ref{fig.rotatez}). A nova orientação do quadro é (\textit{up}, \textit{left}, \textit{out}). Considere agora uma rotação de $90^\circ$ em torno do eixo $x$ (Figs.~ref{fig.standard2}--ref{fig.rotatex}). Isto faz com que o eixo de $y$ salte para fora do papel e o eixo de $z$ caia para baixo sobre o papel, resultando na orientação (\textit{right}, \textit{out}, \textit{down}). Finalmente, considere uma rotação de $90^\circ$ em torno do eixo $y$ (Figs.~\ref{fig.standard-axis3}--\ref{fig.rotatey}). O eixo de $x$ "cai" no papel e o eixo de $z$ "cai para a direita" no papel. A nova posição da moldura é (\textit{in}, \textit{up}, \textit{right}).
+Gire o quadro de coordenadas no sentido anti-horário em torno do eixo $z$, de modo que o eixo $z$ permaneça inalterado (Figs.~\ref{fig.standard-axis1}--\ref{fig.rotatez}). A nova orientação do quadro é (\textit{up}, \textit{left}, \textit{out}). Considere agora uma rotação de $90^\circ$ em torno do eixo $x$ (Figs.~\ref{fig.standard-axis2}--\ref{fig.rotatex}). Isto faz com que o eixo de $y$ salte para fora do papel e o eixo de $z$ caia para baixo sobre o papel, resultando na orientação (\textit{right}, \textit{out}, \textit{down}). Finalmente, considere uma rotação de $90^\circ$ em torno do eixo $y$ (Figs.~\ref{fig.standard-axis3}--\ref{fig.rotatey}). O eixo de $x$ "cai" no papel e o eixo de $z$ "cai para a direita" no papel. A nova posição da moldura é (\textit{in}, \textit{up}, \textit{right}).
 
 \begin{figure}
 \begin{minipage}{.48\textwidth}
@@ -1255,7 +1255,7 @@ Os ângulos de Euler são relativamente ineficientes para calcular e sofrem com 
 \[
 i^2 = j^2 = k^2 = ij\,k = -1\,.
 \]
-Lembre-se de que um vetor no plano bidimensional pode ser expresso como um número complexo $x+\vec{i},y$. A rotação do vetor por um ângulo $\theta$ pode ser realizada multiplicando pelo valor $\cos \theta + \vec{i} \sin\theta$.  Da mesma forma, em três dimensões, um vetor pode ser expresso como um quaternion com um componente real zero:$p=0+x\,\vec{i} + y\,\vec{j} + z\,\vec{k}$. Dado um eixo e um ângulo, existe um quaternion $q$ que gira o vetor em torno do eixo por este ângulo usando a fórmula $qpq^{-1}$. Este cálculo é mais eficiente e robusto do que o cálculo equivalente com ângulos Euler e é usado em uma variedade de contextos, como controle de aeronaves e computação gráfica.
+Lembre-se de que um vetor no plano bidimensional pode ser expresso como um número complexo $x+\vec{i},y$. A rotação do vetor por um ângulo $\theta$ pode ser realizada multiplicando pelo valor $\cos \theta + \vec{i} \sin\theta$.  Da mesma forma, em três dimensões, um vetor pode ser expresso como um quaternion com um componente real zero: $p=0+x\,\vec{i} + y\,\vec{j} + z\,\vec{k}$. Dado um eixo e um ângulo, existe um quaternion $q$ que gira o vetor em torno do eixo por este ângulo usando a fórmula $qpq^{-1}$. Este cálculo é mais eficiente e robusto do que o cálculo equivalente com ângulos Euler e é usado em uma variedade de contextos, como controle de aeronaves e computação gráfica.
 
 
 \section{Sumário}
@@ -1264,7 +1264,7 @@ A cinemática é a descrição do movimento de um robô. Na cinemática dianteir
 
 Há muitas maneiras de definir e computar rotações arbitrárias. Mencionamos os ângulos de Euler onde uma rotação arbitrária é obtida por uma seqüência de três rotações em torno dos eixos coordenados. Quaternions, uma generalização de números complexos, são freqüentemente utilizados na prática porque são computacionalmente mais eficientes e robustos.
 
-\section{Outras leituras}
+\section{Leitura adicional}
 
 Os livros didáticos avançados sobre cinemática robótica e tópicos relacionados são os de Craig \cite{craig} e Spong et al. \cite{spong}. Veja também o Capítulo 3 do Correll \cite{correll}. O Apêndice B de \cite{craig} contém as matrizes de rotação para todas as seqüências de ângulos de Euler. As vídeo-palestras de Angela Sodemann são muito úteis:\\
 \url{https://www.youtube.com/user/asodemann3},\\

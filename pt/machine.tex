@@ -2,7 +2,7 @@
 
 \chapter{Aprendizagem da máquina}\label{ch.machine}
 
-Considere um robô que reconhece e agarra objetos amarelos (Fig.~ref{fig.sortballs}). Ele pode usar uma câmera colorida para identificar objetos amarelos, mas os objetos aparecerão diferentes em ambientes diferentes, como na luz do sol, em uma sala escura ou em um showroom. Além disso, é difícil definir com precisão o que significa "amarelo": qual é o limite entre amarelo e amarelo limão-amarelo ou entre amarelo e laranja? Em vez de escrever instruções detalhadas para o robô, preferimos que o robô aprenda a reconhecer as cores enquanto executa a tarefa, para que ele possa se adaptar ao ambiente onde a tarefa acontece. Especificamente, queremos projetar um algoritmo de {classificação} que possa ser {treinado} para executar a tarefa sem fornecer todos os detalhes com antecedência.
+Considere um robô que reconhece e agarra objetos amarelos (Fig.~\ref{fig.sortballs}). Ele pode usar uma câmera colorida para identificar objetos amarelos, mas os objetos aparecerão diferentes em ambientes diferentes, como na luz do sol, em uma sala escura ou em um showroom. Além disso, é difícil definir com precisão o que significa "amarelo": qual é o limite entre amarelo e amarelo limão-amarelo ou entre amarelo e laranja? Em vez de escrever instruções detalhadas para o robô, preferimos que o robô aprenda a reconhecer as cores enquanto executa a tarefa, para que ele possa se adaptar ao ambiente onde a tarefa acontece. Especificamente, queremos projetar um algoritmo de \emph{classificação} que possa ser \emph{treinado} para executar a tarefa sem fornecer todos os detalhes com antecedência.
 
 \begin{figure}
 \begin{center}
@@ -13,7 +13,7 @@ Considere um robô que reconhece e agarra objetos amarelos (Fig.~ref{fig.sortbal
 
 Os algoritmos de classificação são um tópico central em \emph{machine learning}, um campo da ciência da computação e estatística que desenvolve computações para reconhecer padrões e prever resultados sem programação explícita. Estes algoritmos extraem \emph{rules} dos dados brutos adquiridos pelo sistema durante um período de treinamento. As regras são posteriormente utilizadas para classificar um novo objeto e, em seguida, para tomar a ação apropriada de acordo com a classe do objeto. Para a tarefa de reconhecimento de cores, treinamos o robô apresentando objetos de cores diferentes e dizendo ao robô quais objetos são amarelos e quais não são. O algoritmo de aprendizagem da máquina gera uma regra para a classificação de cores. Quando é apresentado com novos objetos, ele usa a regra para decidir quais objetos são amarelos e quais não são.
 
-O capítulo anterior apresentou redes neurais artificiais que realizam uma forma de aprendizagem da máquina baseada em \emph{reinforcement}. Neste capítulo, discutimos técnicas estatísticas baseadas em \emph{supervised learning}: durante o período de treinamento, dizemos ao robô as respostas precisas, tais como se um objeto é amarelo ou não. A seção~\ref{s.sorting-onesensor} introduz as técnicas estatísticas desenvolvendo um algoritmo para distinguir entre objetos de duas cores. Apresentamos uma técnica para aprendizagem da máquina chamada \emph{linear discriminant analysis (LDA)}. As seções~~ref{s.lda}--ref{s.gen-lda} apresentam a LDA no mesmo contexto de distinção entre duas cores. A LDA é baseada na suposição de que os dados têm propriedades estatísticas específicas; se estas não se mantiverem, \emph{perceptrons} pode ser usada para classificação, como descrito na seção Sect.~ref{s.perceptrons}.
+O capítulo anterior apresentou redes neurais artificiais que realizam uma forma de aprendizagem da máquina baseada em \emph{reinforcement}. Neste capítulo, discutimos técnicas estatísticas baseadas em \emph{supervised learning}: durante o período de treinamento, dizemos ao robô as respostas precisas, tais como se um objeto é amarelo ou não. A seção~\ref{s.sorting-onesensor} introduz as técnicas estatísticas desenvolvendo um algoritmo para distinguir entre objetos de duas cores. Apresentamos uma técnica para aprendizagem da máquina chamada \emph{linear discriminant analysis (LDA)}. As seções~~\ref{s.lda}--\ref{s.gen-lda} apresentam a LDA no mesmo contexto de distinção entre duas cores. A LDA é baseada na suposição de que os dados têm propriedades estatísticas específicas; se estas não se mantiverem, \emph{perceptrons} pode ser usada para classificação, como descrito na seção Sect.~\ref{s.perceptrons}.
 
 Este capítulo assume que você está familiarizado com os conceitos de \emph{mean}, \emph{variance} e \emph{covariance}. Tutoriais sobre estes conceitos aparecem em Apêndices~\ref{a.mean}--\ref{a.covariance}.
 
@@ -265,7 +265,7 @@ os dois grupos podem ser distinguidos pela linha separadora definida por Eq.~\re
 \[
 w_1x_1 + w_2x_2 = c\,,
 \]
-onde $c$ é definido por um ponto na linha do projeto situado entre os pontos vermelho e azul. Em analogia com o Eq.~ref{eq.j-repeat}, precisamos definir um critério de qualidade $J(\vec{w})$, de modo que valores maiores de $J(\vec{w})$ dêem melhores linhas discriminantes. Então, precisamos encontrar o valor de $J(vec{w}$ que maximize $J(vec{w})$, diferenciando esta função, fixando a derivada em zero e resolvendo por $J(vec{w}$.
+onde $c$ é definido por um ponto na linha do projeto situado entre os pontos vermelho e azul. Em analogia com o Eq.~\ref{eq.j-repeat}, precisamos definir um critério de qualidade $J(\vec{w})$, de modo que valores maiores de $J(\vec{w})$ dêem melhores linhas discriminantes. Então, precisamos encontrar o valor de $J(vec{w}$ que maximize $J(vec{w})$, diferenciando esta função, fixando a derivada em zero e resolvendo por $J(vec{w}$.
 
 \begin{figure}
 \begin{center}
@@ -399,7 +399,7 @@ s^2\left(X_i^{\sub{right}}\right)
 \end{array}
 \right]\,.
 \]
-Para os dados da Fig.~ref{fig.gray-close}, as variações das amostras da área cinza claro são:
+Para os dados da Fig.~\ref{fig.gray-close}, as variações das amostras da área cinza claro são:
 \begin{eqnarray*}
 s^2(X_1^{\sub{left}}) &=& \frac{1}{191} \left((389 - 400)^2 + (390 - 400)^2 + \cdots + (389 - 400)^2 \right) \approx 187 \\
 s^2(X_1^{\sub{right}}) &=& \frac{1}{191} \left((324 - 339)^2 + (323 - 339)^2 + ... + (373 - 339)^2 \right) \approx 286\,.
@@ -490,12 +490,12 @@ As atividades para a LDA são coletadas nesta seção.
   \draw[fill] (\x,0) rectangle +(16mm,1mm);
   \pic[rotate=\angle,scale=0.4] at (\x+8mm, -8mm) { robot };
 }
-\node at (-1,-.5) {\textsf{Turn}\\\textsf{left}};
+\node at (-1,-.5) {\textsf{Vire}\\\textsf{esquerda}};
 \foreach \angle/\x in { 70/0cm, 85/2cm, 65/4cm, 85/6cm, 75/8cm } {
   \draw[fill] (\x,-2.5) rectangle +(16mm,1mm);
   \pic[rotate=\angle,scale=0.4] at (\x+8mm, -33mm) { robot };
 }
-\node at (-1,-3) {\textsf{Turn}\\\textsf{right}};
+\node at (-1,-3) {\textsf{Vire}\\\textsf{à direita}};
 \end{tikzpicture}
 \end{center}
 \caption{Treinamento para evitar obstáculos}\label{fig.train-data-avoid}
@@ -698,7 +698,7 @@ y &=& \mathit{sign}(w_0\times 1 + w_1x_1 + w_2x_2)\\
 &=& \mathit{sign}(0.207)\\
 &=& 1\,.
 \end{eqnarray*}
-Esta saída não é correta: a amostra é da classe $C_2$ que corresponde a $-1$. Os pesos são agora ajustados usando Eq.~ref{eq.perceptron-learn} com uma taxa de aprendizagem $\eta = 0,1$:
+Esta saída não é correta: a amostra é da classe $C_2$ que corresponde a $-1$. Os pesos são agora ajustados usando Eq.~\ref{eq.perceptron-learn} com uma taxa de aprendizagem $\eta = 0,1$:
 \[
 \spacearray
 \begin{array}{lclclcl}
@@ -747,7 +747,7 @@ A figura~\ref{fig.perceptron-dis-etavar} mostra a evolução dos pesos quando es
 \begin{center}
 \includegraphics[width=0.9\textwidth]{weights-etavar.pdf}
 \end{center}
-\caption{Evolution of the weights for learning by a perceptron with a variable learning rate}\label{fig.perceptron-dis-etavar}
+\caption{Evolução dos pesos para aprendizagem por um perceptron com uma taxa de aprendizagem variável}\label{fig.perceptron-dis-etavar}
 \end{figure}
 
 \begin{framed}
