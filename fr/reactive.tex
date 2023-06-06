@@ -5,7 +5,7 @@
 
 Nous sommes maintenant prêts à écrire nos premiers algorithmes pour les robots. Ces algorithmes démontrent un \emph{comportement réactif}\index{comportement réactif} : un événement (tel que la détection d'un objet proche par le robot) amène le robot à réagir en effectuant une action qui modifie son comportement (comme l'arrêt des moteurs). On parle de comportement purement réactif lorsque l'action est liée uniquement à l'occurrence d'un événement et ne dépend pas des données stockées en mémoire (état).
 
-Les comportements réactifs sont ceux des \emph{véhicules de Braitenberg} qui sont appropriés pour introduire la robotique car un comportement complexe découle d'algorithmes simples. Les sections~\ref{s.braitenberg}--\ref{s.turning} décrivent les véhicules de Braitenberg qui ont un comportement réactif ; dans le chapitre~\ref{ch.fmg} nous présentons les véhicules de Braitenberg qui ont un comportement non réactif avec des états. La section~{ref{s.line} présente plusieurs algorithmes pour le comportement réactif classique du suivi de ligne. Le suivi de ligne est une tâche intéressante car les algorithmes sont sensibles aux caractéristiques des capteurs et des lignes. Une calibration est nécessaire pour déterminer les seuils optimaux pour un mouvement rapide et robuste du robot. La section ~\ref{s.abstract-vehicles} donne un bref aperçu de la formulation originale des véhicules de Braitenberg dans une approche biologique avec des capteurs connectés directement aux moteurs, et non à travers un ordinateur. Plus loin dans le livre (Sect.~\ref{s.braitenberg-ann}) nous discutons de l'implémentation des véhicules de Braitenberg en utilisant des réseaux de neurones.
+Les comportements réactifs sont ceux des \emph{véhicules de Braitenberg} qui sont appropriés pour introduire la robotique car un comportement complexe découle d'algorithmes simples. Les sections~\ref{s.braitenberg} à \ref{s.turning} décrivent les véhicules de Braitenberg qui ont un comportement réactif ; dans le chapitre~\ref{ch.fmg} nous présentons les véhicules de Braitenberg qui ont un comportement non réactif avec des états. La section~\ref{s.line} présente plusieurs algorithmes pour le comportement réactif classique du suivi de ligne. Le suivi de ligne est une tâche intéressante car les algorithmes sont sensibles aux caractéristiques des capteurs et des lignes. Une calibration est nécessaire pour déterminer les seuils optimaux pour un mouvement rapide et robuste du robot. La section ~\ref{s.abstract-vehicles} donne un bref aperçu de la formulation originale des véhicules de Braitenberg dans une approche biologique avec des capteurs connectés directement aux moteurs, et non à travers un ordinateur. Plus loin dans le livre (Sect.~\ref{s.braitenberg-ann}) nous discutons de l'implémentation des véhicules de Braitenberg en utilisant des réseaux de neurones.
 
 \section{Véhicules Braitenberg}\label{s.braitenberg}
 \index{Véhicule Braitenberg}
@@ -77,7 +77,7 @@ Si l'on utilise l'instruction \p{while}, \emph{as tant} que l'objet n'est pas d�
 \begin{itemize}
 \item Implémente le comportement Indécis.
 \begin{quote}
-\normalsize\noindent\textbf{Spécification (Indécis):}\index{Véhicule Braitenberg!indécis} Lorsque le robot ne détecte pas d'objet, il se déplace vers l'avant. Lorsqu'il détecte un objet, il recule.
+\normalsize\noindent\textbf{Spécification (Indécis)~:~}Lorsque le robot ne détecte pas d'objet, il se déplace vers l'avant. Lorsqu'il détecte un objet, il recule.
 \end{quote}
 \item A la bonne distance, le robot va \emph{osciller}, c'est-à-dire qu'il va avancer et reculer en succession rapide. Mesurez cette distance pour votre robot et pour des objets de réflectivité différente.
 \end{itemize}
@@ -88,7 +88,7 @@ Si l'on utilise l'instruction \p{while}, \emph{as tant} que l'objet n'est pas d�
 \begin{itemize}
 \item Implémente le comportement Dogged.
 \begin{quote}
-\normalsize\noindent\textbf{Spécification (Dogged):}\index{Véhicule Braitenberg!dogged} Lorsque le robot détecte un objet à l'avant, il recule. Lorsque le robot détecte un objet à l'arrière, il se déplace vers l'avant.
+\normalsize\noindent\textbf{Spécification (Dogged)~:~}Lorsque le robot détecte un objet à l'avant, il recule. Lorsque le robot détecte un objet à l'arrière, il se déplace vers l'avant.
 \end{quote}
 \end{itemize}
 \end{framed}
@@ -98,7 +98,7 @@ Si l'on utilise l'instruction \p{while}, \emph{as tant} que l'objet n'est pas d�
 \begin{itemize}
 \item Implémente le comportement Dogged (arrêt).
 \begin{quote}
-\normalsize\noindent\textbf{Spécification (Dogged (arrêt)):}\index{Véhicule Braitenberg!dogged} Comme dans Activity~\ref{act.dogged}, mais lorsqu'un objet n'est pas détecté, le robot s'arrête.
+\normalsize\noindent\textbf{Spécification (Dogged (arrêt))~:~} Comme dans Activity~\ref{act.dogged}, mais lorsqu'un objet n'est pas détecté, le robot s'arrête.
 \end{quote}
 \end{itemize}
 \end{framed}
@@ -108,7 +108,7 @@ Si l'on utilise l'instruction \p{while}, \emph{as tant} que l'objet n'est pas d�
 \begin{itemize}
 \item Met en oeuvre le comportement Attractif et repoussant.
 \begin{quote}
-\normalsize\noindent\textbf{Spécification (Attraction et répulsion):}\index{Véhicule de Braitenberg!attractif et répulsif} Lorsqu'un objet s'approche du robot par derrière, le robot s'enfuit jusqu'à ce qu'il soit hors de portée.
+\normalsize\noindent\textbf{Spécification (Attraction et répulsion)~:~} Lorsqu'un objet s'approche du robot par derrière, le robot s'enfuit jusqu'à ce qu'il soit hors de portée.
 \end{quote}
 \end{itemize}
 \end{framed}
@@ -116,7 +116,7 @@ Si l'on utilise l'instruction \p{while}, \emph{as tant} que l'objet n'est pas d�
 
 \section{Réaction et virage}\label{s.turning}
 
-Une voiture tourne en modifiant l'angle de ses roues avant par rapport au châssis du véhicule. La puissance du moteur n'est pas modifiée. Un robot à entraînement différentiel ne possède pas de mécanisme de direction (comme le volant d'une voiture ou le guidon d'un vélo). Au lieu de cela, il tourne en réglant différents niveaux de puissance sur les roues gauche et droite. Si une roue tourne plus vite que l'autre, le robot tourne dans la direction opposée à celle de la roue la plus rapide (\ref{fig.left-gentle}). Si une roue tourne en arrière tandis que l'autre tourne en avant, le virage est beaucoup plus serré (Fig.~\ref{fig.left-sharp}). Sur les figures, les flèches indiquent la direction et la vitesse de chaque roue. Le \emph{rayon de virage}\index{rayon de virage} est le rayon du cercle qui constitue la trajectoire du robot. On dit qu'un virage est plus serré si le rayon est plus petit. À l'extrême, si une roue tourne en avant et la seconde en arrière à la même vitesse, le robot tourne sur place et le rayon de braquage est nul.
+Une voiture tourne en modifiant l'angle de ses roues avant par rapport au châssis du véhicule. La puissance du moteur n'est pas modifiée. Un robot à entraînement différentiel ne possède pas de mécanisme de direction (comme le volant d'une voiture ou le guidon d'un vélo). Au lieu de cela, il tourne en réglant différents niveaux de puissance sur les roues gauche et droite. Si une roue tourne plus vite que l'autre, le robot tourne dans la direction opposée à celle de la roue la plus rapide (Fig.\ref{fig.left-gentle}). Si une roue tourne en arrière tandis que l'autre tourne en avant, le virage est beaucoup plus serré (Fig.~\ref{fig.left-sharp}). Sur les figures, les flèches indiquent la direction et la vitesse de chaque roue. Le \emph{rayon de virage}\index{rayon de virage} est le rayon du cercle qui constitue la trajectoire du robot. On dit qu'un virage est plus serré si le rayon est plus petit. À l'extrême, si une roue tourne en avant et la seconde en arrière à la même vitesse, le robot tourne sur place et le rayon de braquage est nul.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -234,7 +234,7 @@ Considérons un entrepôt équipé de chariots robotisés qui apportent des obje
 \end{center}
 \end{figure}
 
-\emph{Line following} est une tâche qui fait ressortir toute l'incertitude de la construction de robots dans le monde réel. La ligne peut ne pas être parfaitement droite, la poussière peut masquer une partie de la ligne ou une roue peut se déplacer plus lentement que l'autre à cause de la poussière. Pour suivre une ligne, le robot doit décider s'il est sur la ligne ou non, et s'il commence à quitter la ligne d'un côté, il doit tourner dans la bonne direction pour regagner la ligne.
+Le \emph{suivi de ligne} est une tâche qui fait ressortir toute l'incertitude de la construction de robots dans le monde réel. La ligne peut ne pas être parfaitement droite, la poussière peut masquer une partie de la ligne ou une roue peut se déplacer plus lentement que l'autre à cause de la poussière. Pour suivre une ligne, le robot doit décider s'il est sur la ligne ou non, et s'il commence à quitter la ligne d'un côté, il doit tourner dans la bonne direction pour regagner la ligne.
 
 
 \subsection{Suivi de ligne avec une paire de capteurs au sol}
@@ -268,7 +268,7 @@ Pour mettre en œuvre le suivi de ligne, le robot doit avancer chaque fois que l
 
 \begin{itemize}
 \item Si le robot sort de la ligne vers le \emph{gauche}, le capteur du \emph{gauche} ne détectera pas la ligne alors que le capteur du \emph{droite} la détecte toujours ; le robot doit tourner vers le \emph{droite}.
-\item Si le robot sort de la ligne vers l'\emph{droite}, le capteur de l'\emph{droite} ne détectera pas la ligne tant que le capteur de l'\emph{gauche} la détecte encore ; le robot doit tourner vers l'\emph{gauche}.
+\item Si le robot sort de la ligne vers la \emph{droite}, le capteur de \emph{droite} ne détectera pas la ligne tant que le capteur de \emph{gauche} la détecte encore ; le robot doit tourner vers la \emph{gauche}.
 \end{itemize}
 Pour l'instant, nous spécifions que le robot s'arrête dès qu'aucun des deux capteurs ne détecte la ligne.
 
@@ -298,7 +298,7 @@ L'algorithme~\ref{alg.line-two} formalise la description informelle ci-dessus.
 \act{Suivi de ligne avec deux capteurs}{suivi de ligne-un}
 \begin{itemize}
 \item Implémentation de l'algorithme~\ref{alg.line-two}.
-\item Utilisez du ruban adhésif noir d'électricien ou du ruban adhésif de gaffer pour créer une ligne sur le sol. (Le ruban adhésif de gaffer est utilisé sur les plateaux de théâtre et de cinéma pour attacher les câbles ou les fixer au sol. Le ruban de gaffer est généralement moins réfléchissant que le ruban d'électricien et constitue donc un meilleur choix pour la mise en œuvre d'algorithmes de suivi de ligne).
+\item Utilisez du ruban adhésif noir d'électricien ou du ruban adhésif à gaffer pour créer une ligne sur le sol. (Le ruban adhésif à gaffer est utilisé sur les plateaux de théâtre et de cinéma pour attacher les câbles ou les fixer au sol. Le ruban de gaffer est généralement moins réfléchissant que le ruban d'électricien et constitue donc un meilleur choix pour la mise en œuvre d'algorithmes de suivi de ligne).
 \item La ligne doit présenter des angles ou des courbes qui amèneront le robot à sortir de la ligne. Exécutez le programme et vérifiez que le robot peut suivre la ligne avec ses angles et ses courbes.
 \item Expérimentez la puissance des moteurs pour revenir sur la ligne. Si le virage est trop doux, l'autre capteur risque de sortir de la ligne avant que le robot ne fasse demi-tour. Si le virage est trop serré, le robot risque de sortir de l'autre côté de la ligne. Dans tous les cas, les virages serrés peuvent être dangereux pour le robot et provoquer la chute de ce qu'il transporte.
 \item La vitesse d'avancement du robot sur la ligne est également importante. Si elle est trop rapide, le robot peut sortir de la ligne avant que les virages n'affectent sa direction. Si la vitesse est trop lente, personne n'achètera votre robot pour l'utiliser dans un entrepôt. À quelle vitesse votre robot peut-il suivre la ligne sans la quitter ?
@@ -378,7 +378,7 @@ L'algorithme~\ref{alg.line-one} modifie les paramètres de puissance du moteur l
 \end{figure}
 
 \begin{framed}
-\act{Ligne suiveuse avec un capteur}{line-following-two}
+\act{Suivi de ligne avec un capteur}{line-following-two}
 \begin{itemize}
 \item Implémentation de l'algorithme~\ref{alg.line-one}.
 \item Expérimentez avec les seuils jusqu'à ce que le robot puisse suivre la ligne.
@@ -387,7 +387,7 @@ L'algorithme~\ref{alg.line-one} modifie les paramètres de puissance du moteur l
 \end{framed}
 
 \begin{framed}
-\act{Line following with proportional correction}{line-following-proportional}
+\act{Suivi de ligne avec correction proportionnelle}{line-following-proportional}
 \begin{itemize}
 \item Puisque les valeurs du capteur sont proportionnelles à l'échelle de gris de la ligne, la distance approximative du capteur par rapport au centre de la ligne peut être calculée. Modifiez l'algorithme pour calculer cette distance.
 \item Modifiez l'algorithme pour que le réglage du moteur soit proportionnel à cette distance.
@@ -420,7 +420,7 @@ En bas de la figure se trouve un graphique des valeurs renvoyées par les capteu
 };
 \end{scope}
 \end{tikzpicture}
-\caption{Suivi de ligne avec un seul capteur et sans gradient. \textit{Above} : robot se déplaçant sur la ligne, \textit{below} : tracé de la valeur du capteur en fonction de la distance}\label{fig.no-gradient}
+\caption{Suivi de ligne avec un seul capteur et sans gradient. Au dessus : robot se déplaçant sur la ligne, au dessous : tracé de la valeur du capteur en fonction de la distance}\label{fig.no-gradient}
 \end{center}
 \end{figure}
 
@@ -447,7 +447,8 @@ En bas de la figure se trouve un graphique des valeurs renvoyées par les capteu
 
 Les véhicules de Valentino Braitenberg ont été construits comme des expériences de pensée non destinées à être mises en œuvre avec des composants électroniques ou dans des logiciels. Les véhicules sont équipés de capteurs directement connectés aux moteurs, comme dans le système nerveux des êtres vivants. Certains véhicules étaient dotés d'une mémoire semblable à celle d'un cerveau.
 
-Les figures~\ref{fig.coward}--\ref{fig.aggressive} montrent des robots qui illustrent la présentation de Braitenberg. Ils possèdent des capteurs de lumière (les demi-cercles à l'avant des robots) qui sont directement reliés aux moteurs des roues. Plus la lumière est détectée, plus chaque roue tourne vite, comme l'indiquent les signes $+$ sur les connexions. Si une forte source de lumière se trouve directement devant le robot, les deux capteurs renverront la même valeur et le robot avancera rapidement. Supposons maintenant que la source lumineuse se trouve sur la gauche. Pour le robot de la Fig. \ref{fig.coward}, la roue gauche tourne rapidement et la roue droite lentement. Il en résulte que le robot tourne brusquement à droite en s'éloignant de la source lumineuse. Braitenberg a appelé ce véhicule \emph{coward}. Dans le cas du robot de la Fig.\ref{fig.aggressive}, la roue droite tourne rapidement et la roue gauche lentement, de sorte que le robot tourne vers la source lumineuse et finit par la percuter. Ce comportement est \emph{agressif}.
+Les figures~\ref{fig.coward}--\ref{fig.aggressive} montrent des robots qui illustrent la présentation de Braitenberg. Ils possèdent des capteurs de lumière (les demi-cercles à l'avant des robots) qui sont directement reliés aux moteurs des roues. Plus la lumière est détectée, plus chaque roue tourne vite, comme l'indiquent les signes $+$ sur les connexions. Si une forte source de lumière se trouve directement devant le robot, les deux capteurs renverront la même valeur et le robot avancera rapidement. Supposons maintenant que la source lumineuse se trouve sur la gauche. Pour le robot de la
+figure~\ref{fig.coward}, la roue gauche tourne rapidement et la roue droite lentement. Il en résulte que le robot tourne brusquement à droite en s'éloignant de la source lumineuse. Braitenberg a appelé ce véhicule \emph{coward}. Dans le cas du robot de la figure~\ref{fig.aggressive}, la roue droite tourne rapidement et la roue gauche lentement, de sorte que le robot tourne vers la source lumineuse et finit par la percuter. Ce comportement est \emph{agressif}.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -556,12 +557,13 @@ Les figures~\ref{fig.coward}--\ref{fig.aggressive} montrent des robots qui illus
 \end{minipage}
 \end{figure}
 
-\section{Summary}
+\section{Résumé}
 
-A robot exhibits reactive behavior when its actions depend only upon the current values returned by its sensors. This chapter presented two families of reactive behavior. Braitenberg vehicles implement reactive behavior by changing the setting of the motors in response to the events of proximity sensors detecting or not detecting an object at some position relative to the robot. The vehicles demonstrate that complex behavior can result from relatively simple reactive algorithms.
+Un robot présente un comportement réactif lorsque ses actions dépendent uniquement des valeurs actuelles renvoyées par ses capteurs. Ce chapitre a présenté deux familles de comportement réactif. Les véhicules de Braitenberg mettent en oeuvre un comportement réactif en modifiant le réglage des moteurs en réponse à la détection ou à la non-détection par les capteurs de proximité d'un objet situé à une certaine position par rapport au robot. Ces véhicules démontrent qu'un comportement complexe peut résulter d'algorithmes réactifs relativement simples.
 
-Line following is a fundamental task in robotics. Because of uncertainties of the robot's motion and its environment, robots use landmarks such as lines to ensure that they move to their intended destination. Line following is a reactive behavior because the robot modifies its behavior in response to values returned by the ground sensors. We have given three configurations for the robot and the line, and developed algorithms for each case. The performance of the algorithms depends on the sensor thresholds and the motor speeds, which must be determined by experimentation in order to ensure that the robot moves rapidly while remaining robust to changes in the environment.
+Le suivi de lignes est une tâche fondamentale en robotique. En raison des incertitudes liées au mouvement du robot et à son environnement, les robots utilisent des points de repère tels que des lignes pour s'assurer qu'ils se déplacent vers la destination prévue. Le suivi de ligne est un comportement réactif car le robot modifie son comportement en réponse aux valeurs renvoyées par les capteurs au sol. Nous avons donné trois configurations pour le robot et la ligne, et développé des algorithmes pour chaque cas. La performance des algorithmes dépend des seuils des capteurs et des vitesses des moteurs, qui doivent être déterminés par expérimentation afin de s'assurer que le robot se déplace rapidement tout en restant robuste aux changements de l'environnement.
 
-\section{Further reading}
+\section{Autres lectures}
 
-Braitenberg's book \cite{valentino} is interesting because he writes from the perspective of a neuroscientist. The book describes vehicles using imagined technology, but they are nevertheless thought-provoking. The Braitenberg vehicles described here are adapted from the hardware implementations described in \cite{creatures}. An implementation of the Braitenberg vehicles in Scratch by the first author can be found at:\par\noindent\url{https://scratch.mit.edu/studios/1452106}.
+Le livre de Braitenberg \cite{valentino} est intéressant parce qu'il est écrit du point de vue d'un neuroscientifique. Le livre décrit des véhicules utilisant une technologie imaginée, mais ils donnent néanmoins à réfléchir. Les véhicules de Braitenberg décrits ici sont adaptés des implémentations matérielles décrites dans \cite{creatures}. Une implémentation des véhicules de Braitenberg en Scratch par le premier auteur est disponible à l'adresse :
+\par\noindent\url{https://scratch.mit.edu/studios/1452106}.
