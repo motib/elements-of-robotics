@@ -2,28 +2,26 @@
 
 \chapter{Mouvement robotique et odométrie}\label{ch.motion}
 
-Les algorithmes robotiques des chapitres précédents réagissent aux données provenant de leurs capteurs en modifiant la vitesse et la direction de leur mouvement, mais ces modifications ne sont pas quantitatives. Nous n'avons pas demandé aux robots de se déplacer deux fois plus vite ou de tourner $90^\circ$ vers la droite. Dans le monde réel, les robots doivent se déplacer vers des endroits spécifiques et peuvent avoir des contraintes techniques sur la vitesse ou la lenteur de leur déplacement ou de leur rotation. Ce chapitre présente les mathématiques du mouvement robotique.
+Les algorithmes robotiques des chapitres précédents réagissent aux données provenant de leurs capteurs en modifiant la vitesse et la direction de leur mouvement, mais ces modifications ne sont pas quantitatives. Nous n'avons pas demandé aux robots de se déplacer deux fois plus vite ou de tourner $90^\circ$ vers la droite. Dans le monde réel, les robots doivent se déplacer vers des endroits spécifiques et peuvent avoir des contraintes techniques sur la vitesse de leur déplacement ou sur leur rotation. Ce chapitre présente les mathématiques du mouvement robotique.
 
-Les sections~\ref{s.distance-vitesse}--\ref{s.acceleration} passent en revue les concepts de distance, de temps, de vitesse et d'accélération qui devraient être familiers lors de l'introduction à la physique. La physique du mouvement est généralement enseignée à l'aide du calcul, mais un ordinateur ne peut pas traiter des fonctions continues ; il faut donc utiliser des approximations discrètes, comme décrit dans la section~\ref{s.continuous}.
+Les sections~\ref{s.distance-vitesse}--\ref{s.acceleration} passent en revue les concepts de distance, de temps, de vitesse et d'accélération qui devraient être familiers lors de l'introduction à la physique. La physique du mouvement leur généralement enseignée à l'aide du calcul, mais un ordinateur ne peut pas traiter des fonctions continues ; il faut donc utiliser des approximations discrètes, comme décrit dans la section~\ref{s.continuous}.
 
-Les sections~\ref{s.odometry}--\ref{s.odometry-turns} présentent la \emph{odometry}, l'algorithme fondamental pour le calcul du mouvement robotique. Une approximation de la position d'un robot peut être obtenue en calculant de manière répétée la distance parcourue et le changement de direction à partir de la vitesse des roues dans un court laps de temps. Malheureusement, l'odométrie est sujette à de graves erreurs, comme le montre la Sec.~\ref{s.odometry-errors}. Il est important de comprendre que les erreurs de direction sont beaucoup plus importantes que les erreurs de distance.
+Les sections~\ref{s.odometry}--\ref{s.odometry-turns} présentent la \emph{l'odométrie}, l'algorithme fondamental pour le calcul du mouvement robotique. Une approximation de la position d'un robot peut être obtenue en calculant de manière répétée la distance parcourue et le changement de direction à partir de la vitesse des roues dans un court laps de temps. Malheureusement, l'odométrie est sujette à de graves erreurs, comme le montre la section~\ref{s.odometry-errors}. Il est important à noter que les erreurs de direction sont beaucoup plus importantes que les erreurs de distance.
 
 Dans l'implémentation la plus simple, la vitesse des roues d'un robot est supposée être proportionnelle à la puissance appliquée par les moteurs. La section~\ref{s.wheel} montre comment la précision de l'odométrie peut être améliorée en utilisant des \emph{codeurs de roue}, qui mesurent le nombre réel de tours des roues.
 
-La section~{ref{s.imu} présente une vue d'ensemble de la \emph{navigation inertielle}, qui est une forme sophistiquée d'odométrie basée sur la mesure de l'accélération linéaire et angulaire, puis sur l'intégration pour obtenir la vitesse et la position. Les capteurs de la navigation inertielle (accéléromètres et gyroscopes) étaient autrefois très coûteux, ce qui limitait son application aux avions et aux fusées, mais une nouvelle technologie appelée \emph{systèmes microélectromécaniques} a permis de construire des robots dotés de la navigation inertielle.
+La section~\{ref{s.imu} présente une vue d'ensemble de la \emph{navigation inertielle}, qui est une forme sophistiquée d'odométrie basée sur la mesure de l'accélération linéaire et angulaire, puis sur l'intégration pour obtenir la vitesse et la position. Les capteurs de navigation inertielle (accéléromètres et gyroscopes) étaient autrefois très coûteux, ce qui limitait son application aux avions et aux fusées, mais une nouvelle technologie appelée \emph{systèmes micro-électromécaniques} a permis de construire des robots dotés de la navigation inertielle.
 
-Les voitures ne peuvent pas se déplacer de haut en bas, contrairement aux hélicoptères et aux sous-marins qui ont une plus grande liberté de mouvement. Cela s'exprime par le concept de \emph{degrés de liberté (DOF)} qui fait l'objet de la section~\ref{s.dof}. La section~\ref{s.num-actuators} traite de la relation entre les DOF et le nombre de \emph{actuateurs} (moteurs) dans un système robotique.
+Les voitures ne peuvent pas se déplacer de haut en bas, contrairement aux hélicoptères et aux sous-marins qui ont une plus grande liberté de mouvement. Cela s'exprime par le concept de \emph{degrés de liberté (DOF)} qui fait l'objet de la section~\ref{s.dof}. La section~\ref{s.num-actuators} traite de la relation entre les DOF et le nombre \emph{d'actuateurs} (moteurs) dans un système robotique.
 
-Le nombre de DOF d'un système ne signifie pas qu'un système tel qu'un véhicule peut se déplacer librement dans toutes ces directions. Une voiture peut se déplacer en tout point du plan et s'orienter dans n'importe quelle direction, mais elle ne peut pas se déplacer latéralement, ce qui nécessite une manœuvre difficile lors d'un stationnement parallèle. Cela est dû à la différence entre les DOF et les \emph{degrés de mobilité (DOM)}, un sujet exploré dans la section~\ref{s.holonomic}, ainsi que le concept de \emph{mouvement holonomique} qui relie les DOF et les DOM.
-
-
+Le nombre de DOF d'un système ne signifie pas que le système, par exemple un véhicule, peut se déplacer librement dans toutes ces directions. Une voiture peut se déplacer en tout point du plan et s'orienter dans n'importe quelle direction, mais elle ne peut pas se déplacer latéralement, ce qui nécessite une manœuvre difficile lors d'un stationnement parallèle. Cela est dû à la différence entre les DOF et les \emph{degrés de mobilité (DOM)}, un sujet exploré dans la section~\ref{s.holonomic}, ainsi que le concept de \emph{mouvement holonome} qui relie les DOF et les DOM.
 
 \section{Distance, vitesse et temps}\label{s.distance-vitesse}
 
 Supposons qu'un robot se déplace avec une \emph{vitesse}\index{vitesse} constante de $10$ cm/s pendant une période de \emph{temps} de $5$ s.\footnote{La vitesse est une \emph{vitesse} dans une \emph{direction}. Un robot peut se déplacer de $10$ cm/s en avant ou en arrière ; dans les deux cas, la vitesse est la même mais la vélocité est différente.} La \emph{distance} qu'il parcourt est de $50$ cm. En général, si un robot se déplace à une vitesse constante de $v$ pendant une période de temps de $t$, la distance qu'il parcourt est de $s=vt$. Lorsque les moteurs sont alimentés, les roues tournent, ce qui entraîne le déplacement du robot à une certaine vitesse. Cependant, nous ne pouvons pas spécifier qu'une certaine puissance entraîne une certaine vitesse :
 
 \begin{itemize}
-\item Deux composants électriques ou mécaniques ne sont jamais exactement identiques. Un moteur est composé d'aimants et de câbles électriques dont l'interaction entraîne la rotation d'un arbre mécanique. De petites différences dans les propriétés de l'aimant et du fil, ainsi que de petites différences dans la taille et le poids de l'arbre, peuvent faire que les arbres de deux moteurs tournent à des vitesses légèrement différentes pour la même quantité de puissance.
+\item Deux composants électriques ou mécaniques ne sont jamais exactement identiques. Un moteur est composé d'aimants et de câbles électriques dont l'interaction entraîne la rotation d'un arbre mécanique. De petites différences dans les propriétés de l'aimant et du fil, ainsi que de petites différences dans la taille et le poids de l'arbre, peuvent faire que les arbres de deux moteurs tournent à des vitesses légèrement différentes pour la même puissance.
 
 \L'environnement affecte la vitesse d'un robot. Une friction trop faible (glace) ou trop forte (boue) peut ralentir le déplacement d'un robot par rapport à une surface pavée sèche.
 
@@ -47,13 +45,13 @@ L'activité~\ref{act.velocity} montre que pour un réglage de puissance constant
 
 \section{Accélération en tant que changement de vitesse}\label{s.acceleration}
 
-Activity~\ref{act.velocity} a spécifié des paramètres de puissance constante et la vitesse du robot sera donc (plus ou moins) constante. Que se passe-t-il lorsque la vitesse varie ?
+L'activité~\ref{act.velocity} a spécifié des paramètres de puissance constante et la vitesse du robot sera donc (plus ou moins) constante. Que se passe-t-il lorsque la vitesse varie ?
 
 
 \begin{framed}
 \act{Changement de vitesse}{change-v}
 \begin{itemize}
-\item Exécutez le premier programme de Activity~\ref{act.velocity} en faisant varier la distance entre les marques : $0,25$ m, $0,5$ m, $1$ m, $1,5$ m, $2$ m. Pour chaque distance, exécutez le programme plusieurs fois et prenez la moyenne des vitesses calculées. Les vitesses sont-elles les mêmes pour chaque distance ?
+\item Exécutez le premier programme de l'activité~\ref{act.velocity} en faisant varier la distance entre les marques : $0,25$ m, $0,5$ m, $1$ m, $1,5$ m, $2$ m. Pour chaque distance, exécutez le programme plusieurs fois et prenez la moyenne des vitesses calculées. Les vitesses sont-elles les mêmes pour chaque distance ?
 \item Pour améliorer la précision de la mesure, placez des marques sur le sol à ces distances et utilisez le minuteur du robot pour enregistrer les moments où les marques sont détectées.
 \end{itemize}
 \end{framed}
@@ -70,10 +68,10 @@ Pour obtenir une image fidèle du mouvement d'un robot, nous devons diviser son 
   \draw (\x,-1mm) -- (\x,1mm) node [below,yshift=-2mm] {\l} ;
 \end{tikzpicture}
 \end{center}
-et mesurer la distance et le temps pour chaque segment individuellement. Ensuite, nous pouvons calculer les vitesses pour chaque segment. En symboles, si nous désignons la longueur du segment $s_i$ par $\Delta s_i = x_{i+1}-x_i$ et le temps que met le robot à traverser le segment $s_i$ par $\Delta t_i = t_{i+1}-t_i$, alors $v_i$, la vitesse dans le segment $s_i$ est donnée par :
+et mesurer la distance et le temps pour chaque segment individuellement. Ensuite, nous pouvons calculer les vitesses pour chacun de ces segments. Si nous désignons la longueur du segment $s_i$ par $\Delta s_i = x_{i+1}-x_i$ et le temps que met le robot à traverser le segment $s_i$ par $\Delta t_i = t_{i+1}-t_i$, alors $v_i$, la vitesse dans le segment $s_i$ est donnée par :
 \[v_i = \frac{\Delta s_i}{\Delta t_i}\,.\]
 
-La figure~\ref{fig.instant-v} est un graphique de la distance en fonction du temps pour un robot en accélération. L'axe du temps a été divisé en segments et les pentes $\displaystyle\frac{\Delta s_i}{\Delta t_i}$ montrent la vitesse moyenne dans chaque segment qui augmente avec le temps.
+La figure~\ref{fig.instant-v} est un graphique de la distance en fonction du temps pour un robot en accélération. L'axe du temps a été divisé en segments et les pentes $\displaystyle\frac{\Delta s_i}{\Delta t_i}$ montrent la vitesse moyenne dans chaque segment, qui augmente avec le temps.
 
 \begin{figure}
 \begin{center}
@@ -90,14 +88,14 @@ La figure~\ref{fig.instant-v} est un graphique de la distance en fonction du tem
 \end{center}
 \end{figure}
 
-\emph{Accélération} est définie comme la variation de la vitesse sur une période de temps :
+\emph{L'accélération} est définie comme la variation de la vitesse sur une période de temps :
 \[a_i = \frac{\Delta v_i}{\Delta t_i}\,.\]
 Lorsque la puissance du robot est réglée sur une valeur fixe, la force appliquée au robot est constante et nous nous attendons à ce que l'accélération reste constante, ce qui augmente la vitesse. Cependant, à un certain point, l'accélération est réduite à zéro, ce qui signifie que la vitesse n'augmente plus, car la puissance appliquée aux roues est juste suffisante pour surmonter le frottement de la route et la résistance du vent.
 
-Voyons ce qui se passe si l'on augmente le réglage de la puissance avec le temps.
+Voyons ce qui se passe si l'on augmente la puissance avec le temps.
 
 \begin{framed}
-\act{Acceleration}{accel}
+\act{Accélération}{accel}
 \begin{itemize}
 \item Écrivez un programme qui fait accélérer le robot en augmentant périodiquement la puissance. Par exemple, démarrez le robot à une puissance de $20$ et augmentez-la à $40$ après $1$ s, puis à $60$ après $2$ s, à $80$ après $3$ s, et enfin à $100$ après $4$ s.
 \item Placez le robot sur la piste et exécutez le programme.
@@ -117,11 +115,11 @@ Pour une accélération constante, la vitesse peut être obtenue en intégrant l
 et ensuite la distance peut être obtenue en intégrant à nouveau :
 \[s(t) = \int v(t) dt=\int a\,t\,dt = \frac{at^2}{2}\,.\]
 
-\noindent{}\textbf{Exemple} Une voiture moyenne accélère de $0$ à $100$ km/h en environ $10$ s. Tout d'abord, nous convertissons les unités de km/h en m/s :
+\noindent{}\textbf{Exemple} Une voiture moyenne accélère de $0$ à $100$ km/h en environ $10$ s. Tout d'abord, nous convertissons les unités km/h en m/s :
 \[
 v_{\textit{max}} = 100\, \textrm{km/h} = \frac{100\cdot 1000}{60\cdot 60} \,\textrm{m/s} = 27,8 \,\textrm{m/s}\,.
 \]
-En supposant une accélération constante, $v_{\textrm{max}} = 27,8 = at = 10a$, l'accélération est donc de $2,78$ m/s$^{2}$ (lire, $2,78$ mètres par seconde par seconde, c'est-à-dire que chaque seconde la vitesse augmente de $2,78$ mètres par seconde). La distance parcourue par la voiture en $10$ s est :
+En supposant une accélération constante, $v_{\textrm{max}} = 27,8 = at = 10a$, l'accélération est donc de $2,78$ m/s$^{2}$ ($2,78$ mètres par seconde par seconde, c'est-à-dire que chaque seconde la vitesse augmente de $2,78$ mètres par seconde). La distance parcourue par la voiture en $10$ s est :
 \[s(10) = \frac{at^2}{2} = \frac{2.78\cdot 10^2}{2}= 139 \,\textrm{m}\,.\]
 
 \begin{framed}
@@ -166,36 +164,36 @@ En supposant une accélération constante, $v_{\textrm{max}} = 27,8 = at = 10a$,
 \section{Navigation par odométrie}\label{s.odometry}
 \index{odométrie}
 
-Supposons que vous soyez dans une voiture et que votre système de navigation émette l'instruction suivante : "Dans 700 mètres, tournez à droite". Votre tâche est maintenant très simple : Observez l'odomètre de votre voiture qui mesure la distance que vous avez parcourue. Lorsque sa valeur approche les 700 mètres au-delà de sa lecture initiale, cherchez une rue à droite. L'odomètre d'une voiture mesure la vitesse et le temps, et multiplie ces deux valeurs pour calculer la distance parcourue.
+Supposons que vous soyez dans une voiture et que votre système de navigation émette l'instruction suivante : "Dans 700 mètres, tournez à droite". Votre tâche est maintenant très simple : Observez l'odomètre de votre voiture qui mesure la distance que vous avez parcourue. Lorsque sa valeur approche des 700 mètres au-delà de sa valeur initiale, vous cherchez alors une rue à droite. L'odomètre d'une voiture mesure la vitesse et le temps, et multiplie ces deux valeurs pour calculer la distance parcourue.
 
-\L'odométrie - la mesure de la distance - est une méthode fondamentale utilisée par les robots pour la navigation. La mesure du temps est facile grâce à l'horloge interne de l'ordinateur embarqué. La mesure de la vitesse est plus difficile : dans certains robots éducatifs, des encodeurs de roue sont utilisés pour compter les rotations des roues (Sec.~\ref{s.wheel}), tandis que dans d'autres, la vitesse est estimée à partir des propriétés des moteurs. À partir de la distance parcourue $s=vt$, la nouvelle position du robot peut être calculée. En une dimension, le calcul est trivial, mais il devient un peu plus complexe lorsque le mouvement implique des virages. Cette section présente le calcul de la distance par odométrie, d'abord pour un robot se déplaçant linéairement, puis pour un robot effectuant un virage.
+\L'odométrie - la mesure de la distance - est une méthode fondamentale utilisée par les robots pour la navigation. La mesure du temps est facile grâce à l'horloge interne de l'ordinateur embarqué. La mesure de la vitesse est plus difficile : dans certains robots éducatifs, des encodeurs de roue sont utilisés pour compter les rotations des roues (section~\ref{s.wheel}), tandis que dans d'autres, la vitesse est estimée à partir des propriétés des moteurs. Connaissant la distance parcourue $s=vt$, la nouvelle position du robot peut être calculée. En une dimension, le calcul est trivial, mais il devient un peu plus complexe lorsque le mouvement implique des virages. Cette section présente le calcul de la distance par odométrie, d'abord pour un robot se déplaçant linéairement, puis pour un robot effectuant un virage.
 
 La section~\ref{s.odometry-errors} montre que les erreurs de cap sont plus graves que les erreurs de distance.
 
-L'un des inconvénients de l'odométrie (avec ou sans encodeurs de roue) est que les mesures sont indirectes : elles relient la puissance des moteurs ou le mouvement des roues aux changements de position du robot. Cela peut être source d'erreurs car la relation entre la vitesse du moteur et la rotation des roues peut être très non linéaire et varier dans le temps. En outre, les roues peuvent glisser et déraper, ce qui peut entraîner des erreurs dans la relation entre le mouvement des roues et le mouvement du robot. De meilleures estimations de la position peuvent être obtenues en utilisant un système de navigation inertiel, qui mesure directement l'accélération et la vitesse angulaire pouvant être utilisées pour déterminer la position du robot (Sec.~\ref{s.imu}).
+L'un des inconvénients de l'odométrie (avec ou sans encodeurs de roue) est que les mesures sont indirectes : elles relient la puissance des moteurs ou le mouvement des roues aux changements de position du robot. Cela peut être source d'erreurs car la relation entre la vitesse du moteur et la rotation des roues peut être très non linéaire et varier dans le temps. En outre, les roues peuvent glisser et déraper, ce qui peut entraîner des erreurs dans la relation entre le mouvement des roues et le mouvement du robot. De meilleures estimations de la position peuvent être obtenues en utilisant un système de navigation inertiel, qui mesure directement l'accélération et la vitesse angulaire pouvant être utilisées pour déterminer la position du robot (section~\ref{s.imu}).
 
-L'odométrie est une forme de \emph{localisation} : le robot doit déterminer sa position dans l'environnement. En odométrie, nous déterminons la position en mesurant le changement par rapport à la position initiale connue du robot, tandis que la localisation (Chap.~\ref{ch.local}) fait référence à la détermination de la position d'un robot par rapport aux positions connues d'autres objets tels que des points de repère ou des balises.
+L'odométrie est une forme de \emph{localisation} : le robot doit déterminer sa position dans l'environnement. En odométrie, nous estimons la position en mesurant le changement par rapport à la position initiale connue du robot, tandis que la localisation proprement dite (Chap.~\ref{ch.local}) fait référence à la détermination de la position d'un robot par rapport aux positions connues d'autres objets tels que des points de repère ou des balises.
 
 \section{Odométrie linéaire}
 \index{odométrie!linéaire}
 
-Avant d'étudier les mathématiques de l'odométrie, vous devriez essayer l'activité suivante :
+Avant d'étudier les mathématiques de l'odométrie, voyons l'activité suivante :
 
 \begin{framed}
 \act{Distance à partir de la vitesse et du temps}{odometry1}
 \begin{itemize}
-\item Faites fonctionner le robot à une puissance constante pendant une période donnée et mesurez la distance parcourue.
+\item Faites bouger le robot à une puissance constante pendant une période donnée et mesurez la distance parcourue.
 \item Répétez la mesure plusieurs fois. La distance est-elle constante ? Si non, de combien varie-t-elle en pourcentage de la distance ?
 \item Répétez la mesure plusieurs fois pour différents réglages de puissance. La distance mesurée est-elle linéaire en fonction du réglage de la puissance ? La variation de la distance mesurée sur plusieurs parcours dépend-elle du réglage de la puissance ?
 \item Répétez la mesure pour un réglage de puissance fixe mais pendant des périodes de temps différentes et analysez les résultats.
 \end{itemize}
 \end{framed}
 
-Lorsqu'une relation entre la puissance du moteur et la vitesse $v$ a été déterminée, le robot peut calculer la distance parcourue par $s=vt$. S'il commence à la position $(0,0)$ et se déplace en ligne droite le long de l'axe $x$, alors après $t$ secondes, sa nouvelle position est $(vt,0)$.
+Lorsqu'une relation entre la puissance du moteur et la vitesse $v$ a été déterminée, le robot peut calculer la distance parcourue par $s=vt$. S'il démarre à la position $(0,0)$ et se déplace en ligne droite le long de l'axe $x$, alors après $t$ secondes, sa nouvelle position est $(vt,0)$.
 
-Cette activité doit démontrer qu'il est possible de mesurer une distance par odométrie avec une précision et une exactitude raisonnables. Une voiture autonome peut utiliser l'odométrie pour déterminer sa position afin de ne pas avoir à analyser continuellement les données de ses capteurs pour vérifier si la rue requise a été atteinte. Compte tenu des incertitudes du mouvement et de la route, la voiture ne doit pas dépendre uniquement de l'odométrie pour décider quand tourner, mais l'erreur ne sera pas grande et les données des capteurs peuvent être analysées pour détecter le virage lorsque l'odométrie indique que la voiture est à proximité de l'intersection.
+Cette activité doit démontrer qu'il est possible de mesurer une distance par odométrie avec une précision et une exactitude raisonnables. Une voiture autonome peut utiliser l'odométrie pour déterminer sa position afin de ne pas avoir à analyser continuellement les données de ses capteurs pour vérifier si la rue cherchée a été atteinte. Compte tenu des incertitudes du mouvement et de la route, la voiture ne doit pas dépendre uniquement de l'odométrie pour décider quand tourner, cependent l'erreur ne sera pas énorme et les données des capteurs peuvent être analysées pour détecter le virage lorsque l'odométrie indique que la voiture est à proximité de l'intersection.
 
-L'activité~\ref{act.odometry1} vous demande de mesurer la distance parcourue dans une dimension. Trois informations doivent être calculées si le mouvement est en deux dimensions : la \emph{position} $(x,y)$ du robot par rapport à une origine fixe et son \emph{heading} $\theta$, la direction dans laquelle le robot pointe (Fig.~\ref{fig.pos-head}). Le triplet $(x,y,\theta)$ est appelé la \emph{pose}\index{pose} du robot. Si le robot commence à l'origine $(0,0)$ et se déplace en ligne droite selon un angle $\theta$ avec une vitesse $v$ pendant un temps $t$, la distance parcourue est $s=vt$. Sa nouvelle position $(x,y)$ est :
+L'activité~\ref{act.odometry1} demande de mesurer la distance parcourue dans une dimension. Trois informations doivent être calculées si le mouvement est en deux dimensions : la \emph{position} $(x,y)$ du robot par rapport à une origine fixe et son \emph{cap} $\theta$, la direction dans laquelle le robot pointe (Fig.~\ref{fig.pos-head}). Le triplet $(x,y,\theta)$ est appelé la \emph{pose}\index{pose} du robot. Si le robot commence à l'origine $(0,0)$ et se déplace en ligne droite selon un angle $\theta$ avec une vitesse $v$ pendant un temps $t$, la distance parcourue est $s=vt$. Sa nouvelle position $(x,y)$ est :
 \begin{eqnarray*}
 x &=& vt \cos \theta\\
 y &=& vt \sin \theta\,.
@@ -217,21 +215,21 @@ y &=& vt \sin \theta\,.
 \draw[->] (0,0) -- +(30:1.2) {} ;
 \node at (1,.3) {$\theta$} ;
 \end{tikzpicture}
-\caption{Position et en-tête}\label{fig.pos-head}
+\caption{Position et cap}\label{fig.pos-head}
 \end{center}
 \end{figure}
 
 
-\section{Odométrie avec tours}\label{s.odometry-turns}
+\section{Odométrie avec virages}\label{s.odometry-turns}
 \index{odométrie!tours@avec tours}
 
-Supposons que le robot tourne légèrement à gauche car la roue droite se déplace plus rapidement que la roue gauche (Fig.\ref{fig.small-turn}). Sur la figure, le robot est orienté vers le haut de la page ; le point bleu représente la roue gauche, le point rouge la roue droite et le point noir le centre du robot qui se trouve à mi-chemin entre les roues. Le \textit{baseline} $b$ est la distance entre les roues, et $d_l, d_r, d_c$ représentent les distances parcourues par les deux roues et le centre lorsque le robot tourne. Nous voulons calculer la nouvelle position et le nouveau cap du robot.
+Supposons que le robot tourne légèrement à gauche car la roue droite se déplace plus rapidement que la roue gauche (Fig.\ref{fig.small-turn}). Sur la figure, le robot est orienté vers le haut de la page ; le point bleu représente la roue gauche, le point rouge la roue droite et le point noir le centre du robot qui se trouve à mi-chemin entre les roues. La \textit{ligne de base} $b$ est la distance entre les roues, et $d_l, d_r, d_c$ représentent les distances parcourues par les deux roues et le centre lorsque le robot tourne. Nous voulons calculer la nouvelle position et le nouveau cap du robot.
 
-Nous pouvons mesurer $d_l$ et $d_r$, les distances parcourues par les deux roues en utilisant la méthode décrite dans Activity~\ref{act.odometry1} : relier la puissance du moteur à la vitesse de rotation, puis multiplier par le temps. On peut aussi utiliser le nombre de rotations comptées par les encodeurs des roues. Si le rayon d'une roue est de $R$ et que les vitesses de rotation des roues gauche et droite sont respectivement de $\omega_l,\omega_r$ tours par seconde, alors après $t$ secondes la roue s'est déplacée :
+Nous pouvons mesurer $d_l$ et $d_r$, les distances parcourues par les deux roues en utilisant la méthode décrite dans l'activité~\ref{act.odometry1} : relier la puissance du moteur à la vitesse de rotation, puis multiplier par le temps. On peut aussi utiliser le nombre de rotations comptées par les encodeurs des roues. Si le rayon d'une roue est de $R$ et que les vitesses de rotation des roues gauche et droite sont respectivement de $\omega_l,\omega_r$ tours par seconde, alors après $t$ secondes la roue s'est déplacée :
 \begin{equation}
 d_i=2\pi R \omega_i t,\;\;\;i=l,r\,. \label{eq.rotation}
 \end{equation}
-La tâche consiste à déterminer la nouvelle pose du robot après le déplacement des roues sur ces distances.
+La tâche consiste à déterminer la nouvelle pose du robot après le déplacement des roues sur cette distance.
 
 \begin{figure}
 \begin{center}
@@ -263,7 +261,7 @@ La tâche consiste à déterminer la nouvelle pose du robot après le déplaceme
 \caption{Géométrie d'un virage à gauche par un robot à deux roues}\label{fig.small-turn}
 \end{figure}
 
-La figure\ref{fig.small-turn} montre le robot initialement à la pose $(x,y,\phi)$, où le robot est orienté vers le nord ($\phi=\pi/2$). Après une rotation de $\theta$ radians, quelle est la nouvelle position $(x',y',\phi')$ ? Il est clair que le cap du robot est maintenant $\phi'=\phi+\theta$, mais nous devons également calculer $x',y'$.
+La figure~\ref{fig.small-turn} montre le robot initialement à la pose $(x,y,\phi)$, où le robot est orienté vers le nord ($\phi=\pi/2$). Après une rotation de $\theta$ radians, quelle est la nouvelle position $(x',y',\phi')$ ? Il est clair que le cap du robot est maintenant $\phi'=\phi+\theta$, mais nous devons également calculer $x',y'$.
 
 La longueur d'un arc d'angle $\theta$ radians est donnée par sa fraction de la circonférence du cercle : $2\pi r\,(\theta/2\pi)=\theta r$. Pour les petits angles, les distances $d_l,d_c,d_r$ sont approximativement égales à la longueur des arcs correspondants, on a donc :
 \begin{eqnarray}
@@ -326,9 +324,9 @@ Les formules montrent comment calculer les changements \textit{dx}, \textit{dy} 
 \begin{framed}
 \act{Odométrie en deux dimensions}{odométrie2}
 \begin{itemize}
-\item Write a program that causes the robot to make a gentle left turn for a specific period of time.
+\item Écrivez un programme qui fait faire un léger virage à gauche au robot en temps donné.
 \item Calculez la pose $( - d_c \sin \theta, d_c \cos \theta, \theta)$ et comparez le résultat avec les valeurs mesurées à l'aide d'une règle et d'un rapporteur. Exécutez le programme plusieurs fois et voyez si les mesures sont cohérentes.
-\item Exécutez le programme pendant différentes périodes de temps. Comment cela affecte-t-il l'exactitude et la précision du calcul de l'odométrie ?
+\item Exécutez le programme pour différentes durées. Comment cela affecte-t-il l'exactitude et la précision du calcul de l'odométrie ?
 \end{itemize}
 \end{framed}
 
@@ -336,11 +334,11 @@ Les formules montrent comment calculer les changements \textit{dx}, \textit{dy} 
 
 Nous avons déjà noté que l'odométrie n'est pas précise car les mesures incohérentes et les irrégularités de la surface peuvent provoquer des erreurs. Dans cette section, nous montrons que même de petits changements dans la direction du mouvement du robot peuvent causer des erreurs beaucoup plus importantes que celles causées par des changements dans son mouvement linéaire.
 
-Pour simplifier la présentation, supposons qu'un robot doive se déplacer de $10$ mètres depuis l'origine d'un système de coordonnées le long de l'axe $x$ et qu'il doive ensuite rechercher un objet spécifique dans son environnement. Quel est l'effet d'une erreur de \emph{up to} $p\,\%$ ? Si l'erreur porte sur la mesure de $x$, la distance parcourue, alors $\Delta x$, l'erreur sur $x$ est :
+Pour simplifier la présentation, supposons qu'un robot doive se déplacer de $10$ mètres depuis l'origine d'un système de coordonnées le long de l'axe $x$ et qu'il doive ensuite rechercher un objet spécifique dans son environnement. Quel est l'effet d'une erreur de $p\,\%$ ? Si l'erreur porte sur la mesure de $x$, la distance parcourue, alors $\Delta x$, l'erreur sur $x$ est :
 \[\Delta x \leq \pm 10\cdot\frac{p}{100} = \pm\frac{p}{10}\ ; \textrm{meter}\,,\]
 où la valeur est négative ou positive car le robot peut se déplacer jusqu'à $p\,\%$ avant ou après la distance prévue.
 
-Supposons maintenant qu'il y ait une erreur de $p\%$ dans l'\emph{direction} du robot et, pour simplifier, supposons qu'il n'y ait pas d'erreur dans la distance parcourue. La géométrie est la suivante :
+Supposons maintenant qu'il y ait une erreur de $p\%$ dans la \emph{direction} du robot et, pour simplifier, supposons qu'il n'y ait pas d'erreur dans la distance parcourue. La géométrie est la suivante :
 
 \begin{center}
 \begin{tikzpicture}
@@ -383,12 +381,12 @@ Les tableaux suivants comparent la différence entre une erreur linéaire de $p\
 
 Pour une très petite erreur comme $2\,\%$, l'erreur de distance après un déplacement de $10$ m est de seulement $.2$ m, ce qui devrait placer le robot à proximité de l'objet qu'il recherche, mais une erreur de cap du même pourcentage place le robot à $1.25$ m de l'objet. Pour une erreur plus importante, telle que $5$ ou $10$, l'erreur de distance ($50$ ou $100$ cm) peut encore être gérée, mais l'erreur de cap place le robot à $3,09$ ou $5,88$ m, ce qui n'est même pas à proximité de l'objet.
 
-L'accumulation des erreurs d'odométrie au fur et à mesure que la distance parcourue s'allonge est représentée sur la Fig.~ref{fig.odo-errors}. La position initiale du robot est désignée par le point à l'origine.  En supposant une erreur d'au plus $\pm 4\,\%$ dans la direction linéaire et le cap, les positions possibles du robot après un déplacement de $d=1,2,\ldots,10$ mètres sont représentées par des ellipses. Les rayons mineurs des ellipses d'erreur résultent des erreurs linéaires :
-\[.04s = 0.04, .08, \ldots, .4 \;\;\textrm{meters},
+L'accumulation des erreurs d'odométrie au fur et à mesure que la distance parcourue s'allonge est représentée sur la Fig.~\ref{fig.odo-errors}. La position initiale du robot est désignée par le point à l'origine.  En supposant une erreur d'au plus $\pm 4\,\%$ dans la direction linéaire et le cap, les positions possibles du robot après un déplacement de $d=1,2,\ldots,10$ mètres sont représentées par des ellipses. Les rayons mineurs des ellipses d'erreur résultent des erreurs linéaires :
+\[.04s = 0.04, .08, \ldots, .4 \;\;\textrm{mètres},
 \]
 tandis que les rayons majeurs des ellipses d'erreur résultent des erreurs angulaires :
 \[
-d\sin \,(.04\cdot 360^\circ)=d \sin 14.4^\circ \approx{} .25, .50, \ldots 2.5\;\;\textrm{meters}.
+d\sin \,(.04\cdot 360^\circ)=d \sin 14.4^\circ \approx{} .25, .50, \ldots 2.5\;\;\textrm{mètres}.
 \]
 Il est clair que les erreurs angulaires sont beaucoup plus importantes que les erreurs linéaires.
 
@@ -519,7 +517,7 @@ v_n = \sum^{n}_{i=0} a_n \Delta t,\;\; \theta_n = \sum^{n}_{i=0} \omega_n \Delta
 \]
 Les INS sont sujets à des erreurs dues à des imprécisions dans la mesure elle-même ainsi qu'à des variations causées par des facteurs environnementaux tels que la température, et par l'usure de l'unité. La mesure inertielle est souvent combinée avec le GPS (\ref{s.gps}) pour mettre à jour la position avec un emplacement absolu.
 
-Les systèmes de navigation inertielle pour robots sont construits avec des \emph{systèmes microélectromécaniques (MEMS)}\index{systèmes microélectromécaniques}, qui utilisent des techniques de fabrication de circuits intégrés combinant des éléments mécaniques avec des composants électroniques qui s'interfacent avec l'ordinateur du robot.
+Les systèmes de navigation inertielle pour robots sont construits avec des \emph{systèmes micro-électromécaniques (MEMS)}\index{systèmes microélectromécaniques}, qui utilisent des techniques de fabrication de circuits intégrés combinant des éléments mécaniques avec des composants électroniques qui s'interfacent avec l'ordinateur du robot.
 
 \subsection{Accelerometers}\label{s.accelerometer}
 \index{inertial navigation system!accelerometer}
@@ -610,7 +608,7 @@ Un système de navigation inertiel possède trois accéléromètres et trois gyr
 \index{degré de liberté}
 \index{actionneur}
 
-Le nombre de \emph{degrés de liberté (DOF)} d'un système est la dimensionnalité des coordonnées nécessaires pour décrire la pose d'un robot mobile ou la pose de l'effecteur final d'un manipulateur robotique.\footnote{Cette section et les suivantes sont plus avancées et peuvent être sautées lors de votre première lecture. De plus, certains des exemples concernent des manipulateurs robotiques décrits dans le Chap.~\ref{ch.kinematics}.} Par exemple, un hélicoptère possède six DOF car il peut se déplacer dans les trois dimensions spatiales et tourner autour des trois axes. Par conséquent, une coordonnée à six dimensions $(x,y,z,\phi,\psi,\theta)$ est nécessaire pour décrire sa pose.
+Le nombre de \emph{degrés de liberté (DOF)} d'un système est la dimensionnalité des coordonnées nécessaires pour décrire la pose d'un robot mobile ou la pose de l'effecteur final d'un manipulateur robotique.\footnote{Cette section et les suivantes sont plus avancées et peuvent être passées lors de votre première lecture. De plus, certains des exemples concernent des manipulateurs robotiques décrits dans le Chap.~\ref{ch.kinematics}.} Par exemple, un hélicoptère possède six DOF car il peut se déplacer dans les trois dimensions spatiales et tourner autour des trois axes. Par conséquent, une coordonnée à six dimensions $(x,y,z,\phi,\psi,\theta)$ est nécessaire pour décrire sa pose.
 
 \begin{quote}
 \begin{center}
@@ -646,7 +644,7 @@ Le bras robotique à deux articulations de la Fig.~\ref{fig.two-link} ne possèd
 
 Nous avons besoin de plus d'informations que les degrés de liberté pour décrire un mouvement robotique. Considérons un véhicule tel qu'une voiture, un vélo ou une chaise de bureau. Bien que trois coordonnées $(x,y,\theta)$ soient nécessaires pour décrire sa pose, nous ne pouvons pas nécessairement déplacer le véhicule directement d'une pose à une autre. Une chaise de bureau peut être déplacée \emph{directement} en tout point du plan et orientée dans n'importe quelle direction. Une voiture ou une bicyclette située à $(2,0,0^\circ)$ (pointée le long de l'axe positif $x$) ne peut pas être déplacée directement le long de l'axe $y$ vers la position $(2,2,0^\circ)$. Une manœuvre plus complexe est nécessaire.
 
-Nous devons connaître le nombre de ses \emph{actuateurs} (généralement des moteurs) et leur configuration. Un robot à entraînement différentiel possède deux actionneurs, un pour chaque roue, bien que le robot lui-même ait trois DOF. Les moteurs déplacent le robot le long d'un axe en avant et en arrière, mais en appliquant une puissance inégale, nous pouvons modifier le cap du robot. Le bras à deux articulations de la Fig.~{fig.two-link} possède deux moteurs, un pour chaque articulation tournante, de sorte que le nombre d'actionneurs est égal au nombre de DOF. Enfin, un train n'a qu'un seul actionneur, le moteur qui le fait avancer ou reculer dans son unique DOF.
+Nous devons connaître le nombre de ses \emph{actuateurs} (généralement des moteurs) et leur configuration. Un robot à entraînement différentiel possède deux actionneurs, un pour chaque roue, bien que le robot lui-même ait trois DOF. Les moteurs déplacent le robot le long d'un axe en avant et en arrière, mais en appliquant une puissance inégale, nous pouvons modifier le cap du robot. Le bras à deux articulations de la Fig.~\ref{fig.two-link} possède deux moteurs, un pour chaque articulation tournante, de sorte que le nombre d'actionneurs est égal au nombre de DOF. Enfin, un train n'a qu'un seul actionneur, le moteur qui le fait avancer ou reculer dans son unique DOF.
 
 \begin{framed}
 \act{Robot qui peut seulement tourner}{rotation seulement}
@@ -689,20 +687,20 @@ Un train possède un actionneur (son moteur) qui déplace le train le long de so
 
 \subsubsection*{Le nombre d'actionneurs est inférieur au nombre de DOF}
 
-Les robots mobiles ont généralement moins d'actionneurs que de DOF. Un robot à entraînement différentiel et une voiture n'ont que deux actionneurs, mais ils peuvent atteindre toutes les positions tridimensionnelles possibles dans le plan. Le fait d'avoir moins d'actionneurs rend le système moins coûteux, mais les problèmes de planification et de contrôle du mouvement sont beaucoup plus difficiles. Le stationnement parallèle d'une voiture est réputé pour sa difficulté : deux rotations et une translation sont nécessaires pour effectuer un simple déplacement latéral (Figs.~\ref{fig.parallel-diff}--\ref{fig.parallel-car}).
+Les robots mobiles ont généralement moins d'actionneurs que de DOF. Un robot à entraînement différentiel et une voiture n'ont que deux actionneurs, mais ils peuvent atteindre toutes les positions tridimensionnelles possibles dans le plan. Le fait d'avoir moins d'actionneurs rend le système moins coûteux, mais les problèmes de planification et de contrôle du mouvement sont beaucoup plus difficiles. Le stationnement parallèle d'une voiture est réputé pour sa difficulté : deux rotations et une translation sont nécessaires pour effectuer un simple déplacement latéral (Figures~\ref{fig.parallel-diff}--\ref{fig.parallel-car}).
 
 Un exemple extrême est celui d'une montgolfière qui ne possède qu'un seul actionneur (un réchauffeur) qui injecte plus ou moins d'air chaud dans le ballon et contrôle ainsi son altitude. Cependant, les vents peuvent faire bouger la montgolfière dans l'une des trois directions de l'espace et même la faire tourner (au moins partiellement) dans trois orientations, de sorte que l'opérateur de la montgolfière ne peut jamais la contrôler précisément. Une montgolfière diffère donc d'un ascenseur : les deux ont un seul actionneur, mais l'ascenseur est contraint par son arbre à se déplacer dans une seule DOF.
 
-Pour un autre exemple de la relation complexe entre les DOF et le nombre d'actionneurs, le lecteur est invité à étudier la commande de vol des hélicoptères. Les hélicoptères sont très maniables (encore plus que les avions qui ne peuvent pas voler en arrière), mais un pilote contrôle le vol de l'hélicoptère en utilisant seulement trois actionneurs :
+Pour un autre exemple de la relation complexe entre les DOF et le nombre d'actionneurs, le lecteur est invité à étudier la commande de vol des hélicoptères. Les hélicoptères sont très maniables (encore plus que les avions, qui ne peuvent pas voler en arrière), mais un pilote contrôle le vol de l'hélicoptère en utilisant seulement trois actionneurs :
 \begin{itemize}
-\item Le \emph{cyclique} contrôle le pas du \emph{arbre} du rotor principal qui détermine si l'hélicoptère se déplace en avant, en arrière ou sur un côté.
+\item La \emph{commande de pas cyclique} contrôle le pas du \emph{arbre} du rotor principal qui détermine si l'hélicoptère se déplace en avant, en arrière ou sur un côté.
 \item Le paramètre \emph{collective} contrôle le pas des \emph{pales} du rotor principal qui détermine si l'hélicoptère se déplace vers le haut ou vers le bas.
 \item Les \emph{pédales} contrôlent la vitesse du rotor de queue qui détermine la direction dans laquelle le nez de l'hélicoptère pointe.
 \end{itemize}
 
 \subsubsection*{Le nombre d'actionneurs est supérieur au nombre de DOF}
 
-Cela ne semble pas être une bonne idée d'avoir \emph{plus} d'actionneurs que de DOF, mais en pratique, de telles configurations sont souvent utiles. Les systèmes des Figs.~\ref{fig.hi-act-low-dof-1}--\ref{fig.hi-act-low-dof-2} ont plus d'actionneurs que de DOF. Le bras manipulateur robotique de la Fig.~\ref{fig.hi-act-low-dof-1} possède quatre liaisons tournant dans le plan avec des actionneurs (moteurs) \p{a1}, \p{a2}, \p{a3}, \p{a4} aux articulations. Nous supposons que l'effecteur final est fixé au lien de \p{a4} et ne peut pas tourner, donc sa pose est définie par sa position $(x,y)$ et une orientation fixe. Par conséquent, bien que le bras ait quatre actionneurs, il n'a que deux DOF car il ne peut déplacer l'effecteur final qu'horizontalement et verticalement.
+Cela ne semble pas être une bonne idée d'avoir \emph{plus} d'actionneurs que de DOF, mais en pratique, de telles configurations sont souvent utiles. Les systèmes des figures~\ref{fig.hi-act-low-dof-1}--\ref{fig.hi-act-low-dof-2} ont plus d'actionneurs que de DOF. Le bras manipulateur robotique de la Fig.~\ref{fig.hi-act-low-dof-1} possède quatre liaisons tournant dans le plan avec des actionneurs (moteurs) \p{a1}, \p{a2}, \p{a3}, \p{a4} aux articulations. Nous supposons que l'effecteur final est fixé au lien de \p{a4} et ne peut pas tourner, donc sa pose est définie par sa position $(x,y)$ et une orientation fixe. Par conséquent, bien que le bras ait quatre actionneurs, il n'a que deux DOF car il ne peut déplacer l'effecteur final qu'horizontalement et verticalement.
 
 Le robot mobile avec un bras (Fig.~\ref{fig.hi-act-low-dof-2}) possède trois actionneurs : un moteur qui déplace le robot en avant et en arrière, et des moteurs pour chacune des deux articulations tournantes. Cependant, le système n'a que deux DOF puisque la pose de son effecteur final est définie par une coordonnée bidimensionnelle $(x,y)$. Les systèmes comportant plus d'actionneurs que de DOF sont appelés \emph{systèmes redondants}\index{systèmes redondants}.
 
@@ -791,7 +789,7 @@ Dans certaines situations, un système redondant est nécessaire car la tâche n
 \end{minipage}
 \end{figure}
 
-Un avantage important des systèmes redondants provient des actionneurs ayant des caractéristiques différentes. Le robot mobile de la Fig.~ref{fig.hi-act-low-dof-2} peut s'approcher rapidement de la cible, bien que sa position finale puisse ne pas être précise en raison d'erreurs comme un terrain accidenté. Une fois que le robot mobile s'arrête, les moteurs des articulations qui n'ont pas à faire face au terrain peuvent être positionnés avec précision. Bien que le positionnement soit précis, ces articulations n'ont pas la portée étendue de la base mobile.
+Un avantage important des systèmes redondants provient des actionneurs ayant des caractéristiques différentes. Le robot mobile de la Fig.~\ref{fig.hi-act-low-dof-2} peut s'approcher rapidement de la cible, bien que sa position finale puisse ne pas être précise en raison d'erreurs comme un terrain accidenté. Une fois que le robot mobile s'arrête, les moteurs des articulations qui n'ont pas à faire face au terrain peuvent être positionnés avec précision. Bien que le positionnement soit précis, ces articulations n'ont pas la portée étendue de la base mobile.
 
 \subsection*{Exemple d'un système comportant plus d'actionneurs que de DOF}
 
@@ -918,8 +916,7 @@ Deux activités sont prévues dans cette section. La première activité s'adres
 \end{itemize}
 \end{framed}
 
-\section{Mouvement holonomique et non holonomique}\label{s.holonomic}
-\index{mouvement holonomique}.
+\section{Mouvement holonome et non holonome}\label{s.holonomic}
 
 La section~\ref{s.dof} a présenté le concept de degré de liberté (DOF) et le rôle du nombre d'actionneurs. Il existe un autre concept qui relie les DOF et les actionneurs dans le cas d'un robot mobile : le \emph{degré de mobilité (DOM)}\index{degré de mobilité}. Le degré de mobilité $\delta_m$ correspond au nombre de degrés de liberté auxquels les actionneurs peuvent \emph{directement accéder}. Un robot mobile dans le plan possède au maximum trois DOF (position et cap $(x,y)$), le degré maximal de mobilité d'un robot mobile est donc $\delta_m = 3$.
 
@@ -1029,7 +1026,7 @@ Les robots mobiles qui peuvent accéder directement aux trois DOF ($\delta_m=3$)
 \caption{Robot omnidirectionnel avec trois roues suédoises}\label{fig.omni3}
 \end{figure}
 
-Les valeurs relatives des DOF et des DOM d'un robot définissent le concept de mouvement holonomique. Un robot a un \emph{mouvement holonomique}\index{mouvement holonomique} si $\delta_m = \#\textrm{DOF}$ et il a un \emph{mouvement non holonomique} $\delta_m < \#\textrm{DOF}$. Un robot holonome comme celui de la figure~\ref{fig.omni-robot} peut contrôler directement toutes ses DOF sans manœuvres difficiles. La figure~\ref{fig.parallel-omni} montre à quel point il est facile pour le robot omnidirectionnel à roues suédoises (Fig.~\ref{fig.omni3}) d'effectuer un stationnement parallèle.
+Les valeurs relatives des DOF et des DOM d'un robot définissent le concept de mouvement holonom. Un robot a un \emph{mouvement holonome} si $\delta_m = \#\textrm{DOF}$ et il a un \emph{mouvement non holonome} $\delta_m < \#\textrm{DOF}$. Un robot holonome comme celui de la figure~\ref{fig.omni-robot} peut contrôler directement toutes ses DOF sans manœuvres difficiles. La figure~\ref{fig.parallel-omni} montre à quel point il est facile pour le robot omnidirectionnel à roues suédoises (Fig.~\ref{fig.omni3}) d'effectuer un stationnement parallèle.
 
 \begin{figure}
 \begin{center}
@@ -1052,7 +1049,7 @@ Les valeurs relatives des DOF et des DOM d'un robot définissent le concept de m
 \draw[thick,red,->] (0,0) arc (90:166:41mm);
 \end{tikzpicture}
 \end{center}
-\caption{Parking parallèle par un robot omnidirectionnel}\label{fig.parallel-omni}
+\caption{Stationnement en parallèle par un robot omnidirectionnel}\label{fig.parallel-omni}
 \end{figure}
 
 Une voiture et un robot à entraînement différentiel sont non ergonomiques car leur DOM ($\delta_m=1$ et $\delta_m=2$, respectivement) est inférieur à leur DOF qui est de trois. En raison de ce degré de mobilité limité, ces véhicules ont besoin de manœuvres de direction complexes, par exemple pour effectuer un stationnement parallèle. Il existe une différence significative entre les deux véhicules. Le robot à entraînement différentiel nécessite trois mouvements distincts, mais ils sont très simples (Fig.~\ref{fig.parallel-diff}) : rotation à gauche, recul, rotation à droite. La voiture a également besoin de trois mouvements distincts, mais ils sont extrêmement difficiles à exécuter correctement (Fig.~\ref{fig.parallel-car}). Vous devez estimer le point de départ de la manœuvre, la précision de chaque virage et la distance à parcourir entre les virages. Le DOM supérieur du robot à entraînement différentiel est avantageux dans cette situation.
@@ -1082,15 +1079,15 @@ Une voiture et un robot à entraînement différentiel sont non ergonomiques car
 \draw[thick,blue,->] (8mm,6mm) arc (0:-90:10mm);
 \draw[thick,green!60!black,->] (-1mm,-4mm) -- (12mm,-4mm);
 \end{tikzpicture}
-\caption{Parallel parking for a non-holonomic car}\label{fig.parallel-car}
+\caption{Stationnement en parallèle pour une automobile non holonome}\label{fig.parallel-car}
 \end{minipage}
 \end{figure}
 
 \begin{framed}
-\act{Mouvement holonomique et non-holonomique}{holonomique}
+\act{Mouvement holonome et non-holonome}{holonom}
 \begin{itemize}
-\item Regardez à nouveau le robot mobile qui est contraint à un mouvement de rotation uniquement (Fig.~\ref{fig.rot-dof}). Quel est son degré de mobilité $\delta_m$ ? Est-il holonomique ou non ?
-\item La figure~\ref{fig.wallcleaning} montre un robot qui nettoie les murs d'un bâtiment. Il y a deux ancrages d'où descendent des câbles qui passent par des yeux fixés au corps du robot, puis par des treuils actionnés par les roues du robot. En enroulant et déroulant les câbles, le robot monte et descend le long du mur. Cependant, si les deux moteurs ne font pas bouger les roues précisément à la même vitesse de rotation, le robot se balancera d'un côté à l'autre. Combien de DOF et combien de DOM ce robot possède-t-il ? Est-il holonomique ou non ?
+\item Regardez à nouveau le robot mobile qui est contraint à un mouvement de rotation uniquement (Fig.~\ref{fig.rot-dof}). Quel est son degré de mobilité $\delta_m$ ? Est-il holonome ou non ?
+\item La figure~\ref{fig.wallcleaning} montre un robot qui nettoie les murs d'un bâtiment. Il y a deux ancrages d'où descendent des câbles qui passent par des yeux fixés au corps du robot, puis par des treuils actionnés par les roues du robot. En enroulant et déroulant les câbles, le robot monte et descend le long du mur. Cependant, si les deux moteurs ne font pas bouger les roues précisément à la même vitesse de rotation, le robot se balancera d'un côté à l'autre. Combien de DOF et combien de DOM ce robot possède-t-il ? Est-il holonome ou non ?
 \end{itemize}
 \end{framed}
 
@@ -1141,6 +1138,6 @@ La navigation inertielle utilise des accéléromètres et des gyroscopes pour am
 
 Les DOF d'un système sont le nombre de dimensions dans lesquelles il peut se déplacer - jusqu'à trois dimensions sur une surface et jusqu'à six dimensions dans l'air ou sous l'eau - mais un robot peut être contraint d'avoir moins que le nombre maximum de DOF. Une autre considération est le nombre et la configuration des actionneurs d'un robot qui définissent son degré de mobilité. Si le DOM est égal au nombre de DOF, le robot est holonome et peut se déplacer directement d'une pose à une autre, bien qu'il puisse être difficile à contrôler. Si le DOM est inférieur au nombre de DOF, le robot est non ergonomique ; il ne peut pas se déplacer directement d'une pose à l'autre et devra effectuer des manœuvres complexes pour réaliser certaines tâches.
 
-\section{Lectures complémentaires}
+\section{Pour aller plus loin}
 
 Un traitement mathématique détaillé des erreurs d'odométrie en deux dimensions est donné dans \cite[Sect.~5.24]{siegwart}. Pour un aperçu de la navigation inertielle, voir \cite{king,oxford}. Les manuels avancés sur la robotique présentent l'holonomie : \cite{correll,craig,siegwart,spong}.

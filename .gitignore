@@ -1,6 +1,7 @@
-﻿en/tikz/*
-fr/tikz/*
-pt/tikz/*
+﻿en/tikz
+fr/tikz
+pt/tikz
+fr/revisions
 *.pdf
 !er-fr-*.pdf
 *.bat

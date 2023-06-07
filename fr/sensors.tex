@@ -2,7 +2,7 @@
 
 \chapter{Capteurs}\label{ch.sensors}
 
-Un robot ne peut pas se déplacer sur une distance spécifique dans une direction spécifique simplement en réglant la puissance relative des moteurs des deux roues et la durée de fonctionnement des moteurs. Supposons que nous voulions que le robot se déplace en ligne droite. Si nous réglons la puissance des deux moteurs au même niveau, même de petites différences dans les caractéristiques des moteurs et des roues feront que le robot tournera légèrement sur le côté. Les inégalités de la surface sur laquelle le robot se déplace font également tourner les roues à des vitesses différentes. L'augmentation ou la diminution de la friction entre les roues et la surface peut affecter la distance parcourue en un laps de temps donné. Par conséquent, si nous voulons que le robot se déplace vers un mur situé à 1 m et s'arrête 20 cm devant, le robot doit \emph{sentir} l'existence du mur et s'arrêter lorsqu'il \emph{détecte} que le mur est à 20 cm.
+Un robot ne peut pas se déplacer sur une distance donnée dans une direction donnée simplement en réglant la puissance relative des moteurs des deux roues et leur durée d'action. Supposons que nous voulions que le robot se déplace en ligne droite. Si nous réglons la puissance des deux moteurs au même niveau, même de petites différences dans les caractéristiques des moteurs et des roues feront que le robot tournera légèrement sur le côté. Les inégalités de la surface sur laquelle le robot se déplace font également tourner les roues à des vitesses différentes. L'augmentation ou la diminution de la friction entre les roues et la surface peut affecter la distance parcourue en un laps de temps donné. Par conséquent, si nous voulons que le robot se déplace vers un mur situé à 1 m et s'arrête 20 cm devant, le robot doit \emph{détecter} l'existence du mur et s'arrêter lorsqu'il \emph{détecte} que le mur est à 20 cm.
 
 Un \emph{capteur} est un composant qui mesure certains aspects de l'environnement. L'ordinateur du robot utilise ces mesures pour contrôler les actions du robot. L'un des capteurs les plus importants en robotique est le capteur de distance qui mesure la distance entre le robot et un objet. En utilisant plusieurs capteurs de distance ou en faisant tourner le capteur, il est possible de mesurer l'angle de l'objet par rapport à l'avant du robot. Les capteurs de distance peu coûteux utilisant la lumière infrarouge ou les ultrasons sont invariablement utilisés dans les robots éducatifs ; les robots industriels utilisent fréquemment des capteurs laser coûteux car ils sont très précis.
 
@@ -15,13 +15,13 @@ La section~\ref{s.classify} présente la terminologie des capteurs. La section~\
 
 \section{Classification des capteurs}\label{s.classify}
 
-Les capteurs sont classés comme \emph{proprioceptif}\index{capteur!proprioceptif} ou \emph{exteroceptif}\index{capteur!exteroceptif}, et les capteurs exteroceptifs sont en outre classés comme \emph{actif} ou \emph{passif} (Fig.~\ref{fig.sensor-classification}). Un capteur proprioceptif mesure un élément interne au robot lui-même. L'exemple le plus connu est le compteur de vitesse d'une voiture qui mesure la vitesse de la voiture en comptant les rotations des roues (Sec.~\ref{s.wheel}). Un capteur extéroceptif mesure quelque chose d'extérieur au robot, comme la distance à un objet. Un capteur actif affecte l'environnement généralement en émettant de l'énergie : un télémètre sonar sur un sous-marin émet des ondes sonores et utilise le son réfléchi pour déterminer la distance. Un capteur passif n'affecte pas l'environnement : un appareil photo enregistre simplement la lumière réfléchie par un objet. Les robots utilisent invariablement certains capteurs extéroceptifs pour corriger les erreurs qui pourraient survenir avec les capteurs proprioceptifs ou pour prendre en compte les changements de l'environnement.
+Les capteurs sont classés comme \emph{proprioceptif}\index{capteur!proprioceptif} ou \emph{extéroceptif}\index{capteur!exteroceptif}, et les capteurs extéroceptifs sont en outre classés comme \emph{actif} ou \emph{passif} (Fig.~\ref{fig.sensor-classification}). Un capteur proprioceptif mesure un élément interne au robot lui-même. L'exemple le plus connu est le compteur de vitesse d'une voiture qui mesure la vitesse de la voiture en comptant les rotations des roues (Sec.~\ref{s.wheel}). Un capteur extéroceptif mesure quelque chose d'extérieur au robot, comme la distance à un objet. Un capteur actif affecte l'environnement généralement en émettant de l'énergie : un télémètre sonar sur un sous-marin émet des ondes sonores et utilise le son réfléchi pour déterminer la distance. Un capteur passif n'affecte pas l'environnement : un appareil photo enregistre simplement la lumière réfléchie par un objet. Les robots utilisent invariablement certains capteurs extéroceptifs pour corriger les erreurs qui pourraient survenir avec les capteurs proprioceptifs ou pour prendre en compte les changements de l'environnement.
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[node distance = 4mm and 1cm]
 \node (sensor) { \textsf{capteur} };
-\node (ex) [above right=of sensor] { \textsf{exteroceptif} };
+\node (ex) [above right=of sensor] { \textsf{extéroceptif} };
 \node (pro) [below right=of sensor] { \textsf{proprioceptif} };
 \node (active) [above right=of ex] { \textsf{actif} };
 \node (passive) [below right=of ex] { \textsf{passif} };
@@ -63,15 +63,15 @@ Les capteurs de distance bon marché reposent sur un autre principe : comme l'in
 \subsection{Capteurs de distance à ultrasons}
 \index{Capteur!ultrasonique}
 
-Les ultrasons sont des sons dont la fréquence est supérieure à $20 000$ hertz, c'est-à-dire supérieure à la fréquence la plus élevée pouvant être entendue par l'oreille humaine. Il existe deux environnements où le son est meilleur que la vision : la nuit et dans l'eau. Les chauves-souris utilisent les ultrasons pour s'orienter lorsqu'elles volent la nuit, car après le coucher du soleil, il y a peu de lumière naturelle pour localiser la nourriture. Les navires et les sous-marins utilisent les ultrasons pour détecter des objets, car le son se propage beaucoup mieux dans l'eau que dans l'air. Vérifiez-le vous-même en vous baignant dans un lac boueux ou dans l'océan : à quelle distance pouvez-vous voir un ami ? Maintenant, demande-lui de produire un son en frappant deux objets l'un contre l'autre ou en tapant dans ses mains. A quelle distance peux-tu entendre ce son ? 
+Les ultrasons sont des sons dont la fréquence est supérieure à $20\:000$ hertz, c'est-à-dire supérieure à la fréquence la plus élevée pouvant être entendue par l'oreille humaine. Il existe deux environnements où le son est meilleur que la vision : la nuit et dans l'eau. Les chauves-souris utilisent les ultrasons pour s'orienter lorsqu'elles volent la nuit, car après le coucher du soleil, il y a peu de lumière naturelle pour localiser la nourriture. Les navires et les sous-marins utilisent les ultrasons pour détecter des objets, car le son se propage beaucoup mieux dans l'eau que dans l'air. Vérifiez-le vous-même en vous baignant dans un lac boueux ou dans l'océan : à quelle distance pouvez-vous voir un ami ? Maintenant, demande-lui de produire un son en frappant deux objets l'un contre l'autre ou en tapant dans ses mains. A quelle distance pouvez-vous entendre ce son ? 
 
-La vitesse du son dans l'air est d'environ $340$ m/s ou $34,000$ cm/s. Si un objet se trouve à une distance de $34$ cm d'un robot, il ressort de l'équation~\ref{eq.reflected} qu'un signal ultrasonore se déplacera vers l'objet et sera réfléchi :
+La vitesse du son dans l'air est d'environ $340$ m/s ou $34\:000$ cm/s. Si un objet se trouve à une distance de $34$ cm d'un robot, il ressort de l'équation~\ref{eq.reflected} qu'un signal ultrasonore se déplacera vers l'objet et sera réfléchi :
 
 Un circuit électronique peut facilement mesurer des périodes de temps en millisecondes.
 
 L'avantage des capteurs à ultrasons est qu'ils ne sont pas sensibles aux changements de couleur ou de réflectivité des objets, ni à l'intensité lumineuse de l'environnement. Ils sont toutefois sensibles à la texture : le tissu absorbe une partie du son, tandis que le bois ou le métal le réfléchit presque entièrement. C'est pourquoi les rideaux, les tapis et les dalles de plafond souples sont utilisés pour rendre les pièces plus confortables.
 
-Les capteurs à ultrasons sont relativement bon marché et peuvent fonctionner dans des environnements extérieurs. Ils sont utilisés dans les voitures pour détecter de courtes distances, par exemple pour faciliter le stationnement. Leur principal inconvénient est que la mesure de la distance est relativement lente, car la vitesse du son est bien inférieure à celle de la lumière. Un autre inconvénient est qu'ils ne peuvent pas être focalisés afin de mesurer la distance à un objet spécifique.
+Les capteurs à ultrasons sont relativement bon marché et peuvent fonctionner dans des environnements extérieurs. Ils sont utilisés dans les voitures pour détecter de courtes distances, par exemple pour faciliter le stationnement. Leur principal inconvénient est que la mesure de la distance est plutôt lente, car la vitesse du son est bien inférieure à celle de la lumière. Un autre inconvénient est qu'ils ne peuvent pas être focalisés afin de mesurer la distance à un objet spécifique.
 
 \subsection{Capteurs de proximité à infrarouge}
 \index{capteur!infrarouge}\index{capteur!de proximité}
@@ -83,7 +83,7 @@ Les capteurs de proximité sont des dispositifs simples qui utilisent la lumièr
 \subsection{Détecteurs de distance optique}\label{s.distance optique}
 \index{capteur!optique}
 
-La distance peut être calculée à partir de la mesure du temps écoulé entre l'envoi d'un signal lumineux et sa réception. La lumière peut être de la lumière ordinaire ou de la lumière provenant d'un laser. La lumière produite par un laser est \emph{cohérente} (voir ci-dessous).  Le plus souvent, les lasers utilisés pour mesurer la distance utilisent la lumière infrarouge, bien que la lumière visible puisse également être utilisée. Les lasers présentent plusieurs avantages par rapport aux autres sources de lumière. Premièrement, les lasers sont plus puissants et peuvent détecter et mesurer la distance d'objets à longue distance. Deuxièmement, un faisceau laser est hautement focalisé, ce qui permet de mesurer précisément l'angle par rapport à l'objet (Fig.~\ref{fig.beam}).
+La distance peut être calculée à partir de la mesure du temps écoulé entre l'envoi d'un signal lumineux et sa réception. La lumière peut être de la lumière ordinaire ou de la lumière provenant d'un laser. La lumière produite par un laser est \emph{cohérente} (voir ci-dessous).  Le plus souvent, les lasers utilisés pour mesurer la distance utilisent la lumière infrarouge, bien que la lumière visible puisse également être utilisée. Les lasers présentent plusieurs avantages par rapport aux autres sources de lumière. Premièrement, les lasers sont plus puissants et peuvent détecter et mesurer la distance d'objets lointains. Deuxièmement, un faisceau laser est hautement focalisé, ce qui permet de mesurer précisément l'angle par rapport à l'objet (Fig.~\ref{fig.beam}).
 
 \begin{figure}
 \begin{center}
@@ -101,7 +101,7 @@ La distance peut être calculée à partir de la mesure du temps écoulé entre 
 \begin{center}
 \textbf{Lumière cohérente}
 \end{center}
-Trois types de lumière sont représentés sur la Fig.~\ref{fig.coherent}. La lumière du soleil ou d'une ampoule est appelée \emph{lumière blanche} car elle est composée de lumière de plusieurs couleurs (fréquences) différentes, émise à différents moments (phases) et émise dans différentes directions. Les diodes électroluminescentes (DEL) émettent une lumière monochromatique (lumière d'une seule couleur), mais elle n'est pas cohérente car ses phases sont différentes et elle est émise dans des directions différentes. Les lasers émettent une lumière cohérente : toutes les ondes ont la même fréquence et la même phase (le début de chaque onde est au même moment). Toute l'énergie d'une lumière est concentrée dans un faisceau étroit et la distance peut être calculée en mesurant le temps de vol et la différence de phase de la lumière réfléchie.
+Trois types de lumière sont représentés sur la Fig.~\ref{fig.coherent}. La lumière du soleil ou d'une ampoule est appelée \emph{lumière blanche} car elle est composée de lumière de plusieurs couleurs (fréquences) différentes, émise à différents moments (phases) et émise dans différentes directions. Les diodes électroluminescentes (DEL) émettent une lumière monochromatique (lumière d'une seule couleur), mais elle n'est pas cohérente car ses phases sont différentes et elle est émise dans des directions différentes. Les lasers émettent une lumière cohérente : toutes les ondes ont la même fréquence et la même phase (chaque onde débute au même moment). Toute l'énergie d'une lumière est concentrée dans un faisceau étroit et la distance peut être calculée en mesurant le temps de parcours et la différence de phase de la lumière réfléchie.
 \end{quote}
 
 \begin{figure}
@@ -116,7 +116,7 @@ Trois types de lumière sont représentés sur la Fig.~\ref{fig.coherent}. La lu
 \begin{scope}[yshift=-4cm]
 \draw[fill,gray] (-16mm,-8mm) rectangle +(10mm,24mm);
 \draw[fill=white] (-6mm,4mm) circle[x radius=4mm, y radius=10mm];
-\node[anchor=west] at (-5.8,2mm) {\p{lumière}\\\p{monochromatique}\\\p{non cohérent}};
+\node[anchor=west] at (-5.8,2mm) {\p{lumière}\\\p{monochromatique}\\\p{non cohérente}};
 \draw[samples=100,red,thick,rotate=8] plot (\x,{.8*sin(3*\x r)});
 \draw[samples=100,red,thick,yshift=2mm] plot (\x,{.8*sin(3*(\x+.5) r)});
 \draw[samples=100,red,thick,yshift=4mm,rotate=-8] plot (\x,{.8*sin(3*(\x+1.2) r)});
@@ -134,7 +134,7 @@ Trois types de lumière sont représentés sur la Fig.~\ref{fig.coherent}. La lu
 \caption{Lumière blanche, monochromatique et cohérente}\label{fig.coherent}
 \end{figure}
 
-Supposons qu'une impulsion lumineuse soit transmise par le robot, réfléchie par un objet et reçue par un capteur sur le robot. La vitesse de la lumière dans l'air est d'environ $300 000 000$ m/s, soit $3\times 10^8$ m/s ou $3\times 10^{10}$ cm/s en notation scientifique. Si un signal lumineux est dirigé vers un objet situé à $30$ cm du robot, le temps d'émission et de réception du signal est (Fig.~\ref{fig.ir}):\index{temps écoulé du capteur}
+Supposons qu'une impulsion lumineuse soit transmise par le robot, réfléchie par un objet et reçue par un capteur sur le robot. La vitesse de la lumière dans l'air est d'environ $300\:000\:000$ m/s, soit $3\times 10^8$ m/s ou $3\times 10^{10}$ cm/s en notation scientifique. Si un signal lumineux est dirigé vers un objet situé à $30$ cm du robot, le temps d'émission et de réception du signal est (Fig.~\ref{fig.ir}):\index{temps écoulé du capteur}
 \[
 \frac{2\cdot 30}{3\times 10^{10}} = \frac{2}{10^9} = 2\times 10^{-9}\ \textrm{secondes} = 0,002\ \textrm{microsecondes}.
 \]
@@ -149,7 +149,7 @@ Le deuxième principe de mesure de distance par un faisceau lumineux est la tria
 
 \subsection{Capteurs de triangulation}\label{s.triangulating-sensors}
 
-Avant d'expliquer le fonctionnement d'un \emph{capteur de triangulation}\index{capteur!triangulation}, nous devons comprendre comment la réflexion de la lumière dépend de l'objet qu'elle frappe. Lorsqu'un faisceau étroit de lumière, comme la lumière cohérente d'un laser, frappe une surface brillante comme un miroir, les rayons lumineux rebondissent en un faisceau étroit. L'angle de réflexion par rapport à la surface de l'objet est le même que l'angle d'incidence. C'est ce qu'on appelle la réflexion spéculaire (Fig.~\ref{fig.reflect-left}). Lorsque la surface est rugueuse, la réflexion est \emph{diffuse} (Fig.~\ref{fig.reflect-right}) dans toutes les directions car même les zones très proches de la surface ont des angles légèrement différents. La plupart des objets présents dans un environnement, comme les personnes et les murs, ont une réflexion diffuse. Pour détecter la lumière laser réfléchie, il n'est donc pas nécessaire de placer le détecteur à un angle précis par rapport à l'émetteur.
+Avant d'expliquer le fonctionnement d'un \emph{capteur de triangulation}\index{capteur!triangulation}, nous devons comprendre comment la réflexion de la lumière dépend de l'objet qu'elle rencontre. Lorsqu'un faisceau étroit de lumière, comme la lumière cohérente d'un laser, frappe une surface brillante comme un miroir, les rayons lumineux rebondissent en un faisceau étroit. L'angle de réflexion par rapport à la surface de l'objet est le même que l'angle d'incidence. C'est ce qu'on appelle la réflexion spéculaire (Fig.~\ref{fig.reflect-left}). Lorsque la surface est rugueuse, la réflexion est \emph{diffuse} (Fig.~\ref{fig.reflect-right}) dans toutes les directions car même les zones très proches de la surface ont des angles légèrement différents. La plupart des éléments présents dans un environnement, comme les personnes et les murs, ont une réflexion diffuse. Pour détecter la lumière laser réfléchie, il n'est donc pas nécessaire de placer le détecteur à un angle précis par rapport à l'émetteur.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -179,7 +179,7 @@ Avant d'expliquer le fonctionnement d'un \emph{capteur de triangulation}\index{c
 \end{minipage}
 \end{figure}
 
-Les figures~\ref{fig.triangulation-left}--\ref{fig.triangulation-right} montrent un capteur à triangulation simplifié détectant un objet à deux distances. Le capteur est constitué d'un émetteur laser et, à une distance $d$, d'une lentille qui focalise la lumière reçue sur un réseau de capteurs placés à une distance $l$ derrière la lentille. En supposant que l'objet reflète la lumière de manière diffuse, une partie de la lumière sera collectée par la lentille et focalisée sur les capteurs. La distance $d$ le long du réseau de capteurs est inversement proportionnelle à la distance $s$ de l'objet par rapport à l'émetteur laser.
+Les figures~\ref{fig.triangulation-left}--\ref{fig.triangulation-right} montrent un capteur à triangulation simplifié détectant un objet avec deux mesures de distance. Le capteur est constitué d'un émetteur laser et, à une distance $d$, d'une lentille qui focalise la lumière reçue sur un réseau de capteurs placés à une distance $l$ derrière la lentille. En supposant que l'objet reflète la lumière de manière diffuse, une partie de la lumière sera collectée par la lentille et focalisée sur les capteurs. La distance $d$ le long du réseau de capteurs est inversement proportionnelle à la distance $s$ de l'objet par rapport à l'émetteur laser.
 
 Les triangles $\triangle ll'd$ et $\triangle ss'd$ sont similaires, nous avons donc la formule :
 \[
@@ -300,7 +300,7 @@ Avec un capteur laser, la largeur du faisceau est si faible qu'un grand nombre d
 \act{Distance d'un capteur de distance}{range}
 
 \begin{itemize}
-\item Déterminez la portée maximale à laquelle les capteurs de proximité de votre robot peuvent détecter un objet. Existe-t-il également une portée minimale ou les objets peuvent-ils être détectés même s'ils sont placés en contact direct avec le capteur ? S'il existe une portée minimale, expliquez pourquoi des objets plus proches ne peuvent pas être détectés.
+\item Déterminez la portée maximale à laquelle les capteurs de proximité de votre robot peuvent détecter un objet. Existe-t-il également une portée minimale où les objets peuvent être détectés même s'ils sont placés en contact direct avec le capteur ? S'il existe une portée minimale, expliquez pourquoi des objets plus proches ne peuvent pas être détectés.
 \item Votre logiciel peut vous permettre de mesurer les valeurs numériques renvoyées par le capteur. Si tel est le cas, ces valeurs sont-elles des distances ou des valeurs arbitraires qui doivent être converties en distance ? S'il s'agit de valeurs arbitraires, trouvez une formule de conversion ou construisez un tableau qui donne les distances pour différentes valeurs renvoyées par le capteur.
 \item Un capteur qui n'utilise pas de lumière laser cohérente peut détecter un objet à sa gauche ou à sa droite, et pas seulement les objets qui se trouvent directement devant lui. Mesurez l'angle auquel il est possible de détecter des objets. Les objets peuvent-ils être détectés au même angle à gauche et à droite du centre du capteur ?
 \item Combien de capteurs faudrait-il pour pouvoir détecter un objet placé n'importe où autour de votre robot ?
@@ -311,10 +311,10 @@ Avec un capteur laser, la largeur du faisceau est si faible qu'un grand nombre d
 \medskip
 
 \begin{framed}
-\act{Thresholds}{threshold}
+\act{Seuils}{threshold}
 
 \begin{itemize}
-\item Un robot mobile comme une voiture autonome ne s'arrête pas exactement devant un obstacle ; il laisse un espace supplémentaire pour la sécurité, peut-être $1$ m ou $50$ cm. Définissez un \emph{threshold}\index{threshold}, la distance minimale de sécurité par rapport à un objet, et programmez votre robot pour qu'il s'arrête à cette distance d'un objet.
+\item Un robot mobile comme une voiture autonome ne s'arrête pas exactement devant un obstacle ; il laisse un espace supplémentaire par sécurité, peut-être $1$ m ou $50$ cm. Définissez un \emph{threshold}\index{threshold}, la distance minimale de sécurité par rapport à un objet, et programmez votre robot pour qu'il s'arrête à cette distance d'un objet.
 \item Si votre logiciel ne vous permet pas de mesurer les valeurs numériques renvoyées par le capteur, il peut vous permettre d'effectuer une action lorsque la valeur renvoyée passe un ou plusieurs seuils (par exemple, lorsque l'objet est " proche ", " moyen ", " éloigné "). Mesurez les distances correspondant à ces seuils : placez un objet à proximité du capteur et éloignez-le lentement. Notez les distances auxquelles les seuils sont franchis.
 \end{itemize}
 \end{framed}
@@ -342,7 +342,7 @@ Avec un capteur laser, la largeur du faisceau est si faible qu'un grand nombre d
 \section{Caméras}\label{s.cameras}
 \index{caméra}
 
-Les appareils photo numériques sont largement utilisés en robotique car ils peuvent fournir des informations beaucoup plus détaillées que la simple distance et l'angle d'un objet. Les appareils photo numériques utilisent un composant électronique appelé \emph{dispositif à couplage de charge}\index{dispositif à couplage de charge (CCD)} qui détecte les ondes lumineuses et renvoie une matrice de \emph{éléments d'image}, ou \emph{pixels}\index{pixel} pour faire court (Fig.~\ref{fig.camera}).
+Les appareils photo numériques sont largement utilisés en robotique car ils peuvent fournir des informations beaucoup plus détaillées que la simple distance et l'angle d'un objet. Les appareils photo numériques utilisent un composant électronique appelé \emph{dispositif à couplage de charge}\index{dispositif à transfert de charge (CCD, « Charge Coupled Device »)} qui détecte les ondes lumineuses et renvoie une matrice des \emph{pixels}\index{pixel} (Fig.~\ref{fig.camera}).
 
 \begin{figure}
 \includegraphics[width=.6\textwidth]{camera-image2}
@@ -351,21 +351,21 @@ Les appareils photo numériques sont largement utilisés en robotique car ils pe
 
 Les appareils photo numériques se caractérisent par le nombre de pixels capturés dans chaque image et par le contenu de ces pixels. Une petite caméra utilisée dans un robot éducatif contient $192$ rangées de $256$ pixels chacune, soit un total de $49 152$ pixels. Il s'agit d'une très petite image : les capteurs des appareils photo numériques des smartphones enregistrent des images de millions de pixels.
 
-Un appareil photo peut renvoyer les valeurs de chaque pixel en noir et blanc ($1$ bit par pixel), en nuances de gris appelées niveaux de gris ($8$ bits par pixel) ou en couleur rouge-vert-bleu (RVB) ($3$ fois $8=24$ bits par pixel). La petite caméra de $256\times 192$ a donc besoin d'environ $50$ kilo-octets pour une seule image en niveaux de gris ou $150$ kilo-octets pour une image en couleurs. Étant donné qu'un robot mobile tel qu'une voiture à conduite autonome devra stocker plusieurs images par seconde (les films et la télévision affichent $24$ images par seconde), la mémoire nécessaire pour stocker et analyser les images peut être très importante.
+Un appareil photo peut renvoyer les valeurs de chaque pixel en noir et blanc ($1$ bit par pixel), en nuances de gris appelées niveaux de gris ($8$ bits par pixel) ou en couleur rouge-vert-bleu (RVB) ($3$ fois $8=24$ bits par pixel). La petite caméra de $256\times 192$ a donc besoin d'environ $50$ kilo-octets pour une seule image en niveaux de gris ou $150$ kilo-octets pour une image en couleurs. Étant donné qu'un robot mobile tel qu'une voiture à conduite autonome devra stocker plusieurs images par seconde (les films et la télévision affichent $24$ images par seconde), la mémoire nécessaire pour stocker et analyser les images peut devenir très grande.
 
-Une caractéristique importante dans la conception d'une caméra pour un robot est le \emph{champ de vision} de son objectif. Étant donné la position de la caméra, quelle partie de la sphère entourant la caméra est capturée dans l'image ? Pour un capteur donné dans une caméra, un objectif avec un champ de vision étroit capture une petite zone avec une haute résolution et peu de distorsion, tandis qu'un objectif avec un champ de vision large capture une grande zone avec une résolution plus faible et plus de distorsion. La distorsion la plus extrême provient d'une \emph{caméra omnidirectionnelle} qui capture en une seule image (presque) toute la sphère qui l'entoure. La figure~\ref{fig.camera} montre l'image d'une salle de conférence prise par une caméra omnidirectionnelle ; la position de la caméra est indiquée par le point noir au centre. Les caméras à large champ de vision sont utilisées dans les robots mobiles car l'image peut être analysée pour comprendre l'environnement. L'analyse de l'image est utilisée pour la navigation, pour détecter des objets dans l'environnement et pour interagir avec des personnes ou d'autres robots en utilisant des propriétés visuelles comme la couleur.
+Une caractéristique importante dans la conception d'une caméra pour  robot est le \emph{champ de vision} de son objectif. Étant donné la position de la caméra, quelle partie de la sphère entourant la caméra est capturée dans l'image ? Pour un capteur donné dans une caméra, un objectif avec un champ de vision étroit capture une petite zone avec une haute résolution et peu de distorsion, tandis qu'un objectif avec un champ de vision large capture une grande zone avec une résolution plus faible et plus de distorsion. La distorsion la plus extrême provient d'une \emph{caméra omnidirectionnelle} qui capture en pratiquement une seule image toute la sphère qui l'entoure. La figure~\ref{fig.camera} montre l'image d'une salle de conférence prise par une caméra omnidirectionnelle ; la position de la caméra est indiquée par le point noir au centre. Les caméras à large champ de vision sont utilisées dans les robots mobiles car l'image peut être analysée pour comprendre l'environnement. L'analyse de l'image est utilisée pour la navigation, pour détecter des objets dans l'environnement et pour interagir avec des personnes ou d'autres robots en utilisant des propriétés visuelles comme la couleur.
 
 Le problème fondamental des caméras en robotique est que nous ne sommes pas intéressés par un ensemble de pixels "bruts", mais par l'identification des objets présents dans l'image. L'œil et le cerveau humains effectuent instantanément des tâches de reconnaissance : lorsque nous conduisons une voiture, nous identifions automatiquement les autres voitures, les piétons, les feux de circulation et les obstacles sur la route, et nous prenons les mesures appropriées. Le traitement d'images par un ordinateur nécessite des algorithmes sophistiqués et une puissance de traitement importante (Chap.~\ref{ch.image}). Pour cette raison, les robots équipés de caméras sont beaucoup plus complexes et coûteux que les robots éducatifs qui utilisent des capteurs de proximité.
 
 \section{Autres capteurs}\label{s.other-sensors}
 
-Un \emph{capteur tactile}\index{capteur!tactile} peut être considéré comme un capteur de distance simplifié qui ne mesure que deux valeurs : la distance à un objet est nulle ou supérieure à zéro. Les capteurs tactiles sont fréquemment utilisés comme mécanismes de sécurité. Par exemple, un capteur tactile est monté sur la partie inférieure des petits chauffages d'appoint afin que le chauffage ne fonctionne que si le capteur tactile détecte le sol. Si le radiateur tombe, le capteur tactile détecte qu'il n'est plus en contact avec le sol et le chauffage s'arrête pour éviter un incendie. Un capteur tactile peut être utilisé sur un robot mobile pour appliquer un frein d'urgence si le robot s'approche trop près d'un mur.
+Un \emph{capteur tactile}\index{capteur!tactile} peut être considéré comme un capteur de distance simplifié qui ne mesure que deux valeurs : la distance à un objet nulle ou supérieure à zéro. Les capteurs tactiles sont fréquemment utilisés comme mécanismes de sécurité. Par exemple, un capteur tactile est monté sur la partie inférieure des petits chauffages d'appoint afin que le chauffage ne fonctionne que si le capteur tactile détecte le sol. Si le radiateur tombe, le capteur tactile détecte qu'il n'est plus en contact avec le sol et le chauffage s'arrête pour éviter un incendie. Un capteur tactile peut être utilisé sur un robot mobile pour appliquer un arrêt d'urgence si le robot s'approche trop près d'un mur.
 
 Des boutons et des interrupteurs permettent à l'utilisateur d'interagir directement avec le robot.
 
 Un \emph{microphone}\index{sensor!microphone} sur le robot lui permet de détecter le son. Le robot peut simplement détecter le son ou utiliser des algorithmes pour interpréter les commandes vocales.
 
-Un \emph{accelerometer}\index{sensor!accelerometer} mesure l'accélération. L'utilisation principale des accéléromètres est de mesurer la direction de la force gravitationnelle qui provoque une accélération d'environ $9,8$ m/sec$^{2}$ vers le centre de la terre. Avec trois accéléromètres montés perpendiculairement les uns aux autres (Fig.~\ref{fig.accel}), on peut mesurer la \emph{attitude} du robot : les trois angles du robot, appelés \emph{pitch}, \emph{yaw} et \emph{roll}. Les accéléromètres sont abordés plus en détail dans la Sec.~\ref{s.accelerometer} et une tâche utilisant des accéléromètres est présentée dans la Sec.~\ref{s.detect-slope}.
+Un \emph{accéléromètre}\index{sensor!accelerometer} mesure l'accélération. L'utilisation principale des accéléromètres est de mesurer la direction de la force gravitationnelle qui provoque une accélération d'environ $9,8$ m/sec$^{2}$ vers le centre de la terre. Avec trois accéléromètres montés perpendiculairement les uns aux autres (Fig.~\ref{fig.accel}), on peut mesurer l' \emph{assiette} du robot : les trois angles du robot, appelés \emph{tangage}, \emph{lacet} et \emph{roulis}. Les accéléromètres sont abordés plus en détail dans la Sec.~\ref{s.accelerometer} et une activité utilisant des accéléromètres est présentée dans la Sec.~\ref{s.detect-slope}.
 
 \begin{figure}
 \begin{center}
@@ -378,8 +378,8 @@ Un \emph{accelerometer}\index{sensor!accelerometer} mesure l'accélération. L'u
 \draw (0,0,0) -- (2,0,0);
 \draw (2.3,0,0) arc [start angle=0, end angle=270, radius=3mm];
 \path (0,-16mm) -- +(0,1mm);  % So arrow doesn't get chopped
-\node at (1,2) {\textsf{assiette}};
-\node at (3,0) {\textsf{rouleau}};
+\node at (1,2) {\textsf{tangage}};
+\node at (3,0) {\textsf{roulis}};
 \node at (-2,-1) {\textsf{lacet}};
 \end{tikzpicture}
 \caption{Accéléromètre trois axes}\label{fig.accel}
@@ -387,14 +387,14 @@ Un \emph{accelerometer}\index{sensor!accelerometer} mesure l'accélération. L'u
 \end{figure}
 
 \begin{framed}
-\act{Mesure de l'attitude à l'aide d'accéléromètres}{accelerometers}
+\act{Mesure de l'assiette à l'aide d'accéléromètres}{accelerometers}
 
 \begin{itemize}
-\item Écrivez un programme qui affiche l'attitude de votre robot lorsque vous le prenez et le faites tourner autour des trois axes.
+\item Écrivez un programme qui affiche l'assiette de votre robot lorsque vous le prenez et le faites tourner autour des trois axes.
 
 \item Implémentez un jeu de votre choix en utilisant le robot comme contrôleur.
 
-\item Écrivez un programme qui fait avancer le robot et qui s'arrête si une pente est atteinte. Utilisez l'accéléromètre qui mesure l'inclinaison.
+\item Écrivez un programme qui fait avancer le robot et qui s'arrête si une pente est atteinte. Utilisez l'accéléromètre pour mesurer l'inclinaison.
 \end{itemize}
 \end{framed}
 
@@ -419,19 +419,19 @@ Très souvent, un capteur aura une haute résolution mais une faible précision 
 \end{itemize}
 \end{framed}
 
-\emph{Accuracy}\index{accuracy} fait référence à la proximité d'une mesure par rapport à la quantité réelle mesurée. Si un capteur de distance affirme systématiquement que la distance est supérieure de $5$ cm à ce qu'elle est en réalité, le capteur n'est pas précis. En robotique, l'exactitude n'est pas aussi importante que la précision, car la mesure d'un capteur ne renvoie pas directement une quantité physique. Au lieu de cela, un calcul est effectué pour obtenir une quantité physique telle que la distance ou la vitesse à partir d'une valeur électronique mesurée. Si l'imprécision est constante, la valeur du capteur peut être calibrée pour obtenir la véritable quantité physique (Sect.~\ref{s.nonlinearity}). Un capteur de distance utilisant la lumière ou le son calcule la distance à partir du temps de vol d'un signal $s=vt/2$. Si l'on sait que le capteur renvoie systématiquement une valeur de $5$ cm trop grande, l'ordinateur peut simplement utiliser la formule $s=(vt/2) - 5$.
+L' \emph{exactitude}\index{accuracy} fait référence à la proximité d'une mesure par rapport à la quantité réelle mesurée. Si un capteur de distance affirme systématiquement que la distance est supérieure de $5$ cm à ce qu'elle est en réalité, le capteur n'est pas précis. En robotique, l'exactitude n'est pas aussi importante que la précision, car la mesure d'un capteur ne renvoie pas directement une quantité physique. Au lieu de cela, un calcul est effectué pour obtenir une quantité physique telle que la distance ou la vitesse à partir d'une valeur électronique mesurée. Si l'imprécision est constante, la valeur du capteur peut être calibrée pour obtenir la véritable quantité physique (Sect.~\ref{s.nonlinearity}). Un capteur de distance utilisant la lumière ou le son calcule la distance à partir du temps de vol d'un signal $s=vt/2$. Si l'on sait que le capteur renvoie systématiquement une valeur de $5$ cm trop grande, l'ordinateur peut simplement utiliser la formule $s=(vt/2) - 5$.
 
 \begin{framed}
-\act{Accuracy}{accuracy}
+\act{Exactitude}{accuracy}
 \begin{itemize}
 \item Placez un objet à différentes distances du robot et mesurez les distances renvoyées par le capteur. Les résultats sont-ils précis ? Si non, pouvez-vous écrire une fonction qui transforme les mesures du capteur en distances ?
 \end{itemize}
 \end{framed}
 
-\section{Nonlinearity}\label{s.nonlinearity}
+\section{Non linéarité}\label{s.nonlinearity}
 \index{nonlinearity}
 
-Les capteurs renvoient des quantités électroniques telles que le potentiel ou le courant qui sont proportionnelles à ce qui est mesuré. Les valeurs analogiques sont converties en valeurs numériques. Par exemple, un capteur de proximité peut renvoyer $8$ bits de données (valeurs comprises entre $0$ et $255$) qui représentent une gamme de distances, peut-être de $0$ à $50$ cm. Un capteur de $8$ bits ne peut même pas renvoyer des angles de l'ordre de $0^\circ$--$360^\circ$ avec une résolution d'un degré. L'ordinateur doit traduire les valeurs numériques en mesures d'une quantité physique. La découverte de la correspondance pour cette traduction est appelée \emph{calibration}\index{calibration}. Dans le meilleur des cas, la correspondance sera linéaire et facile à calculer. Dans le cas contraire, si la correspondance est non linéaire, il faut utiliser une table ou une fonction non linéaire. Les tables sont plus efficaces car la recherche d'une entrée est plus rapide que le calcul d'une fonction, mais les tables nécessitent beaucoup de mémoire.
+Les capteurs renvoient des grandeurs électroniques telles que la tension qui sont proportionnelles à ce qui est mesuré. Les valeurs analogiques sont converties en valeurs numériques. Par exemple, un capteur de proximité peut renvoyer $8$ bits de données (valeurs comprises entre $0$ et $255$) qui représentent une gamme de distances, peut-être de $0$ à $50$ cm. Un capteur de $8$ bits ne peut même pas renvoyer des angles de l'ordre de $0^\circ$--$360^\circ$ avec une résolution d'un degré. L'ordinateur doit traduire les valeurs numériques en mesures d'une quantité physique. La découverte de la correspondance pour cette traduction est appelée \emph{calibration}\index{calibration}. Dans le meilleur des cas, la correspondance sera linéaire et facile à calculer. Dans le cas contraire, si la correspondance est non linéaire, il faut utiliser une table ou une fonction non linéaire. Les tables sont plus efficaces car la recherche d'une entrée est plus rapide que le calcul d'une fonction, mais elles nécessitent beaucoup de mémoire.
 
 \subsection{Capteurs linéaires}
 \index{Capteur!linéaire}
@@ -508,7 +508,7 @@ s \textrm{(cm)} & x & x_l\\\hline
 
 Évidemment, il serait préférable d'avoir une entrée de tableau pour chacune des valeurs possibles renvoyées par le capteur. Cependant, cela prendrait beaucoup de mémoire et pourrait s'avérer peu pratique si la plage des valeurs renvoyées par le capteur est beaucoup plus large, par exemple de $0$ à $4095$ ($12$ bits). Une solution consiste à prendre la valeur la plus proche, de sorte que si la valeur $27$ est renvoyée par le capteur dont le mappage est donné dans le Tableau~\ref{tab.nonlinear}, la distance sera de $12$.
 
-Une meilleure solution consiste à utiliser l'interpolation\index{interpolation}. Si vous regardez à nouveau le graphique de la Fig.~\ref{fig.nonlinear}, vous pouvez constater que les segments de la courbe sont à peu près linéaires, bien que leurs pentes changent en fonction de la courbe. Par conséquent, nous pouvons obtenir une bonne approximation de la distance correspondant à une valeur de capteur en prenant la distance relative sur une ligne droite entre deux points (Fig.~ref{fig.interpolation}). Étant donné les distances $s_1$ et $s_2$ correspondant aux valeurs de capteur $x_1$ et $x_2$, respectivement, pour une valeur $x_1<x<x_2$, sa distance $s$ :
+Une meilleure solution consiste à utiliser l'interpolation\index{interpolation}. Si vous étudiez à nouveau le graphique de la Fig.~\ref{fig.nonlinear}, vous pouvez constater que les segments de la courbe sont à peu près linéaires, bien que leurs pentes changent en fonction de la courbe. Par conséquent, nous pouvons obtenir une bonne approximation de la distance correspondant à une valeur de capteur en prenant la distance relative sur une ligne droite entre deux points (Fig.~ref{fig.interpolation}). Étant donné les distances $s_1$ et $s_2$ correspondant aux valeurs de capteur $x_1$ et $x_2$, respectivement, pour une valeur $x_1<x<x_2$, sa distance $s$ :
 \[
 s = s_1 + \frac{s_2-s_1}{x_2-x_1}(x-x_1)\,.
 \]
@@ -519,17 +519,19 @@ s = s_1 + \frac{s_2-s_1}{x_2-x_1}(x-x_1)\,.
 \draw (0,0) node[left] {$x_1$} -- (0,2) node[left] {$x_2$} -- (4,0) node[below] {$s_2$} -- cycle node[below] {$s_1$};
 \draw[dashed] (0,1) node[left] {$x$} -| (2,1) -- (2,0) node[below] {$s$};
 \end{tikzpicture}
-\caption{Interpolation of sensor values}\label{fig.interpolation}
+\caption{Interpolation des valeurs du capteur}\label{fig.interpolation}
 \end{center}
 \end{figure}
 
-\section{Summary}
+\section{Résumé}
 
-When designing a robot, the choice of sensors is critical. The designer needs to decide \emph{what} needs to the measured: distance, attitude, velocity, etc. Then the designer has to make trade-offs: larger range, finer resolution, higher precision and accuracy are always better, but come at a price. For educational robots, price is the overriding consideration, so don't expect good performance from your robot. Nevertheless, the algorithmic principles are the same whether the sensors are of high quality or not, so the trade-off does not affect the ability to learn with the robot.
+Lors de la conception d'un robot, le choix des capteurs est crucial. Le concepteur doit décider ce qui a besoin d'être mesuré : la distance, l'attitude, la vitesse, etc. Ensuite, le concepteur doit faire des compromis : une plus grande portée, une résolution plus fine, une plus grande précision et une meilleure exactitude ont un prix. Néanmoins, les principes algorithmiques sont les mêmes, que les capteurs soient de haute qualité ou non, de sorte que le compromis n'affecte pas la capacité d'apprentissage du robot.
 
-Any sensor connected to the robot's computer is going to return discrete values within a fixed range. The computer must be able to map these sensor values to physical quantities in a process called calibration. If the sensor is linear, the calibration results in two values (slope and intercept) that determine a linear function. If the sensor is nonlinear, a table or a non-linear function must be used.
+Tout capteur connecté à l'ordinateur du robot va renvoyer des valeurs discrètes dans une plage fixe. L'ordinateur doit être en mesure d'associer ces valeurs de capteur à des quantités physiques dans le cadre d'un processus appelé étalonnage. Si le capteur est linéaire, l'étalonnage donne deux valeurs (pente et ordonnée à l'origine) qui déterminent une fonction linéaire. Si le capteur est non linéaire, une table ou une fonction non linéaire doit être utilisée.
+
+ 
 
 
-\section{Further reading}
+\section{Pou aller plus loin}
 
-For an overview of sensors used in mobile robots see \cite[Section 4.1]{siegwart}. The book by Everett \cite{everett} is devoted entirely to this topic.
+Pour une vue d'ensemble des capteurs utilisés dans les robots mobiles, voir \cite[Section 4.1]{siegwart}. Le livre d'Everett \cite{everett} est entièrement consacré à ce sujet.

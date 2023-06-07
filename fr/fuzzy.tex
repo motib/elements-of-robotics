@@ -12,23 +12,23 @@ La logique est "floue" parce que les règles sont exprimées en termes de \emph{
 
 Un contrôleur à logique floue se compose de trois phases qui s'exécutent de manière séquentielle :
 \begin{description}
-\item[\textbf{Fuzzify}] Les valeurs des capteurs sont converties en valeurs des variables linguistiques, telles que \p{far}, \p{fermeture}, \p{proche}, appelées \emph{prémisses}. Chaque prémisse spécifie une \emph{certitude} qui est la probabilité de notre croyance que la variable est vraie.
-\item[\textbf{Appliquer les règles}] Un ensemble de \emph{règles} exprime l'algorithme de contrôle. Étant donné un ensemble de prem\-ises, un \emph{conséquent} est déduit. Les conséquences sont également des variables linguistiques telles que \p{très rapide}, \p{rapide}, \p{cruise}, \p{slow}, \p{stop}.
-\item[\textbf{Defuzzify}] Les conséquences sont combinées afin de produire une sortie \emph{crisp}, qui est une valeur numérique qui contrôle certains aspects du robot tels que la puissance appliquée aux moteurs.
+\item[\textbf{Flouter}] Les valeurs des capteurs sont converties en valeurs de variables linguistiques, telles que \p{loin}, \p{en approche}, \p{près}, appelées \emph{prémisses}. Chaque prémisse spécifie une \emph{probabilité} qui est la probabilité de notre conviction que la variable est vraie.
+\item[\textbf{Appliquer les règles}] Un ensemble de \emph{règles} exprime l'algorithme de contrôle. Étant donné un ensemble de prémisses, une \emph{valeur} est déduite. Les valeurs sont également des variables linguistiques telles que \p{très rapide}, \p{rapide}, \p{vitesse de croisière}, \p{lent}, \p{arrêt}.
+\item[\textbf{Déflouter}] Les valeurs sont combinées afin de produire une sortie \emph{pertinente}, une valeur numérique qui contrôle certains aspects du robot tels que la puissance appliquée aux moteurs.
 \end{description}
 
 Les sections suivantes présentent les trois phases du contrôle flou pour la tâche d'un robot s'approchant d'un objet et s'arrêtant lorsqu'il est très proche de l'objet.
 
-\section{Fuzzify}
+\section{Flouter}
 
-Lors de l'approche d'un objet, la valeur lue par le capteur de proximité horizontal passe de $0$ à $100$. La valeur renvoyée par le capteur est rendue floue en la convertissant en valeur d'une variable linguistique. La figure \ref{fig.fuzz} montre trois graphiques permettant de convertir les valeurs du capteur en certitudes des variables linguistiques \index{fuzzy logic!linguistic variable} \p{faround}, \p{closing} et \p{near}. L'axe $x$ est la valeur renvoyée par le capteur et l'axe $y$ donne la prémisse pour chaque variable, la certitude que la variable linguistique est vraie.
+Lors de l'approche d'un objet, la valeur lue par le capteur de proximité horizontal passe de $0$ à $100$. La valeur renvoyée par le capteur est rendue floue en la convertissant en valeur d'une variable linguistique. La figure \ref{fig.fuzz} montre trois graphiques permettant de convertir les valeurs du capteur en probabilités des variables linguistiques \index{fuzzy logic!linguistic variable} \p{loin}, \p{en approche} et \p{près}. L'axe $x$ est la valeur renvoyée par le capteur et l'axe $y$ donne la prémisse pour chaque variable, la probabilité que la variable linguistique est vraie.
 
 
 \begin{figure}
 \begin{center}
 % Fuzzify a horizontal proximity sensor
 \begin{tikzpicture}
-\draw (0,0) node[left] {\p{0.0}} node[below] {\p{0}} -- node[sloped,above] {\textsf{certitude}} (0,3) node[left] {\p{1.0}};
+\draw (0,0) node[left] {\p{0.0}} node[below] {\p{0}} -- node[sloped,above] {\textsf{probabilité}} (0,3) node[left] {\p{1.0}};
 \draw (0,0) -- node[below,yshift=-16pt] {\textsf{capteur}} (8,0) node[below] {\p{100}};
 \foreach \n/\x in {a/1,b/2,c/3,d/5,e/6,f/7} {
   \draw[fill] (\x,0) circle [radius=2pt];
@@ -43,44 +43,44 @@ Lors de l'approche d'un objet, la valeur lue par le capteur de proximité horizo
 \draw[dashed] (1,0) -- (1,3);
 \draw[dashed] (7,0) -- (7,3);
 \node at (.5,1.8) {\textsf{loin}};
-\node at (4,1.8) {\textsf{fermeture}};
-\node at (7.5,1.8) {\textsf{près de}};
+\node at (4,1.8) {\textsf{en approche}};
+\node at (7.5,1.8) {\textsf{près}};
 \end{tikzpicture}
-\caption{Fuzzifier la valeur du capteur de proximité horizontal}\label{fig.fuzz}
+\caption{Flouter la valeur du capteur de proximité horizontal}\label{fig.fuzz}
 \end{center}
 \end{figure}
 
-Les points étiquetés sur l'axe $x$ correspondent aux seuils : (a) \p{far\_low}, (b) \p{closing\_low}, (c) \p{far\_high}, (d) \p{near\_low}, (e) \p{closing\_high}, (f) \p{near\_high}. Si la valeur du capteur est inférieure à \p{far\_low}, nous sommes totalement certains que l'objet est éloigné et la certitude est de $1$. Si la valeur est comprise entre \p{closing\_low} et \p{far\_high}, nous sommes quelque peu certains que l'objet est éloigné, mais aussi quelque peu certains qu'il se rapproche. Le flou résulte du chevauchement des plages : lorsque la valeur se situe entre le point (b) et le point (c), nous ne pouvons pas dire avec une certitude absolue si l'objet est éloigné ou s'il se rapproche. Pour la valeur du capteur \p{v} d'environ $33$, la certitude de \p{far} est d'environ $.15$ et la certitude de \p{fermeture} est d'environ $.25$.
+Les points étiquetés sur l'axe $x$ correspondent aux seuils : (a) \p{far\_low}, (b) \p{closing\_low}, (c) \p{far\_high}, (d) \p{near\_low}, (e) \p{closing\_high}, (f) \p{near\_high}. Si la valeur du capteur est inférieure à \p{far\_low}, nous sommes totalement certains que l'objet est éloigné et la probabilité est de $1$. Si la valeur est comprise entre \p{closing\_low} et \p{far\_high}, nous sommes quelque peu certains que l'objet est éloigné, mais aussi quelque peu certains qu'il se rapproche. Le flou résulte du chevauchement des plages : lorsque la valeur se situe entre le point (b) et le point (c), nous ne pouvons pas dire avec une probabilité absolue si l'objet est éloigné ou s'il se rapproche. Pour la valeur du capteur \p{v} d'environ $33$, la probabilité de \p{far} est d'environ $.15$ et la probabilité de \p{fermeture} est d'environ $.25$.
 
 \section{Appliquer les règles}
 
-Les trois prémisses, les certitudes de \p{far}, \p{fermeture} et \p{proche}, sont utilisées pour calculer cinq conséquences\index{logique floue!conséquence} en utilisant les règles suivantes\index{logique floue!règle} :
+Les trois prémisses, les probabilités de \p{loin}, \p{en approche} et \p{près}, sont utilisées pour calculer cinq valeurs\index{logique floue!conséquence} en utilisant les règles suivantes\index{logique floue!règle} :
 
 \begin{enumerate}
-\item Si \p{farce} alors \p{très rapide}
-\item If \p{far} and \p{closing} then \p{fast} Si \p{faronne} et \p{ferme} alors \p{rapide}
-\item Si \p{fermeture} alors \p{croisière}
-\item If \p{closing} and \p{near} then \p{slow} (Si \p{closing} et \p{near} alors \p{slow})
-\item Si \p{proche} alors \p{stop}
+\item Si \p{loin} alors \p{très rapide}
+\item Si loin et en approche alors rapide
+\item Si \p{en approche} alors \p{vitesse de croisière}
+\item Si en approche et proche alors lent
+\item Si \p{proche} alors \p{arrêt}
 \end{enumerate}
 
-Les certitudes des conséquences résultant des règles 1, 3, 5 sont les mêmes que les certitudes des prémisses correspondantes. Lorsqu'il y a deux prémisses, comme dans les règles 2 et 4, les certitudes des conséquences sont calculées à partir du minimum des certitudes des prémisses. Puisque \emph{les deux} prémisses doivent s'appliquer, nous ne pouvons pas être \emph{plus certains} du conséquent que nous le sommes de la plus petite des prémisses. Pour la valeur \p{v} dans la Fig.~\ref{fig.fuzz}, la règle 2 s'applique et la certitude du conséquent est $\min(.15,.25)=.15$.
+Les probabilités des valeurs résultant des règles 1, 3, 5 sont les mêmes que les probabilités des prémisses correspondantes. Lorsqu'il y a deux prémisses, comme dans les règles 2 et 4, les probabilités des valeurs sont calculées à partir du minimum des probabilités des prémisses. Puisque \emph{les deux} prémisses doivent s'appliquer, nous ne pouvons pas être \emph{plus certains} de la valeur que nous le sommes de la plus petite des prémisses. Pour la valeur \p{v} dans la Fig.~\ref{fig.fuzz}, la règle 2 s'applique et la probabilité de la valeur est $\min(.15,.25)=.15$.
 
 Une autre façon de combiner les prémisses est de prendre leur probabilité conjointe :
 \[
 p(A \cap B) = P(A)\cdot P(B)\,.
 \]
-Pour la valeur \p{v}, la certitude du conséquent est de 0,15 $ fois 0,25 = 0,0375 $, soit beaucoup moins que la certitude obtenue à partir de la fonction minimale.
+Pour la valeur \p{v}, la probabilité de la valeur est de 0,15 $ fois 0,25 = 0,0375 $, soit beaucoup moins que la probabilité obtenue à partir de la fonction minimale.
 
-\section{Defuzzifier}
+\section{Déflouter}
 
-L'étape suivante consiste à combiner les conséquences en tenant compte de leurs certitudes. La figure \ref{fig.defuzz} montre les puissances des moteurs de sortie pour chacun des cinq conséquents. Par exemple, si nous sommes totalement certains que la sortie est \p{cruise}, le graphique central de la figure montre que la puissance du moteur doit être fixée à $50$, mais si nous sommes moins certains, la puissance du moteur doit être inférieure ou supérieure.
+L'étape suivante consiste à combiner les valeurs en tenant compte de leurs probabilités. La figure \ref{fig.defuzz} montre les puissances des moteurs de sortie pour chacune des cinq valeurs. Par exemple, si nous sommes totalement certains que la sortie est \p{cruise}, le graphique central de la figure montre que la puissance du moteur doit être fixée à $50$, mais si nous sommes moins certains, la puissance du moteur doit être inférieure ou supérieure.
 
 \begin{figure}
 \begin{center}
 % Defuzzify to obtain a crisp motor setting
 \begin{tikzpicture}
-\draw (0,0) node[left] {\p{0.0}} -- node[sloped,above] {\textsf{certitude}} (0,3) node[left] {\p{1.0}};
+\draw (0,0) node[left] {\p{0.0}} -- node[sloped,above] {\textsf{probabilité}} (0,3) node[left] {\p{1.0}};
 \draw (0,0) -- node[below,yshift=-12pt] {\textsf{moteur}} (8,0);
 \foreach \n/\x in {0/0,25/2,50/4,75/6,100/8} {
   \draw[fill] (\x,0) circle [radius=2pt];
@@ -91,23 +91,23 @@ L'étape suivante consiste à combiner les conséquences en tenant compte de leu
 \draw[blue,thick] (2,0) -- (4,3) -- (6,0);
 \draw[blue!50!green,thick] (4,0) -- (6,3) -- (8,0);
 \draw[green!50!black,thick] (6,0) -- (8,3);
-\node at (.5,2.2) {\textsf{arrêter}};
+\node at (.5,2.2) {\textsf{arrêt}};
 \node at (2,2.2) {\textsf{lent}};
-\node at (4,2.2) {\textsf{croisière}};
+\node at (4,2.2) {\textsf{vitesse de croisière}};
 \node at (6,2.2) {\textsf{rapide}};
 \node at (8.2,2.2) {\textsf{très rapide}};
 \end{tikzpicture}
-\caption{Défuzzifier pour obtenir le réglage croustillant du moteur}\label{fig.defuzz}
+\caption{Déflouter pour obtenir un réglage robuste du moteur}\label{fig.defuzz}
 \end{center}
 \end{figure}
 
-Supposons que la certitude du conséquent de \p{cruise} soit calculée à $0,4$. Le triangle central de la Fig.~\ref{fig.defuzz} n'est alors plus pertinent car la certitude ne peut jamais être supérieure à $0,4$, ce qui est représenté par un trapèze dans la Fig.~\ref{fig.trap}.
+Supposons que la probabilité de la valeur de \p{cruise} soit calculée à $0,4$. Le triangle central de la Fig.~\ref{fig.defuzz} n'est alors plus pertinent car la probabilité ne peut jamais être supérieure à $0,4$, ce qui est représenté par un trapèze dans la Fig.~\ref{fig.trap}.
 
 \begin{figure}
 \begin{center}
 % Areas defined by the certainties of the consequents
 \begin{tikzpicture}
-\draw (0,0) node[left] {\p{0.0}} -- node[sloped,above] {\textsf{certitude}} (0,3) node[left] {\p{1.0}};
+\draw (0,0) node[left] {\p{0.0}} -- node[sloped,above] {\textsf{probabilité}} (0,3) node[left] {\p{1.0}};
 \draw (0,0) -- node[below,yshift=-12pt] {\textsf{moteur}} (8,0);
 \foreach \n/\x in {0/0,25/2,50/4,75/6,100/8} {
   \draw[fill] (\x,0) circle [radius=2pt];
@@ -124,7 +124,7 @@ node at (4,2.2) {\textsf{cruise}};
 \draw[blue,thick] (2.8,1.2) node[black,left] {\p{0.4}} -- (5.2,1.2);
 \draw[blue!50!green,thick] (4.4,.6) -- (7.6,.6) node[black,right] {\p{0.2}};
 \end{tikzpicture}
-\caption{Domaines définis par les certitudes des conséquences}\label{fig.trap}
+\caption{Domaines définis par les probabilités des valeurs}\label{fig.trap}
 \end{center}
 \end{figure}
 
@@ -132,7 +132,7 @@ Soit $w$ et $h$ la largeur et la hauteur d'un triangle. Alors l'aire d'un trapè
 \begin{displaymath}
 wh'\left(1-\frac{h'}{2h}\right)\,.
 \end{displaymath}
-Il est possible que plus d'un conséquent ait des valeurs positives. La figure \ref{fig.trap} montre les trapèzes pour le conséquent \p{cruise} avec une certitude de $0.4$ et le conséquent \p{fast} avec une certitude de $0.2$. Pour $w=50$, $h=1$, $h_{c}'=0.4$ (\p{cruise}), $h_{f}'=0.2$ (\p{fast}), les aires des trapèzes $a_c$ (\p{cruise}) et $a_f$ (\p{fast}) sont :
+Il est possible que plus d'une valeur ait des valeurs positives. La figure \ref{fig.trap} montre les trapèzes pour la valeur \p{vitesse de croisière} avec une probabilité de $0.4$ et la valeur \p{fast} avec une probabilité de $0.2$. Pour $w=50$, $h=1$, $h_{c}'=0.4$ (\p{cruise}), $h_{f}'=0.2$ (\p{fast}), les aires des trapèzes $a_c$ (\p{cruise}) et $a_f$ (\p{fast}) sont :
 
 \begin{displaymath}
 \spacearray
@@ -145,14 +145,14 @@ Pour obtenir une valeur précise, on calcule le \emph{centre de gravité}. Il s'
 \begin{displaymath}
 \frac{16\times 50 + 9\times 75}{16+9}=59\,.
 \end{displaymath}
-La valeur est plus proche de la valeur associée à \p{cruise} que de la valeur associée à \p{fast}. Cela n'est pas surprenant puisque la certitude de \p{cruise} est plus grande que la certitude de \p{fast}.
+La valeur est plus proche de la valeur associée à \p{vitesse de croisière} que de la valeur associée à \p{rapide}. Cela n'est pas surprenant puisque la probabilité de \p{vitesse de croisière} est plus grande que la probabilité de \p{rapide}.
 
 \begin{framed}
 \act{Logique floue}{fuzzy}
 \begin{itemize}
 \item Mettre en œuvre le contrôleur à logique floue pour un robot s'approchant d'un objet.
-\item Définir les seuils appropriés pour le capteur de proximité et les valeurs appropriées pour la défuzzification afin d'obtenir une vitesse de moteur précise.
-\item Comparez les résultats avec l'algorithme de contrôle proportionnel que vous avez implémenté dans Activity~\ref{act.proportional}.
+\item Définir les seuils appropriés pour le capteur de proximité et les valeurs appropriées pour le défloutage afin d'obtenir une vitesse de moteur précise.
+\item Comparez les résultats avec l'algorithme de contrôle proportionnel que vous avez implémenté dans l'activité~\ref{act.proportional}.
 \end{itemize}
 \end{framed}
 
@@ -160,7 +160,6 @@ La valeur est plus proche de la valeur associée à \p{cruise} que de la valeur 
 
 Le contrôle par logique floue est une alternative aux algorithmes de contrôle mathématiques classiques décrits au Chap.~\ref{ch.control}. L'avantage de la commande par logique floue est qu'elle n'exige pas de spécifications mathématiques précises du comportement du robot, qui peuvent être difficiles à définir. Nous avons donné l'exemple des définitions floues de la vitesse ; d'autres exemples seraient la couleur (quand une nuance de rouge devient-elle orange ?) et la température (quand une pièce chaude devient-elle chaude ?). L'inconvénient est que le comportement de la commande à logique floue n'est pas aussi transparent que celui des algorithmes de commande classiques.
 
-\section{Lecture complémentaire}
+\section{Pour aller plus loin}
 
-Les premiers travaux sur la logique floue ont été réalisés par Lotfi Zadeh \cite{zadeh}. Un manuel sur l'application de la logique floue au contrôle est \cite{passino}.  La logique floue est également utilisée dans le traitement des images \cite[Sect.~3.8]{GW}.
-
+Les premiers travaux sur la logique floue ont été réalisés par Lotfi Zadeh \cite{zadeh}. Un ouvrage sur l'application de la logique floue au contrôle est \cite{passino}.  La logique floue est également utilisée dans le traitement des images \cite[Sect.~3.8]{GW}.

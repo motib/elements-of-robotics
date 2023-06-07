@@ -1,0 +1,302 @@
+\begin{thebibliography}{10}
+
+\bibitem{astrom-murray}
+Karl~Johan \AA{}str\"{o}m and Richard~M. Murray.
+\newblock {\em Feedback Systems: An Introduction for Scientists and Engineers}.
+\newblock Princeton University Press, 2008.
+\newblock The draft of a second edition is available online at
+  \url{http://www.cds.caltech.edu/~murray/amwiki/index.php/Second_Edition}.
+
+\bibitem{turtle}
+Harold Abelson and Andrea diSessa.
+\newblock {\em Turtle Geometry: The Computer as a Medium for Exploring
+  Mathematics}.
+\newblock MIT Press, 1986.
+
+\bibitem{aho}
+Alfred~V. Aho, John~E. Hopcroft, and Jeffrey~D. Ullman.
+\newblock {\em The Design and Analysis of Computer Algorithms}.
+\newblock Addison-Wesley, 1974.
+
+\bibitem{slam-tutorial2}
+Tim Bailey and Hugh Durrant-Whyte.
+\newblock Simultaneous localization and mapping: Part ii.
+\newblock {\em IEEE Robotics \& Automation Magazine}, 13(3):108--117, 2006.
+
+\bibitem{pcdp2}
+M.~Ben-Ari.
+\newblock {\em Principles of Concurrent and Distributed Programming (Second
+  Edition)}.
+\newblock Addison-Wesley, 2006.
+
+\bibitem{bodi2012interaction}
+Michael Bodi, Ronald Thenius, Martina Szopek, Thomas Schmickl, and Karl
+  Crailsheim.
+\newblock Interaction of robot swarms using the honeybee-inspired control
+  algorithm beeclust.
+\newblock {\em Mathematical and Computer Modelling of Dynamical Systems},
+  18(1):87--100, 2012.
+
+\bibitem{valentino}
+Valentino Braitenberg.
+\newblock {\em Vehicles: Experiments in Synthetic Psychology}.
+\newblock MIT Press, 1984.
+
+\bibitem{gross2015}
+J.~Chen, M.~Gauci, W.~Li, A.~Kolling, and R.~Gro{\ss}.
+\newblock Occlusion-based cooperative transport with a swarm of miniature
+  mobile robots.
+\newblock {\em IEEE Transactions on Robotics}, 31(2):307--321, 2015.
+
+\bibitem{chen2013strategy}
+Jianing Chen, Melvin Gauci, and Roderich Gro{\ss}.
+\newblock A strategy for transporting tall objects with a swarm of miniature
+  mobile robots.
+\newblock In {\em IEEE International Conference on Robotics and Automation},
+  pages 863--869, 2013.
+
+\bibitem{crls3}
+Thomas~H. Cormen, Charles~E. Leiserson, Ronald~L. Rivest, and Clifford Stein.
+\newblock {\em Introduction to Algorithms (Third Edition)}.
+\newblock MIT Press, 2009.
+
+\bibitem{correll}
+Nikolaus Correll.
+\newblock {\em Introduction to Autonomous Robots}.
+\newblock CreateSpace, 2014.
+\newblock Avaiable for download at
+  \url{https://github.com/correll/Introduction-to-Autonomous-Robots/releases/download/v1.9/book.pdf}.
+
+\bibitem{craig}
+John~J. Craig.
+\newblock {\em Introduction to Robotics: Mechanics and Control, Third Edition}.
+\newblock Pearson, 2005.
+
+\bibitem{sahin2005}
+Erol \c{S}ahin and William~M. Spears, editors.
+\newblock {\em Swarm Robotics: SAB 2004 International Workshop}, chapter Swarm
+  Robotics: From Sources of Inspiration to Domains of Application, pages
+  10--20.
+\newblock Springer, 2005.
+
+\bibitem{dudek}
+Gregory Dudek and Michael Jenkin.
+\newblock {\em Computational Principles of Mobile Robotics (Second Edition)}.
+\newblock Cambridge University Press, 2010.
+
+\bibitem{slam-tutorial1}
+Hugh Durrant-Whyte and Tim Bailey.
+\newblock Simultaneous localization and mapping: Part i.
+\newblock {\em IEEE Robotics \& Automation Magazine}, 13(2):99--110, 2006.
+
+\bibitem{everett}
+H.R. Everett.
+\newblock {\em Sensors for Mobile Robots}.
+\newblock A.K. Peters, 1995.
+
+\bibitem{GW}
+Rafael~C. Gonzalez and Richard~E. Woods.
+\newblock {\em Digital Image Processing (Third Edition)}.
+\newblock Pearson, 2008.
+
+\bibitem{slam-graph}
+Giorgio Grisetti, Rainer K\"{u}mmerle, Cyrill Stachniss, and Wolfram Burgard.
+\newblock A tutorial on graph-based slam.
+\newblock {\em IEEE Intelligent Transportation Systems Magazine}, 2(4):31--43,
+  2010.
+
+\bibitem{harrington2012machine}
+Peter Harrington.
+\newblock {\em Machine learning in action}, volume~5.
+\newblock Manning Greenwich, CT, 2012.
+
+\bibitem{haykin}
+Simon~O. Haykin.
+\newblock {\em Neural Networks and Learning Machines (Third Edition)}.
+\newblock Pearson, 2008.
+
+\bibitem{herculano2009human}
+Suzana Herculano-Houzel.
+\newblock The human brain in numbers: a linearly scaled-up primate brain.
+\newblock {\em Frontiers in human neuroscience}, 3:31, 2009.
+
+\bibitem{creatures}
+David~W. Hogg, Fred Martin, and Mitchel Resnick.
+\newblock Braitenberg creatures.
+\newblock Technical Report E\&L Memo No. 13, MIT Media Lab, 1991.
+\newblock \url{http://cosmo.nyu.edu/hogg/lego/braitenberg_vehicles.pdf}.
+
+\bibitem{automata}
+John Hopcroft, Rajeev Motwani, and Jeffrey~D. Ullman.
+\newblock {\em Introduction to Automata Theory, Languages, and Computation
+  (Third Edition)}.
+\newblock Pearson, 2007.
+
+\bibitem{Ijspeert2001}
+Auke~Jan Ijspeert, Alcherio Martinoli, Aude Billard, and Luca~Maria
+  Gambardella.
+\newblock Collaboration through the exploitation of local interactions in
+  autonomous collective robotics: The stick pulling experiment.
+\newblock {\em Autonomous Robots}, 11(2):149--171, 2001.
+
+\bibitem{izenman2008}
+Alan~Julian Izenman.
+\newblock {\em Modern multivariate statistical techniques}.
+\newblock Springer, 2008.
+
+\bibitem{kernbach2013handbook}
+Serge Kernbach.
+\newblock {\em Handbook of collective robotics: Fundamentals and challenges}.
+\newblock CRC Press, 2013.
+
+\bibitem{king}
+A.D. King.
+\newblock Inertial navigation---forty years of evolution.
+\newblock {\em GEC Review}, 13(3):140--–149, 1998.
+\newblock
+  \url{http://www.imar-navigation.de/downloads/papers/inertial_navigation_introduction.pdf}.
+
+\bibitem{kriesel}
+David Kriesel.
+\newblock A brief introduction to neural networks.
+\newblock \url{http://www.dkriesel.com/en/science/neural_networks}, 2007.
+
+\bibitem{kubat2015machinelearning}
+Miroslav Kubat.
+\newblock {\em An introduction to machine learning}.
+\newblock Springer, 2015.
+
+\bibitem{kumar}
+Deepak Kumar.
+\newblock {\em Learning Computing with Robots}.
+\newblock Lulu, 2011.
+\newblock Download from
+  \url{http://calicoproject.org/Learning_Computing_With_Robots}.
+
+\bibitem{latombe}
+Jean-Claude Latombe.
+\newblock {\em Robot Motion Planning}.
+\newblock Springer, 1991.
+
+\bibitem{lavalle}
+Steven~M. LaValle.
+\newblock {\em Planning Algorithms}.
+\newblock Cambridge University Press, 2006.
+
+\bibitem{Mayet2010}
+Ralf Mayet, Jonathan Roberz, Thomas Schmickl, and Karl Crailsheim.
+\newblock Antbots: A feasible visual emulation of pheromone trails for swarm
+  robots.
+\newblock In Marco Dorigo, Mauro Birattari, Gianni~A. Di~Caro, Ren{\'e}
+  Doursat, Andries~P. Engelbrecht, Dario Floreano, Luca~Maria Gambardella,
+  Roderich Gro{\ss}, Erol {\c{S}}ahin, Hiroki Sayama, and Thomas St{\"u}tzle,
+  editors, {\em Swarm Intelligence: 7th International Conference, ANTS 2010,
+  Brussels, Belgium, September 8-10, 2010. Proceedings}, pages 84--94. Springer
+  Berlin Heidelberg, 2010.
+
+\bibitem{oxford}
+{Oxford Technical Solutions}.
+\newblock What is an ({INS}) inertial navigation system?
+\newblock \url{http://www.oxts.com/what-is-inertial-navigation-guide/}.
+
+\bibitem{passino}
+Kevin~M. Passino and Stephen Yurkovich.
+\newblock {\em Fuzzy Control}.
+\newblock Addison-Wesley, 1998.
+
+\bibitem{karel}
+Richard~E. Pattis, Jim Roberts, and Mark Stehlik.
+\newblock {\em Karel the Robot: A Gentle Introduction to the Art of Programming
+  (Second Edition)}.
+\newblock Wiley, 1995.
+
+\bibitem{rojas}
+Ra{\'u}l Rojas.
+\newblock {\em Neural Networks: A Systematic Introduction}.
+\newblock Springer, 1996.
+
+\bibitem{russ}
+John~C. Russ.
+\newblock {\em The Image Processing Handbook (Sixth Edition)}.
+\newblock CRC Press, 2011.
+
+\bibitem{ai}
+Stuart Russell and Peter Norvig.
+\newblock {\em Artificial Intelligence: A Modern Approach (Third Edition)}.
+\newblock Pearson, 2009.
+
+\bibitem{schmickl2013assisi}
+Thomas Schmickl, Stjepan Bogdan, Lu{\'\i}s Correia, Serge Kernbach, Francesco
+  Mondada, Michael Bodi, Alexey Gribovskiy, Sibylle Hahshold, Damjan Miklic,
+  Martina Szopek, et~al.
+\newblock Assisi: mixing animals with robots in a hybrid society.
+\newblock In {\em Conference on Biomimetic and Biohybrid Systems}, pages
+  441--443. Springer, 2013.
+
+\bibitem{Schmickl2009}
+Thomas Schmickl, Ronald Thenius, Christoph Moeslinger, Gerald Radspieler, Serge
+  Kernbach, Marc Szymanski, and Karl Crailsheim.
+\newblock Get in touch: Cooperative decision making based on robot-to-robot
+  collisions.
+\newblock {\em Autonomous Agents and Multi-Agent Systems}, 18(1):133--155,
+  2009.
+
+\bibitem{shin2014idc}
+Jiwon Shin, Roland Siegwart, and St{\'e}phane Magnenat.
+\newblock Visual programming language for {Thymio II} robot.
+\newblock In {\em Proc. of the 2014 Conference on Interaction Design and
+  Children (IDC)}, 2014.
+
+\bibitem{siegwart}
+Roland Siegwart, Illah~R. Nourbakhsh, and Davide Scaramuzza.
+\newblock {\em Introduction to Autonomous Mobile Robots (Second Edition)}.
+\newblock MIT Press, 2011.
+
+\bibitem{spong}
+Mark~W. Spong, Seth Hutchinson, and M.~Vidyasagar.
+\newblock {\em Robot Modeling and Control}.
+\newblock Wiley, 2005.
+
+\bibitem{szeliski}
+Richard Szeliski.
+\newblock {\em Computer Vision: Algorithms and Applications}.
+\newblock Springer, 2011.
+
+\bibitem{thrun}
+Sebastian Thrun, Wolfram Burgard, and Dieter Fox.
+\newblock {\em Probabilistic Robotics}.
+\newblock MIT Press, 2005.
+
+\bibitem{trobaugh}
+James~J. Trobaugh and Mannie Lowe.
+\newblock {\em Winning LEGO MINDSTORMS Programming}.
+\newblock Apress, 2012.
+
+\bibitem{vince}
+John Vince.
+\newblock {\em Quaternions for Computer Graphics}.
+\newblock Springer, 2011.
+
+\bibitem{wang2016dars}
+Shiling Wang, Francis Colas, Ming Liu, Francesco Mondada, and St{\'e}phane
+  Magnenat.
+\newblock Localization of inexpensive robots with low-bandwidth sensors.
+\newblock In {\em Distributed Autonomous Robotic Systems (DARS)}. IEEE, 2016.
+
+\bibitem{vsi}
+Alan Winfield.
+\newblock {\em Robotics: A Very Short Introduction}.
+\newblock Oxford University Press, 2012.
+
+\bibitem{yamauchi}
+B.~Yamauchi.
+\newblock A frontier-based approach for autonomous exploration.
+\newblock In {\em IEEE International Symposium on Computational Intelligence in
+  Robotics and Automation}, pages 146--151, 1997.
+
+\bibitem{zadeh}
+Lotfi~A. Zadeh.
+\newblock Fuzzy sets.
+\newblock {\em Information and Control}, 8(3):338--–353, 1965.
+
+\end{thebibliography}

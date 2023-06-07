@@ -2,21 +2,21 @@
 
 \chapter{Navigation locale : Évitement d'obstacles}\label{ch.obstacle}
 
-Un robot mobile doit naviguer d'un point à un autre de son environnement. Il peut s'agir d'une tâche simple, par exemple si un robot peut suivre une ligne sans obstacle sur le sol d'un entrepôt (\ref{s.line}), mais la tâche devient plus difficile dans des environnements inconnus et complexes comme un rover explorant la surface de Mars ou un submersible explorant une chaîne de montagnes sous-marine. Même une voiture autonome qui circule sur une route doit faire face aux autres voitures, aux obstacles sur la route, aux passages pour piétons, à la construction des routes, etc. 
+Un robot mobile doit naviguer d'un point à un autre de son environnement. Il peut s'agir d'une tâche simple. En effet, si un robot peut suivre une ligne sans obstacle sur le sol d'un entrepôt (\ref{s.line}), la tâche devient plus difficile dans des environnements inconnus et complexes comme un rover explorant la surface de Mars ou un submersible explorant une chaîne de montagnes sous-marines. Une voiture autonome qui circule sur une route doit faire face aux autres voitures, aux obstacles sur la route, aux passages pour piétons, aux travaux sur la voie, etc. 
 
 La navigation d'une voiture autonome peut être divisée en deux tâches : La première, de haut niveau, consiste à trouver un chemin entre une position de départ et une position d'arrivée. Avant le développement des systèmes informatiques modernes, pour trouver un chemin, il fallait étudier une carte ou demander son chemin. Aujourd'hui, il existe des applications pour smartphones qui prennent une position de départ et une position d'arrivée et calculent des chemins entre ces deux positions. Si l'application reçoit des données en temps réel sur les conditions de circulation, elle peut suggérer le chemin qui vous permettra d'atteindre votre objectif le plus rapidement possible. Le chemin peut être calculé hors ligne ou, si vous disposez d'un système GPS capable de déterminer votre position actuelle, le chemin peut être trouvé en temps réel et mis à jour pour tenir compte de l'évolution des conditions.
 
-Une voiture autonome doit également adapter son comportement à l'environnement : s'arrêter pour laisser passer un piéton sur un passage piéton, tourner aux intersections, éviter les obstacles sur la route, etc. Alors que la recherche de chemin de haut niveau peut être effectuée une fois avant le voyage (ou toutes les quelques minutes), la tâche de bas niveau consistant à éviter les obstacles doit être exécutée fréquemment, car la voiture ne sait jamais quand un piéton va sauter sur la route ou quand la voiture qu'elle suit va soudainement freiner.
+Une voiture autonome doit également adapter son comportement à l'environnement : s'arrêter pour laisser passer un piéton sur un passage piéton, tourner aux intersections, éviter les obstacles sur la route, etc. Alors que la recherche de chemin de haut niveau peut être effectuée une fois avant le voyage (en quelques minutes), la tâche de bas niveau consistant à éviter les obstacles doit être exécutée fréquemment, car la voiture ne sait jamais quand un piéton va sugir sur la route ou quand la voiture suivie va soudainement freiner.
 
-La section~\ref{s.obstacle-avoidance} examine la tâche de bas niveau d'évitement des obstacles. La section~\ref{s.no-localization} montre comment un robot peut reconnaître des marquages tout en suivant une ligne afin de savoir quand il a atteint son objectif. Les sections~\ref{s.ants}--\ref{s.fsm-ants} démontrent un comportement de plus haut niveau : trouver un chemin sans carte de l'environnement. Cela se fait par analogie avec une colonie de fourmis localisant une source de nourriture et communiquant son emplacement à tous les membres de la colonie.
+La section~\ref{s.obstacle-avoidance} examine la tâche de bas niveau d'évitement des obstacles. La section~\ref{s.no-localization} montre comment un robot peut reconnaître des indications tout en suivant une ligne afin de savoir quand il a atteint son objectif. Les sections~\ref{s.ants}--\ref{s.fsm-ants} montrent un comportement de plus haut niveau : trouver un chemin sans carte de l'environnement. Cela se fait par analogie avec une colonie de fourmis localisant une source de nourriture et communiquant son emplacement à tous les membres de la colonie.
 
-\section{Evitement des obstacles}\label{s.obstacle-avoidance}
+\section{Évitement des obstacles}\label{s.obstacle-avoidance}
 \index{évitement des obstacles}
 
-Les algorithmes présentés jusqu'à présent se sont concentrés sur la détection d'objets et le déplacement vers ceux-ci. Lorsqu'un robot se déplace vers un objectif, il est susceptible de rencontrer des objets supplémentaires appelés \emph{obstacles} qui bloquent le chemin et empêchent le robot d'atteindre son objectif. Nous supposons que le robot est capable de détecter s'il existe un chemin libre vers l'objectif, par exemple en détectant une lumière sur l'objectif. Cette section décrit trois algorithmes d'évitement d'obstacles, où les obstacles sont des murs qui bloquent le mouvement du robot :
+Les algorithmes présentés jusqu'à présent se sont concentrés sur la détection d'objets et l’évitement de ceux-ci. Lorsqu'un robot se déplace vers un objectif, il est susceptible de rencontrer des objets appelés \emph{obstacles} qui bloquent le chemin et empêchent le robot d'atteindre son objectif. Nous supposons que le robot est capable de détecter s'il existe un chemin libre vers l'objectif, par exemple en détectant une lumière sur l'objectif. Cette section décrit trois algorithmes d'évitement d'obstacles, où les obstacles sont des murs qui empêchent le mouvement du robot :
 \begin{itemize}
-\item Un algorithme simple de suivi de mur, qui malheureusement ne fonctionnera pas s'il y a plusieurs obstacles dans l'environnement.
-\item Un algorithme qui peut éviter plusieurs obstacles, mais qui doit connaître la direction générale du but (peut-être grâce à son système GPS). Malheureusement, certains obstacles peuvent bloquer le robot dans une boucle.
+\item Un algorithme simple de suivi de mur, qui malheureusement ne fonctionnera pas s'il y a plusieurs obstacles dans l'espace.
+\item Un algorithme qui peut éviter plusieurs obstacles, mais qui doit connaître la direction générale vers lequel il va (peut-être grâce à son système GPS). Malheureusement, certains obstacles peuvent bloquer le robot alors qu’il est en train de résoudre une boucle.
 \item L'algorithme Pledge est une petite modification du second qui permet de surmonter ce comportement erroné.
 \end{itemize}
 Les algorithmes utilisent les expressions conditionnelles abstraites \p{mur devant} et \p{mur à droite}, qui sont vraies si un mur se trouve à l'avant ou à la droite du robot. Le premier algorithme utilisera également l'expression conditionnelle \p{corner-right} qui est vraie si le robot se déplace autour d'un obstacle et détecte un coin à sa droite. Il existe plusieurs façons d'implémenter ces expressions, que nous étudions dans Activity~\ref{act.wall-expressions}.
@@ -30,10 +30,10 @@ Les algorithmes utilisent les expressions conditionnelles abstraites \p{mur deva
 \end{itemize}
 \end{framed}
 
-\subsection{suivi du mur}
+\subsection{Suivi du mur}
 \index{mur suivant}
 
-La figure~\ref{fig.wall-following-simple} montre un robot qui suit un mur en maintenant sa position de manière à ce que le mur soit à sa droite (Algorithme~\ref{alg.wall-following-simple}). Si un mur est détecté devant lui, le robot tourne à gauche de manière à ce que le mur soit à sa droite. Si un mur est détecté à droite, le robot continue à se déplacer le long du mur. Si un coin est détecté, le robot tourne à droite pour continuer à contourner l'obstacle. En même temps, le robot cherche continuellement le but (point noir). Lorsqu'il détecte l'objectif, le robot se déplace directement vers lui.
+La figure~\ref{fig.wall-following-simple} montre un robot qui suit un mur en maintenant sa position de manière que le mur soit à sa droite (Algorithme~\ref{alg.wall-following-simple}). Si un mur est détecté devant lui, le robot tourne à gauche de manière que le mur soit à sa droite. Si un mur est détecté à droite, le robot continue à se déplacer le long du mur. Si un coin est détecté, le robot tourne à droite pour continuer à contourner l'obstacle. En même temps, le robot cherche continuellement le but (point noir). Lorsqu'il détecte l'objectif, le robot se déplace directement vers lui.
 
 \begin{figure}
 \begin{center}
@@ -67,7 +67,7 @@ La figure~\ref{fig.wall-following-simple} montre un robot qui suit un mur en mai
 \end{alg}
 \end{figure}
 
-Malheureusement, l'algorithme~\ref{alg.wall-following-simple} ne fonctionne pas toujours correctement. La figure~\ref{fig.wall-following-simple-bug} montre une configuration avec \emph{deux} obstacles entre le robot et le but. Le robot ne détectera jamais l'objectif et se déplacera donc indéfiniment autour du premier obstacle.
+Malheureusement, l'algorithme~\ref{alg.wall-following-simple} ne fonctionne pas toujours correctement. La figure~\ref{fig.wall-following-simple-bug} montre une configuration avec \emph{deux} obstacles entre le robot et son but. Le robot ne détectera jamais l'objectif et se déplacera donc indéfiniment autour du premier obstacle.
 
 \begin{framed}
 \act{Simple suivi de mur}{simple-wall-following}
@@ -140,7 +140,7 @@ L'algorithme \ref{alg.wall-follow} est similaire à l'algorithme précédent, à
 \end{alg}
 \end{figure}
 
-Malheureusement, l'algorithme peut échouer lorsqu'il est confronté à un obstacle en forme de \ref{fig.wall-direction-bug}). Après avoir effectué quatre virages à gauche, il se dirige vers $360^\circ$ (également vers le nord, un multiple de $360^\circ$) et continue d'avancer, rencontrant et suivant le mur encore et encore.
+Malheureusement, l'algorithme peut échouer lorsqu'il est confronté à un obstacle en forme de \texttt{G} (figure~\ref{fig.wall-direction-bug}). Après avoir effectué quatre virages à gauche, il se dirige vers $360^\circ$ (également vers le nord, un multiple de $360^\circ$) et continue d'avancer, rencontrant et suivant le mur encore et encore.
 
 \begin{figure}
 \begin{center}
@@ -160,7 +160,7 @@ Malheureusement, l'algorithme peut échouer lorsqu'il est confronté à un obsta
 \begin{framed}
 \act{Suivi du mur avec direction}{wall-following}
 \begin{itemize}
-\item Mettre en oeuvre l'algorithme de suivi de mur avec direction et vérifier qu'il démontre le comportement montré dans la Fig.~\ref{fig.wall-direction-bug}.
+\item Mettre en œuvre l'algorithme de suivi de mur avec direction et vérifier qu'il démontre le comportement montré dans la Fig.~\ref{fig.wall-direction-bug}.
 \item Exécuter l'algorithme de suivi de mur simple (Algorithm~\ref{alg.wall-following-simple}) avec un obstacle en forme de \emph{G}. Que se passe-t-il ? Cela affecte-t-il notre affirmation selon laquelle cet algorithme n'est pas adapté à l'évitement d'obstacles ?
 \end{itemize}
 \end{framed}
@@ -168,7 +168,7 @@ Malheureusement, l'algorithme peut échouer lorsqu'il est confronté à un obsta
 \subsection{L'algorithme de l'engagement}
 \index{suivi de mur!algorithme de gage}
 
-L'algorithme de gage modifie la ligne~8 de l'algorithme de suivi de mur en :
+L'algorithme de l'engagement modifie la ligne~8 de l'algorithme de suivi de mur en :
 \begin{quote}
 \normalsize \p{if heading $= 0^\circ$}
 \end{quote}
@@ -223,8 +223,8 @@ La navigation sans localisation continue peut être mise en œuvre en lisant un 
 \begin{framed}
 \act{Suivre une ligne tout en lisant un code}{line-coded}
 \begin{itemize}
-\item Mettre en oeuvre le suivi de ligne avec la lecture de code comme indiqué sur la Fig.~\ref{fig.code-line}.
-\item Ecrire un programme qui permet à un robot de suivre un chemin.
+\item Mettre en peut œuvre le suivi de ligne avec la lecture de code comme indiqué sur la Fig.~\ref{fig.code-line}.
+\item Écrire un programme qui permet à un robot de suivre un chemin.
 \item Placer des marques qui codent des valeurs à côté du chemin. Le robot doit afficher ces valeurs (à l'aide de la lumière, du son ou d'un écran) lorsqu'il se déplace sur les codes.
 \end{itemize}
 \end{framed}
@@ -318,7 +318,7 @@ La figure~\ref{fig.ant-nest-food} montre le nid des fourmis dans le coin inféri
 \end{minipage}
 \end{figure}
 
-Le comportement de la fourmi peut être mis en œuvre par un robot.\label{s.ant-like-algo} Supposons qu'il existe une zone fixe à l'intérieur de laquelle le robot peut se déplacer. Comme dans la Fig.~\ref{fig.ant-nest-food}, il y a une source de nourriture et un nid. La source de nourriture est représentée par un point sombre qui peut être facilement détecté par un capteur au sol du robot. Les capteurs de proximité du robot sont utilisés pour détecter les murs de la zone. \ref{act.locate-nest} propose deux méthodes de représentation du nid qui dépendent des capteurs supplémentaires dont dispose votre robot.
+Le comportement de la fourmi peut être mis en œuvre par un robot.\label{s.ant-like-algo} Supposons qu'il existe une zone fixe à l'intérieur de laquelle le robot peut se déplacer. Comme dans la Fig.~\ref{fig.ant-nest-food}, il y a une source de nourriture et un nid. La source de nourriture est représentée par un point sombre qui peut être facilement détecté par un capteur de sol du robot. Les capteurs de proximité du robot sont utilisés pour détecter les murs de la zone. \ref{act.locate-nest} propose deux méthodes de représentation du nid qui dépendent des capteurs supplémentaires dont dispose votre robot.
 
 \begin{framed}
 \act{Localiser le nid}{locate-nest}
@@ -329,7 +329,7 @@ Le comportement de la fourmi peut être mis en œuvre par un robot.\label{s.ant-
 \end{itemize}
 \end{framed}
 
-Simulez les phéromones en recouvrant la zone d'une feuille de papier blanc et en attachant un marqueur noir au robot de manière à ce qu'il trace une ligne partout où il se déplace. Un capteur au sol détecte les marques dans la zone. La figure~\ref{fig.ant-result} montre les lignes résultant du comportement d'un robot exécutant l'algorithme. L'activité~\ref{act.high-density} vous demande d'explorer la capacité du robot à détecter les zones présentant une forte densité de lignes.
+Simulez les phéromones en recouvrant la zone d'une feuille de papier blanc et en attachant un marqueur noir au robot de manière qu'il trace une ligne partout où il se déplace. Un capteur au sol détecte les marques dans la zone. La figure~\ref{fig.ant-result} montre les lignes résultant du comportement d'un robot exécutant l'algorithme. L'activité~\ref{act.high-density} vous demande d'explorer la capacité du robot à détecter les zones présentant une forte densité de lignes.
 
 \begin{figure}
 \begin{center}
@@ -341,7 +341,7 @@ Simulez les phéromones en recouvrant la zone d'une feuille de papier blanc et e
 \begin{framed}
 \act{Détection des zones de haute densité}{high-density}
 \begin{itemize}
-\item Dans la section \ref{s.no-gradient}, nous avons noté que les capteurs ne détectent pas un seul point géométrique mais ont plutôt une ouverture qui lit une zone relativement grande, peut-être même jusqu'à un centimètre carré (\ref{fig.no-gradient}). Faites des expériences avec votre capteur au sol pour voir comment les lectures renvoyées par le capteur dépendent de la largeur de la ligne. Pouvez-vous tirer une conclusion sur la largeur optimale du marqueur ? S'il est trop fin, la piste ne sera pas détectée et s'il est trop épais, les marques du mouvement aléatoire pourraient être prises pour la piste.
+\item Dans la section \ref{s.no-gradient}, nous avons noté que les capteurs ne détectent pas un seul point géométrique mais ont plutôt une ouverture qui lit une zone relativement grande, peut-être même jusqu'à un centimètre carré (\ref{fig.no-gradient}). Faites des expériences avec votre capteur de sol pour voir comment les lectures renvoyées par le capteur dépendent de la largeur de la ligne. Pouvez-vous tirer une conclusion sur la largeur optimale du marqueur ? S'il est trop fin, la piste ne sera pas détectée et s'il est trop épais, les marques du mouvement aléatoire pourraient être prises pour la piste.
 \item Représentez la source de nourriture comme une tache relativement grande et totalement noire et assurez-vous qu'elle donne une lecture minimale du capteur au sol.
 \item La figure~\ref{fig.ant-result} montre que la piste entre la source de nourriture et le nid a une densité élevée. Expérimentez avec différents nombres de lignes et définissez un seuil efficace entre la piste et les zones de mouvement aléatoire à l'extérieur de la piste. Voyez si vous pouvez faire en sorte que le robot trace des lignes plus foncées en variant son mouvement ou en se déplaçant d'avant en arrière le long de la piste.
 \end{itemize}
