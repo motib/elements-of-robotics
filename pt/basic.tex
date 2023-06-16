@@ -2,31 +2,31 @@
 
 \chapter{Robôs e suas aplicações}\label{ch.basic}
 
-Embora todos pareçam saber o que é um robô, é difícil dar uma definição precisa. O Oxford English Dictionary dá a seguinte definição: ``Uma máquina capaz de realizar automaticamente uma série complexa de ações, especialmente uma programável por um computador''. Esta definição inclui alguns elementos interessantes:
+Embora todos pareçam saber o que é um robô, é difícil dar uma definição precisa. Em tradução livre, a definição dada pelo \emph{Oxford English Dictionary} é: ``Uma máquina capaz de realizar automaticamente uma série complexa de ações, especialmente uma programável por computador''. Esta definição inclui alguns elementos interessantes:
 \begin{itemize}
-\item ``Atualização automática das ações''. Este é um elemento chave na robótica, mas também em muitas outras máquinas mais simples chamadas autômatos. A diferença entre um robô e um simples autômato como uma máquina de lavar louça está na definição do que é uma "série complexa de ações". A lavagem de roupas é ou não composta de uma série complexa de ações? Pilotar um avião em um piloto automático é uma ação complexa? Cozinhar pão é uma ação complexa? Para todas estas tarefas existem máquinas que estão na fronteira entre autômatos e robôs.
+\item ``Atualização automática das ações''. Este é um elemento chave na robótica, mas também em muitas outras máquinas mais simples chamadas autômatos. A diferença entre um robô e um simples autômato como uma máquina de lavar louça está na definição do que é uma "série complexa de ações". A lavagem de roupas é ou não composta de uma série complexa de ações? Pilotar um avião em um piloto automático é uma ação complexa? Fazer pão é uma ação complexa? Para todas estas tarefas existem máquinas que estão na fronteira entre autômatos e robôs.
 \item O item "Programável por computador" é outro elemento chave de um robô, pois alguns autômatos são programados mecanicamente e não são muito flexíveis. Por outro lado, os computadores são encontrados em todos os lugares, portanto é difícil utilizar este critério para distinguir um robô de outra máquina.
 \end{itemize}
 Um elemento crucial dos robôs que não é mencionado explicitamente na definição é o uso de sensores. A maioria dos autômatos não tem sensores e não podem adaptar suas ações ao seu ambiente. Os sensores são o que permite que um robô execute tarefas complexas. 
 
-Em Sects.~\ref{s.classification}--\ref{s.educational} deste capítulo introdutório, fazemos um pequeno levantamento dos diferentes tipos de robôs. A seção ~\ref{s.generic} descreve o robô genérico que usamos e a seção Sect.~\ref{s.alg-formalism} apresenta o pseudocódigo usado para formalizar os algoritmos. A seção~\ref{s.overview} dá uma visão detalhada do conteúdo do livro.
+Em Sects.~\ref{s.classification}--\ref{s.educational} deste capítulo introdutório fazemos um pequeno levantamento dos diferentes tipos de robôs. A seção ~\ref{s.generic} descreve o robô genérico que usamos e a seção Sect.~\ref{s.alg-formalism} apresenta o pseudocódigo usado para formalizar os algoritmos. A seção~\ref{s.overview} dá uma visão detalhada do conteúdo do livro.
 
-\section{Classificação dos robôs}\label{s.classification}
+\section{Classificação de Robôs}\label{s.classification}
 
-Os robôs podem ser classificados de acordo com o ambiente em que operam (Fig.~\ref{fig.classification1}). A distinção mais comum é entre os robôs de telefonia móvel e os robôs de telefonia móvel. Estes dois tipos de robôs têm ambientes de trabalho muito diferentes e, portanto, requerem capacidades muito diferentes. Os robôs fixos são em sua maioria manipuladores robóticos industriais que trabalham em ambientes bem definidos e adaptados para robôs. Os robôs industriais executam tarefas repetitivas específicas como soldagem ou pintura de peças em fábricas de automóveis. Com o aperfeiçoamento dos sensores e dispositivos para interação homem-robô, os manipuladores robóticos são cada vez mais utilizados em ambientes menos controlados, como cirurgia de alta precisão.
+Os robôs podem ser classificados de acordo com o ambiente em que operam (Fig.~\ref{fig.classification1}). A distinção mais comum é entre os robôs \emph{fixos} e \emph{móveis}. Estes dois tipos de robôs têm ambientes de trabalho muito diferentes e, portanto, requerem capacidades muito diferentes. Os robôs fixos são, em sua maioria, manipuladores robóticos industriais que trabalham em ambientes bem definidos e adaptados para robôs. Esses robôs industriais executam tarefas repetitivas específicas, como soldagem ou pintura de peças em fábricas de automóveis. Com o aperfeiçoamento dos sensores e dispositivos para interação homem-robô, os manipuladores robóticos são cada vez mais utilizados em ambientes menos controlados, como cirurgia de alta precisão.
 
 \begin{figure}
 \begin{center}
 % Classification of robots according to environment
 \begin{tikzpicture}[node distance = 4mm and 1cm]
-\node (robot) { \textsf{robot} };
+\node (robot) { \textsf{robô} };
 \node (fixed) [below right=of robot] { \textsf{fixo} };
 \node (mobile) [above right=of robot] { \textsf{móvel} };
 \node (water) [above right=of mobile] { \textsf{aquático} };
 \node (land) [right=of mobile] { \textsf{terrestre} };
-\node[xshift=-10pt] (air) [below right=of mobile] { \textsf{aerotransportado} };
-\node (wheeled) [above right=of land] { \textsf{rodado} };
-\node[xshift=10pt] (legged) [below right=of land] { \textsf{legged} };
+\node[xshift=-10pt] (air) [below right=of mobile] { \textsf{aéreo} };
+\node (wheeled) [above right=of land] { \textsf{a rodas} };
+\node[xshift=10pt] (legged) [below right=of land] { \textsf{a patas} };
 \draw (robot) -- (fixed);
 \draw (robot) -- (mobile);
 \draw (mobile) -- (water);
@@ -36,26 +36,26 @@ Os robôs podem ser classificados de acordo com o ambiente em que operam (Fig.~\
 \draw (land) -- (legged);
 \end{tikzpicture}
 \end{center}
-\caption{Classificação dos robôs por ambiente e mecanismo de interação}\label{fig.classification1}
+\caption{Classificação de robôs por ambiente e mecanismo de interação}\label{fig.classification1}
 \end{figure}
 
-Em contraste, espera-se que robôs móveis se movimentem e executem tarefas em ambientes grandes, mal definidos e incertos, que não são projetados especificamente para robôs. Eles precisam lidar com situações que não são precisamente conhecidas com antecedência e que mudam com o tempo. Tais ambientes podem incluir entidades imprevisíveis como seres humanos e animais. Exemplos de robôs móveis são os aspiradores de pó robotizados e os carros que se auto dirigem. 
+Em contraste, espera-se que robôs móveis se movimentem e executem tarefas em ambientes grandes, mal definidos e incertos, que não são projetados especificamente para robôs. Eles precisam lidar com situações que não são precisamente conhecidas com antecedência e que mudam com o tempo. Tais ambientes podem incluir entidades imprevisíveis como seres humanos e animais. Exemplos de robôs móveis são os aspiradores de pó robotizados e os veículos autônomos (carros que se auto dirigem). 
 
-Não há uma linha divisória clara entre as tarefas executadas por robôs fixos e móveis - os humanos podem interagir com robôs industriais e os robôs móveis podem ser constrangidos a se moverem em pistas - mas é conveniente considerar as duas classes como fundamentalmente diferentes. Em particular, os robôs fixos estão presos a um suporte estável no chão, de modo que podem calcular sua posição com base em seu estado interno, enquanto os robôs móveis precisam confiar em sua percepção do ambiente a fim de calcular sua localização.
+Não há uma linha divisória clara entre as tarefas executadas por robôs fixos e móveis - os humanos podem interagir com robôs industriais e os robôs móveis podem ser restringidos a se moverem em pistas - mas é conveniente considerar as duas classes como fundamentalmente diferentes. Em particular, os robôs fixos estão presos a um suporte estável no chão, de modo que podem calcular sua posição com base em seu estado interno, enquanto os robôs móveis precisam confiar em sua percepção do ambiente a fim de calcular sua localização.
 
-Existem três ambientes principais para robôs móveis que requerem princípios de projeto significativamente diferentes porque diferem no mecanismo de movimento: aquático (exploração submarina), terrestre (carros) e aéreo (zangões). Novamente, a classificação não é rigorosa, por exemplo, existem robôs anfíbios que se movimentam tanto na água quanto no solo. Os robôs para estes três ambientes podem ser ainda mais divididos em subclasses: robôs terrestres podem ter pernas ou rodas ou trilhos, e robôs aéreos podem ser mais leves que balões de ar ou aviões mais pesados que o ar, que por sua vez são divididos em asa fixa e asa rotativa (helicópteros).
+Existem três ambientes principais para robôs móveis que requerem princípios de projeto significativamente diferentes porque diferem no mecanismo de movimento: aquático (exploração submarina), terrestre (carros) e aéreo (\emph{drones}). Novamente, a classificação não é rigorosa; por exemplo, existem robôs anfíbios que se movimentam tanto na água quanto no solo. Os robôs para estes três ambientes podem ser ainda mais divididos em subclasses: robôs terrestres podem ter pernas ou rodas ou esteiras, e robôs aéreos podem ser balões mais leves que ar ou aviões mais pesados que o ar, que por sua vez são divididos em asa fixa e asa rotativa (helicópteros).
 
 \begin{figure}
 \begin{center}
 % Classification of robots according to task
 \begin{tikzpicture}[node distance = 6mm and 1cm]
-\node[text width=8mm,align=left] (robot) { \textsf{robot} };
+\node[text width=8mm,align=left] (robot) { \textsf{robô} };
 \node[text width=12mm,align=left] (industrial) [above right=of robot] { \textsf{industrial} };
 \node[text width=12mm,align=left] (service) [below right=of robot] {\textsf{serviço}};
 \node[text width=20mm,align=left] (logistics) [above right=of industrial] { \textsf{logística} };
 \node[text width=20mm,align=left] (manufacturing) [below=of logistics] { \textsf{fabricação} };
 \node[text width=20mm,align=left] (medical) [below=of manufacturing] { \textsf{médico} };
-\node[text width=20mm,align=left] (home) [below=of medical] { \textsf{home} };
+\node[text width=20mm,align=left] (home) [below=of medical] { \textsf{doméstico} };
 \node[text width=20mm,align=left] (education) [below=of home] { \textsf{educacional} };
 \node[text width=20mm,align=left] (military) [below=of education] {  \textsf{defesa}};
 %
@@ -69,12 +69,12 @@ Existem três ambientes principais para robôs móveis que requerem princípios 
 \draw (service.south east |- 0,-15mm) -- (military.north west);
 \end{tikzpicture}
 \end{center}
-\caption{Classificação dos robôs por campo de aplicação}\label{fig.classification2}
+\caption{Classificação de robôs por campo de aplicação}\label{fig.classification2}
 \end{figure}
 
-Os robôs podem ser classificados pelo campo de aplicação pretendido e pelas tarefas que executam (Fig.~\ref{fig.classification2}). Mencionamos os robôs industriais que trabalham em ambientes bem definidos nas tarefas de produção. Os primeiros robôs foram robôs industriais porque o ambiente bem definido simplificou seu projeto.  Os robôs de serviço, por outro lado, auxiliam os humanos em suas tarefas. Estes incluem tarefas em casa como limpeza a vácuo, transporte como carros de auto direção, e aplicações de defesa, como zangões de reconhecimento. A medicina também tem visto o uso crescente de robôs em cirurgia, reabilitação e treinamento. Estas são aplicações recentes que requerem sensores melhorados e uma interação mais próxima com o usuário.
+Robôs podem ser classificados pelo campo de aplicação pretendido e pelas tarefas que executam (Fig.~\ref{fig.classification2}). Mencionamos os robôs industriais que trabalham em ambientes bem definidos nas tarefas de produção. Os primeiros robôs foram robôs industriais porque o ambiente bem definido simplificou seu projeto. Robôs de serviço, por outro lado, auxiliam os humanos em suas tarefas. Estes incluem robôs que realizam tarefas domésticas (como aspiradores de pó robóticos), transporte (como veículos autônomos) e aplicações de defesa (como \emph{drones} de reconhecimento). A medicina também tem visto o uso crescente de robôs em cirurgia, reabilitação e treinamento. Estas são aplicações recentes que requerem sensores melhores e uma interação mais próxima com o usuário.
 
-\section{Robôs industriais}
+\section{Robôs Industriais}
 
 Os primeiros robôs foram robôs industriais que substituíram trabalhadores humanos executando tarefas simples e repetitivas. As linhas de montagem da fábrica podem operar sem a presença de humanos, em um ambiente bem definido onde o robô tem que executar tarefas em uma ordem especificada, atuando sobre objetos precisamente colocados à sua frente (Fig.~\ref{fig.assemblyline}). 
 
