@@ -270,31 +270,27 @@ O robô é um pequeno veículo autônomo com tração diferencial, ou seja, tem 
 
 A figura~\ref{fig.differential} mostra uma visão do robô de cima. A frente do robô é a curva para a direita, que é também a direção do movimento do robô para frente. As rodas (retângulos pretos) estão do lado esquerdo e direito da parte traseira do corpo do robô. O círculo negro representa o ponto sobre o eixo a meio caminho entre as rodas. Quando o robô gira, ele gira em torno de um eixo vertical sobre este ponto. Para estabilidade, em direção à frente do robô há um suporte ou roda não atuada.
 
-
-%%%%%%%%%%%%%%%%%%%%%% Parei aqui %%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \begin{quote}
 \begin{center}
 \textbf{Desenho Mecânico}
 \end{center}
-Uma linha quebrada é a notação padrão na engenharia mecânica para o eixo de simetria em um componente, como uma roda. Quando a visão lateral de uma roda é exibida, a intersecção dos dois eixos de simetria denota o eixo de rotação que é perpendicular ao plano da página. Para evitar a desordem dos diagramas, simplificamos a notação mostrando apenas linhas quebradas para um \emph{eixo de rotação} de um componente, como uma roda. Além disso, a intersecção denotando um eixo perpendicular é normalmente abreviada para uma cruz, possivelmente contida dentro da roda ou de seu eixo.
+Uma linha tracejada é a notação padrão na engenharia mecânica para o eixo de simetria em um componente, como uma roda. Quando a visão lateral de uma roda é exibida, a intersecção dos dois eixos de simetria denota o eixo de rotação que é perpendicular ao plano da página. Para evitar a desordem dos diagramas, simplificamos a notação mostrando apenas linhas quebradas para um \emph{eixo de rotação} de um componente, como uma roda. Além disso, a intersecção denotando um eixo perpendicular é normalmente abreviada para uma cruz, possivelmente contida dentro da roda ou de seu eixo.
 \end{quote}
 
-O acionamento diferencial tem várias vantagens: é simples, pois possui apenas dois motores sem componentes adicionais para a direção e permite que o robô gire no lugar. Em um carro, duas rodas são acionadas juntas (ou quatro rodas são acionadas em pares) e há um mecanismo complexo separado para direção chamado \emph{Ackermann steering}. Como um carro não pode virar no lugar, os motoristas devem realizar manobras complicadas como estacionamento paralelo; motoristas humanos aprendem prontamente a fazer isso, mas tais manobras são difíceis para um sistema autônomo. Um robô autônomo precisa realizar manobras intrincadas com movimentos muito simples, e é por isso que a tração diferencial é a configuração preferida: ele pode facilmente virar para qualquer direção e depois se mover nessa direção.
+O acionamento diferencial tem várias vantagens: é simples, pois possui apenas dois motores sem componentes adicionais para a direção e permite que o robô gire no lugar. Em um carro, duas rodas são acionadas juntas (ou quatro rodas são acionadas em pares) e há um mecanismo complexo separado para direção chamado \emph{direção Ackermann}. Como um carro não pode virar no lugar, os motoristas devem realizar manobras complicadas como estacionamento paralelo; motoristas humanos aprendem prontamente a fazer isso, mas tais manobras são difíceis para um sistema autônomo. Um robô autônomo precisa realizar manobras intrincadas com movimentos muito simples, e é por isso que a tração diferencial é a configuração preferida: ele pode facilmente virar para qualquer direção e depois se mover nessa direção.
 
-A principal desvantagem de um sistema de acionamento diferencial é que ele requer um terceiro ponto de contato com o solo, ao contrário de um carro que já tem quatro rodas para apoiá-lo e, portanto, pode se mover facilmente em terrenos difíceis. Outra desvantagem é que ele não pode dirigir lateralmente sem girar. Existem configurações que permitem que um robô se mova lateralmente (Sect.~\ref{s.holonomic}), mas elas são complexas e caras. O acionamento diferencial também é usado em veículos sobre esteiras, como equipamentos de terraplenagem e tanques militares. Estes veículos podem manobrar em terrenos extremamente acidentados, mas as pistas produzem muito atrito, de modo que o movimento é lento e não preciso.
+A principal desvantagem de um sistema de acionamento diferencial é que ele requer um terceiro ponto de contato com o solo, ao contrário de um carro que já tem quatro rodas para apoiá-lo e, portanto, pode mover-se facilmente em terrenos difíceis. Outra desvantagem é que ele não pode deslocar-se lateralmente sem girar. Existem configurações que permitem que um robô se mova lateralmente (Sect.~\ref{s.holonomic}), mas elas são complexas e caras. O acionamento diferencial também é usado em veículos sobre esteiras, como equipamentos de terraplenagem e tanques militares. Estes veículos podem manobrar em terrenos extremamente acidentados, mas as esteiras produzem muito atrito, de modo que o movimento é lento e não preciso.
 
 \begin{quote}
 \begin{center}
-\textbf{Ajuste de potência ou velocidade de ajuste}
+\textbf{Ajuste de Potência ou Ajuste de Velocidade}
 \end{center}
-A energia fornecida por um motor é regulada por um \emph{throttle}, tal como um pedal em um carro ou alavancas em um avião ou barco. Os motores elétricos usados em robôs móveis são controlados pela modificação da voltagem aplicada aos motores usando uma técnica chamada \emph{pulse width modulation}. Em muitos robôs educacionais, algoritmos de controle como os descritos no Cap.~\ref{ch.control}, são usados para garantir que os motores girem a uma velocidade {target especificada}. Como estamos interessados em conceitos e algoritmos para projetar robôs, iremos expressar algoritmos em termos de fornecimento de energia e lidar separadamente com o controle de velocidade.
+A potência fornecida por um motor é regulada por um \emph{"acelerador"}, tal como um pedal em um carro ou alavancas em um avião ou barco. Os motores elétricos usados em robôs móveis são controlados pela amplitude da tensão aplicada aos motores usando uma técnica chamada PWM, sigla em inglês para \emph{Modulação por Largura de Pulso}. Em muitos robôs educacionais, algoritmos de controle como os descritos no Cap.~\ref{ch.control}, são usados para garantir que os motores girem a uma velocidade {desejada especificada}. Como estamos interessados em conceitos e algoritmos para projetar robôs, iremos expressar algoritmos em termos de fornecimento de potência e lidar separadamente com o controle de velocidade.
 \end{quote}
 
-\subsection{Proximity sensors}
+\subsection{Sensores de Proximidade}
 
-O robô possui sensores de proximidade {sensor!proximidade} que podem detectar um objeto próximo ao robô. Existem muitas tecnologias que podem ser usadas para construir estes sensores, tais como infravermelho, laser, ultra-som; o robô genérico representa robôs que usam qualquer uma destas tecnologias. Nós especificamos que os sensores têm as seguintes capacidades: Um sensor de proximidade horizontal pode medir a distância (em centímetros) entre o robô e um objeto e o ângulo (em graus) entre a frente do robô e o objeto. A figura~\ref{fig.generic-sensor} mostra um objeto localizado a $3\,$ cm do centro do robô em um ângulo de $45^{\circ}$ da direção em que o robô está apontando.\footnote{Ver Apêndice~\ref{ch.units} sobre as convenções para medição de ângulos.}
+O robô possui sensores de proximidade horizontais que podem detectar um objeto próximo a ele. Existem muitas tecnologias que podem ser usadas para construir estes sensores, tais como infravermelho, laser, ultra-som; o robô genérico representa robôs que usam qualquer uma destas tecnologias. Nós especificamos que os sensores têm as seguintes capacidades: Um sensor de proximidade horizontal pode medir a distância (em centímetros) entre o robô e um objeto e o ângulo (em graus) entre a frente do robô e o objeto. A figura~\ref{fig.generic-sensor} mostra um objeto localizado a $3\,$ cm do centro do robô em um ângulo de $45^{\circ}$ da direção em que o robô está apontando.\footnote{Ver Apêndice~\ref{ch.units} sobre as convenções para medição de ângulos.}
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -313,7 +309,7 @@ O robô possui sensores de proximidade {sensor!proximidade} que podem detectar u
 \begin{tikzpicture}
 \pic[scale=1.2] at (0,0) { robot2 };
 \end{tikzpicture}
-\caption{Robô com dois sensores terrestres na parte inferior do robô (retângulos cinza)}
+\caption{Robô com dois sensores de solo na parte inferior do robô (retângulos cinza)}
 \label{fig.generic-ground}
 \end{minipage}
 \end{figure}
@@ -339,15 +335,15 @@ O robô possui sensores de proximidade {sensor!proximidade} que podem detectar u
 %\rightcaption{Robot with two ground sensors on the bottom of the robot (gray rectangles)}\label{fig.generic-ground}
 %\end{figure}
 
-Na prática, um robô educacional terá um pequeno número de sensores, portanto pode não ser capaz de detectar objetos em todas as direções. Além disso, os sensores baratos não serão capazes de detectar objetos que estão longe e suas medidas não serão precisas. As medições também serão afetadas por fatores ambientais como o tipo de objeto, a luz ambiente, e assim por diante. Para simplificar nossos algoritmos, não assumimos nenhuma limitação pré-definida, mas ao implementar os algoritmos, você terá que levar em conta as limitações.
+Na prática, um robô educacional terá um pequeno número de sensores, portanto pode não será capaz de detectar objetos em todas as direções. Além disso, os sensores baratos não serão capazes de detectar objetos que estão longe e suas medidas não serão precisas. As medições também serão afetadas por fatores ambientais como o tipo de objeto, a luz ambiente, e assim por diante. Para simplificar nossos algoritmos, não assumimos nenhuma limitação pré-definida, mas ao implementar os algoritmos, você terá que levar em conta tais limitações.
 
-\subsection{Sensores de terra}
+\subsection{Sensores de Solo}
 
-\emph{Os sensores de terra} são montados na parte inferior do robô. Como estes sensores estão muito próximos ao solo, não há significado de distância ou ângulo; em vez disso, o sensor mede o brilho da luz refletida do solo em valores arbitrários entre $0$ (totalmente escuro) e $100$ (totalmente claro). O robô genérico tem dois sensores de terra montados em direção à frente do robô (Fig.~\ref{fig.generic-ground}), embora às vezes apresentemos algoritmos que utilizam apenas um sensor. A figura mostra uma vista superior do robô, embora os sensores de terra estejam na parte inferior do robô.
+\emph{Os sensores de solo} são montados na parte inferior do robô. Como estes sensores estão muito próximos ao solo, não há significado de distância ou ângulo; em vez disso, o sensor mede o brilho da luz refletida do solo em valores arbitrários entre $0$ (totalmente escuro) e $100$ (totalmente claro). O robô genérico tem dois sensores de solo montados em sua parte frontal inferior (Fig.~\ref{fig.generic-ground}), embora às vezes apresentemos algoritmos que utilizam apenas um sensor. A figura mostra uma vista superior do robô, embora os sensores de solo estejam na parte inferior do mesmo.
 
-\subsection{Computador embutido}\label{s.embedded}
+\subsection{Computador Embarcado}\label{s.embedded}
 
-O robô é equipado com um \emph{computador embutido} (Fig.~\ref{fig.computer}). A especificação precisa do computador não é importante, mas nós assumimos certas capacidades. O computador pode ler os valores dos sensores e definir a potência dos motores. Há uma maneira de exibir informações em uma pequena tela ou usando luzes coloridas. Os sinais e dados podem ser inseridos no computador usando botões, um teclado ou um controle remoto.
+O robô é equipado com um \emph{computador embarcado} (Fig.~\ref{fig.computer}). A especificação precisa do computador não é importante, mas nós assumimos certas capacidades. O computador pode ler os valores dos sensores e definir a potência dos motores. Há uma maneira de exibir informações em uma pequena tela ou usando luzes coloridas. Os sinais e dados podem ser inseridos no computador usando botões, um teclado ou um controle remoto.
 
 \begin{figure}
 \begin{center}
@@ -368,32 +364,32 @@ O robô é equipado com um \emph{computador embutido} (Fig.~\ref{fig.computer}).
 \draw[->] (2,.5) -- (3.2,.5);
 \draw[->] (2,-.5) -- (3.2,-.5);
 \end{tikzpicture}
-\caption{Computador embutido}\label{fig.computer}
+\caption{Computador embarcado}\label{fig.computer}
 \end{center}
 \end{figure}
 
-Os dados são introduzidos no computador por \emph{events} como, por exemplo, o toque de um botão. A ocorrência de um evento provoca a execução de um procedimento chamado de \emph{gerenciador de eventos}. O evento pode ser detectado pelo hardware, em cujo caso o termo \emph{interrupt} é usado, ou pode ser detectado pelo software, geralmente, por \emph{polling}, onde o sistema operacional verifica a existência de eventos em intervalos predefinidos. Quando o manipulador de eventos termina, o cálculo anterior é reiniciado.
+Os dados são introduzidos no computador por \emph{eventos} como, por exemplo, o toque de um botão. A ocorrência de um evento provoca a execução de um procedimento chamado de \emph{gerenciador de eventos}. O evento pode ser detectado pelo hardware, em cujo caso o termo \emph{interrupção} é usado, ou pode ser detectado pelo software, geralmente, por amostragem (em inglês, \emph{polling}), onde o sistema operacional verifica a existência de eventos em intervalos pré-definidos. Quando a tarefa do gerenciador de eventos é encerrada, a execução do programa principal é retomada.
 
-Os manipuladores de eventos são diferentes dos programas seqüenciais que têm uma instrução inicial que insere dados e uma instrução final que exibe a saída, porque os manipuladores de eventos são executados em resposta a eventos imprevisíveis. O tratamento de eventos é usado para implementar interfaces gráficas de usuário em computadores e smartphones: ao clicar ou tocar em um ícone, um manipulador de eventos é executado. Em um robô, um evento pode ser uma entrada discreta como tocar uma tecla. Os eventos também podem ocorrer quando um valor contínuo como o valor lido por um sensor vai acima ou abaixo de um valor pré-definido chamado \emph{threshold}.
+Os gerenciadores de eventos são diferentes dos programas sequenciais que têm uma instrução inicial que insere dados e uma instrução final que exibe a saída, porque os gerenciadores de eventos são executados em resposta a eventos imprevisíveis. O tratamento de interrupções através do gerenciador de eventos é usado para implementar interfaces gráficas de usuário em computadores e smartphones: ao clicar ou tocar em um ícone, um gerenciador de eventos é executado. Em um robô, um evento pode ser uma entrada discreta como tocar uma tecla. Eventos também podem ocorrer quando um valor contínuo como o valor lido por um sensor ultrapassa um limite pré-definido, em inglês chamado de \emph{threshold}.
 
-O computador inclui um \emph{temer} que funciona como um cronômetro em um smartphone. Um temporizador é uma variável que é \emph{set} para um período de tempo, por exemplo, $0,5$ segundo, que é representado como um número inteiro de milissegundos ou microssegundos ($0,5$ segundo é $500$ milissegundos). O relógio de hardware do computador causa uma interrupção em intervalos fixos e o sistema operacional decreta o valor do temporizador. Quando seu valor chega a zero, dizemos que o temporizador tem \emph{expirado}; ocorre uma interrupção.
+O computador inclui um \emph{temporizador} que funciona como um cronômetro em um smartphone. Um temporizador é uma variável que é \emph{ajustada} para um período de tempo, por exemplo, $0,5$ segundo, que é representado como um número inteiro de milissegundos ou microssegundos ($0,5$ segundo é igual a $500$ milissegundos). O relógio de hardware do computador causa uma interrupção em intervalos fixos e o sistema operacional decrementa o valor do temporizador. Quando seu valor chega a zero, dizemos que o temporizador \emph{expirou}; ocorre uma interrupção.
 
-Os temporizadores são usados para implementar eventos repetidos como acender e apagar uma luz. Eles também são usados para \emph{polling}, uma alternativa aos manipuladores de eventos: em vez de realizar um cálculo quando um evento ocorre, os sensores são lidos e armazenados periodicamente. Mais precisamente, a sondagem ocorre como um manipulador de eventos quando um timer expira, mas o projeto de software usando sondagem pode ser bem diferente do projeto de software baseado em eventos.
+Os temporizadores são usados para implementar eventos que se repetem, como piscar uma luz. Eles também são usados para realizar a amostragem de sinais (\emph{polling}), uma alternativa aos gerenciadores de eventos: em vez de realizar um cálculo quando um evento ocorre, os sensores são lidos periodicamente. Mais precisamente, a amostragem ocorre como um gerenciador de eventos quando um timer expira, mas o projeto de software usando amostragem pode ser bem diferente do projeto de software baseado em eventos.
 
-\section{O formalismo algorítmico}\label{s.alg-formalism}
+\section{O Formalismo Algorítmico}\label{s.alg-formalism}
 
-Algoritmos que são implementados como programas de computador são usados pelo computador incorporado para controlar o comportamento do robô. Não fornecemos programas em nenhuma linguagem de programação específica; em vez disso, os algoritmos são apresentados em \emph{pseudocode}, um formato estruturado usando uma combinação de linguagem natural, matemática e estruturas de programação. Algoritmo~\ref{alg.integer-mult} é um algoritmo simples para multiplicação de números inteiros usando adição repetida. A entrada do algoritmo é um par de números inteiros e a saída é o produto dos dois valores de entrada. O algoritmo declara três variáveis inteiras \p{x}, \p{a}, \p{b}. Há cinco afirmações na parte executável. A indicação é usada (como na linguagem de programação Python) para indicar o escopo do laço. Uma seta é usada para atribuição, para que os símbolos familiares $=$ e $\neq$ possam ser usados para igualdade e desigualdade nas fórmulas matemáticas.\footnote{Muitas linguagens de programação usam \texttt{}{=} para atribuição e depois \texttt{==} para igualdade e \texttt{!=} para desigualdade. Isto é confuso porque a igualdade $x=y$ é simétrica, mas a atribuição não é \texttt{x=x+1}. Preferimos manter a notação matemática.}
+Algoritmos que são implementados como programas de computador são usados pelo computador embarcado para controlar o comportamento do robô. Não fornecemos programas em nenhuma linguagem de programação específica; em vez disso, os algoritmos são apresentados em \emph{pseudo-código}\footnote{N. do T.: Preferimos não traduzir os nomes de variáveis nem os comandos usados nos pseudo-códigos para o português já que os termos em inglês guardam semelhança com os comandos de linguagens de programação de alto nível e os códigos-exemplo disponíveis.}, um formato estruturado usando uma combinação de linguagem natural, matemática e estruturas de programação. O algoritmo~\ref{alg.integer-mult} é um algoritmo simples para multiplicação de números inteiros usando adição repetida. A entrada do algoritmo é um par de números inteiros e a saída é o produto dos dois valores de entrada. O algoritmo declara três variáveis inteiras \p{x}, \p{a}, \p{b}. Há cinco declarações na parte executável. Um recuo (ou indentação) é usado para indicar o escopo do laço (como na linguagem de programação Python). Uma seta é usada para indicar atribuição, para que os símbolos familiares $=$ e $\neq$ possam ser usados para igualdade e desigualdade nas fórmulas matemáticas.\footnote{Muitas linguagens de programação usam \texttt{=} para atribuição, \texttt{==} para testar igualdade e \texttt{!=} para testar desigualdade. Isto é confuso porque a igualdade $x=y$ é simétrica, mas a atribuição não é \texttt{x=x+1}. Preferimos manter a notação matemática.}
 
 \begin{figure}
 \begin{alg}{Multiplicação inteira}{integer-mult}           
 &\idv{}integer x \ass 0&\\
 &\idv{}integer a, b&\\
 \hline
-\stl{}&a \ass input an integer&\\
-\stl{}&b \ass input a non-negative integer&\\
+\stl{}&a \ass entrada de um inteiro&\\
+\stl{}&b \ass entrada de um inteiro não negativo&\\
 \stl{}&while b $\neq$ 0&\\
-\stl{}&\idc{} x \ass x $+$ a&// Add the value a to x\\
-\stl{}&\idc{} b \ass b $-$ 1&// \ \ for each b\\
+\stl{}&\idc{} x \ass x $+$ a&// Soma o valor de a com x\\
+\stl{}&\idc{} b \ass b $-$ 1&// \ \ para cada b\\
 \end{alg}
 \end{figure}
 
@@ -405,11 +401,18 @@ A potência do motor é definida usando declarações de atribuição:
 
 Definimos nossos sensores de proximidade como retornando a distância a um objeto detectado e seu ângulo em relação à direção dianteira do robô, mas muitas vezes será mais conveniente usar expressões de linguagem natural como, por exemplo
 \begin{quote}
-\p{when object detected in front}\\
-\p{when object not detected in back}
+\p{when object detected in front (quando objeto detectado em frente)}\\
+\p{when object not detected in back (quando objeto não detectado a trás)}
 \end{quote}
 
-\section{Uma visão geral do conteúdo do livro}\label{s.overview}
+\section{Uma Visão Geral do Conteúdo do Livro}\label{s.overview}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% Parei aqui %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 
 Os primeiros seis capítulos formam o núcleo dos conceitos e algoritmos de robótica.
 \begin{description}
