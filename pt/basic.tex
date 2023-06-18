@@ -118,6 +118,8 @@ A ficção científica e os meios de comunicação de massa gostam de representa
 
 Robôs humanóides são uma forma de robô móvel autônomo com um projeto mecânico extremamente complexo para mover os braços e para a locomoção por pernas. Os robôs humanóides são usados para pesquisas sobre a mecânica do caminhar e a interação homem-máquina. Robôs humanóides foram propostos para realizar serviços e manutenção em uma casa ou em uma estação espacial. Eles estão sendo considerados para prestar cuidados a idosos que possam se sentir ansiosos na presença de uma máquina que não pareça humana. Por outro lado, robôs que se parecem muito aos humanos podem gerar repulsão, um fenômeno chamado de \emph{uncanny valley}.
 
+\enlargethispage{\baselineskip}
+
 Os robôs humanóides podem ser muito difíceis de projetar e controlar. Eles são caros para construir com múltiplas articulações que podem se mover de muitas maneiras diferentes. Robôs que utilizam rodas ou esteiras são preferidos para a maioria das aplicações porque são mais simples, baratos e robustos.
 
 \section{Robôs Educacionais}\label{s.educational}
@@ -146,23 +148,6 @@ Muitos robôs educacionais são projetados como robôs móveis pré-montados. A 
 \end{minipage}
 \end{figure}
 
-%
-%
-%\begin{figure}
-%\subfigures
-%\begin{minipage}{\textwidth}
-%\leftfigure{
-%\includegraphics[width=.45\textwidth]{thymio}
-%}
-%\hspace{\fill}
-%\rightfigure{
-%\includegraphics[width=.45\textwidth]{dash}
-%}
-%\leftcaption{Thymio robot. Source: https://www.thymio.org/en:mediakit by permission of \'{E}cole Polytechnique F\'{e}d\'{e}rale de Lausanne and \'{E}cole Cantonale d'Art de Lausanne.}\label{fig.thymio}
-%\rightcaption{Dash robot. Source: https://www.makewonder.com/mediakit by permission of Wonder Workshop.}\label{fig.dash}
-%\end{minipage}
-%\end{figure}
-%
 \smallskip
 
 \noindent\textbf{Kits de Robótica}
@@ -188,22 +173,6 @@ Uma tendência recente é a de substituir coleções fixas de blocos por peças 
 \label{fig.poppy}
 \end{minipage}
 \end{figure}
-
-
-%\begin{figure}
-%\subfigures
-%\begin{minipage}{\textwidth}
-%\leftfigure{
-%\includegraphics[width=.4\textwidth]{lego}
-%}
-%\hspace{\fill}
-%\rightfigure{
-%\hspace*{-8mm}\includegraphics[width=.55\textwidth]{ErgoJr.jpg}
-%}
-%\end{minipage}
-%\leftcaption{\lego{} Mindstorms EV3 (Courtesy of Adi Shmorak, Intelitek)}\label{fig.lego}
-%\rightcaption{Poppy Ergo Jr robotic arms (Courtesy of the Poppy Project)}\label{fig.poppy}
-%\end{figure}
 
 \smallskip
 
@@ -257,8 +226,8 @@ O robô é um pequeno veículo autônomo com tração diferencial, ou seja, tem 
 \begin{tikzpicture}[scale=1.2]
 \pic[scale=1.5] at (0,0) { robot };
 \draw[densely dotted,thick] (12mm,0) circle[radius=6pt];
-\draw[->] (16mm,10mm) node[right] {\p{support (on the bottom of the robot)}} -- (13mm,3mm);
-\draw[->,thick] (20mm,0) -- node[below] {\p{forward} } +(18mm,0);
+\draw[->] (16mm,10mm) node[right] {\p{suporte (na parte inferior do robô)}} -- (13mm,3mm);
+\draw[->,thick] (20mm,0) -- node[below] {\p{avançar} } +(18mm,0);
 \draw[raxis] (0,0) -- (0,15mm);
 \draw[raxis] (0,0) -- (0,-15mm);
 \draw[raxis] (0,0) -- (11pt,0);
@@ -296,7 +265,7 @@ O robô possui sensores de proximidade horizontais que podem detectar um objeto 
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
 \pic[scale=1.2] at (0,0) { robot };
-\draw[->] (0,0) -- node[sloped,above] {$3\,$cm} (45:2.5cm) node[above right=-4pt] {$\bullet$};
+\draw[->] (0,0) -- node[sloped,above,near end] {$3\,$cm} (45:2.5cm) node[above right=-4pt] {$\bullet$};
 \draw[dashed] (0,0) node[above,xshift=20pt] {$45^{\circ}$}-- (2.5,0);
 \draw (10pt,0) arc [start angle=0, end angle=45, radius=10pt];
 \fill[gray] (0,0) circle[radius=4pt];
@@ -433,6 +402,8 @@ Um robô móvel autônomo deve de alguma forma navegar de uma posição inicial 
 
 \item [\textbf{Capítulo \ref{ch.map-based} Navegação com base em Mapeamento}] Agora que o robô tem um mapa, suponha que lhe seja atribuída uma tarefa que requeira que ele passe de uma posição inicial para uma posição desejada. Que rota ele deve tomar? Este capítulo apresenta dois algoritmos para o planejamento do caminho: O algoritmo de Dijkstra, um algoritmo clássico para encontrar o caminho mais curto em um grafo, e o algoritmo \astar{}, uma versão mais eficiente do algoritmo de Dijkstra que usa informações heurísticas.
 \end{description}
+
+\enlargethispage{\baselineskip}
 
 Os capítulos seguintes apresentam tópicos avançados em robótica. Eles são independentes uns dos outros para que você possa selecionar quais deles estudar e em que ordem.
 \begin{description}
