@@ -172,37 +172,6 @@ Antes de explicar como funciona um \emph{sensor por triangulação}, temos de en
 \end{minipage}
 \end{figure}
 
-%\begin{figure}
-%\subfigures
-%\begin{minipage}{\textwidth}
-%\leftfigure[c]{
-%\begin{tikzpicture}
-%\draw(5,0) arc[start angle=270, end angle=90, radius=8mm];
-%\begin{scope}[rotate=-15,xshift=-6mm,yshift=10mm]
-%\node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm,transform shape] (laser) at (0,8mm) {\p{Laser}};
-%\node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=4mm,transform shape] (tip) [right=of laser] {};
-%\end{scope}
-%\draw(tip.east) -- ++(-15:28.5mm) -- +(195:30mm);
-%\end{tikzpicture}
-%}
-%\hspace{\fill}
-%\rightfigure[c]{
-%\begin{tikzpicture}
-%\draw(5,0) arc[start angle=270, end angle=90, radius=8mm];
-%\begin{scope}[rotate=-15,xshift=-6mm,yshift=10mm]
-%\node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm,transform shape] (laser) at (0,8mm) {\p{Laser}};
-%\node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=4mm,transform shape] (tip) [right=of laser] {};
-%\end{scope}
-%\draw(tip.east) -- ++(-15:28.5mm) coordinate (reflect) -- +(195:10mm);
-%\foreach \angle in {120,135,150,180,210,225}
-%  \draw(reflect) -- +(\angle:10mm);
-%\end{tikzpicture}
-%}
-%\leftcaption{Specular reflection\label{fig.reflect-left}}
-%\rightcaption{Diffuse reflection\label{fig.reflect-right}}
-%\end{minipage}
-%\end{figure}
-
 As figuras~\ref{fig.triangulation-left}--\ref{fig.triangulation-right} mostram um sensor por triangulação simplificado que detecta um objeto a duas distâncias. O sensor consiste de um emissor laser e, a uma distância $d$, uma lente que focaliza a luz recebida em um conjunto de sensores colocados a uma distância de $l$ atrás da lente. Assumindo que o objeto reflete a luz difusa, parte da luz será coletada pela lente e focalizada nos sensores. A distância $d'$ ao longo do conjunto de sensores é inversamente proporcional à distância $s$ do objeto em relação ao emissor laser.
 
 Os triângulos de $d$ e os triângulos de $d'$ são semelhantes, portanto, temos a fórmula:
@@ -225,7 +194,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
   \draw(10mm,\y) circle[radius=1mm];
 \draw(11mm,4mm) node {\p{Matriz de detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (70mm,32mm) {};
-\draw(66mm,22mm) node {\p{Objeto}};
+\draw(70mm,22mm) node {\p{Objeto}};
 % Triangles
 \draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
 \draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
@@ -236,7 +205,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \fill(lens.center) circle[radius=.8pt];
 \fill(sensor) circle[radius=.8pt];
 \fill(sensor1) circle[radius=.8pt];
-\node at (48mm,24mm) {$s'$};
+\node at (48mm,22mm) {$s'$};
 \node at (18mm,14mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto distante}\label{fig.triangulation-left}
@@ -253,7 +222,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
   \draw(10mm,\y) circle[radius=1mm];
 \draw(11mm,4mm) node {\p{Matriz de detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (50mm,32mm) {};
-\draw(46.5mm,22mm) node {\p{Objeto}};
+\draw(50mm,22mm) node {\p{Objeto}};
 % Triangles
 \draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
 \draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
@@ -264,73 +233,12 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \fill(lens.center) circle[radius=.8pt];
 \fill(sensor) circle[radius=.8pt];
 \fill(sensor1) circle[radius=.8pt];
-\node at (38mm,24mm) {$s'$};
-\node at (18mm,14mm) {$l'$};
+\node at (38mm,23mm) {$s'$};
+\node at (18mm,13mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto próximo}\label{fig.triangulation-right}
 \end{minipage}
 \end{figure}
-
-%\begin{figure}
-%\subfigures
-%\begin{minipage}{\textwidth}
-%\leftfigure[c]{
-%\begin{tikzpicture}[scale=.9]
-%\draw(0,0) rectangle +(3,4);
-%\node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
-%\node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=2.4mm] (tip) [right=of laser] {};
-%\draw(26mm,20mm) coordinate (lens) ellipse [x radius=2mm, y radius=4mm];
-%\draw(26mm,14mm) node {\p{Lens}};
-%\foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
-%  \draw(10mm,\y) circle[radius=1mm];
-%\draw(11mm,4mm) node {\p{Detector array}};
-%\node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (70mm,32mm) {};
-%\draw(66mm,25mm) node {\p{Object}};
-%% Triangles
-%\draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
-%\draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
-%\draw[blue,thick] (sensor) -- node[left,black] {$d'$} ($ (object.west) ! 1.373 ! (lens.center) $) coordinate (sensor1);
-%\draw[densely dashed,thick,green!60!black] (tip.east) -- node[above,black] {$s$} (object.west);
-%\draw[red,thick] (object.west) -- ($ (object.west) ! 1.373 ! (lens.center) $) coordinate (sensor1);
-%\fill(tip.east) circle[radius=.8pt];
-%\fill(lens.center) circle[radius=.8pt];
-%\fill(sensor) circle[radius=.8pt];
-%\fill(sensor1) circle[radius=.8pt];
-%\node at (48mm,24mm) {$s'$};
-%\node at (18mm,14mm) {$l'$};
-%\end{tikzpicture}
-%}
-%\hspace{\fill}
-%\rightfigure[c]{
-%\begin{tikzpicture}[scale=.9]
-%\draw(0,0) rectangle +(3,4);
-%\node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
-%\node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=2.4mm] (tip) [right=of laser] {};
-%\draw(26mm,20mm) coordinate (lens) ellipse [x radius=2mm, y radius=4mm];
-%\draw(26mm,14mm) node {\p{Lens}};
-%\foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
-%  \draw(10mm,\y) circle[radius=1mm];
-%\draw(11mm,4mm) node {\p{Detector array}};
-%\node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (50mm,32mm) {};
-%\draw(46.5mm,25mm) node {\p{Object}};
-%% Triangles
-%\draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
-%\draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
-%\draw[blue,thick] (sensor) -- node[left,black] {$d'$} ($ (object.west) ! 1.7 ! (lens.center) $) coordinate (sensor1);
-%\draw[densely dashed,thick,green!60!black] (tip.east) -- node[above,black] {$s$} (object.west);
-%\draw[red,thick] (object.west) -- ($ (object.west) ! 1.7 ! (lens.center) $) coordinate (sensor1);
-%\fill(tip.east) circle[radius=.8pt];
-%\fill(lens.center) circle[radius=.8pt];
-%\fill(sensor) circle[radius=.8pt];
-%\fill(sensor1) circle[radius=.8pt];
-%\node at (38mm,24mm) {$s'$};
-%\node at (18mm,14mm) {$l'$};
-%\end{tikzpicture}
-%}
-%\leftcaption{Triangulation of a far object\label{fig.triangulation-left}}
-%\rightcaption{Triangulation of a near object\label{fig.triangulation-right}}
-%\end{minipage}
-%\end{figure}
 
 
 \subsection{Scanner a Laser}
@@ -372,44 +280,7 @@ Quando sensores de ultrassom ou proximidade são usados, um pequeno número de s
 \end{minipage}
 \end{figure}
 
-
-%\begin{figure}
-%\subfigures
-%\leftfigure{
-%\begin{tikzpicture}
-%\draw pic { robot };
-%\draw[fill,blue] (10mm,5mm) circle[radius=2pt];
-%\draw[thin,blue] (10mm,5mm) -- +(45:10mm);
-%\draw[thin,blue] (10mm,5mm) -- +(-15:10mm);
-%\draw[fill,blue] (10mm,-5mm) circle[radius=2pt];
-%\draw[thin,blue] (10mm,-5mm) -- +(15:10mm);
-%\draw[thin,blue] (10mm,-5mm) -- +(-45:10mm);
-%\draw[fill,blue] (11mm,0mm) circle[radius=2pt];
-%\draw[thin,blue] (11mm,0mm) -- +(30:10mm);
-%\draw[thin,blue] (11mm,0mm) -- +(-30:10mm);
-%\draw[fill,blue] (-2mm,5mm) circle[radius=2pt];
-%\draw[thin,blue] (-2mm,5mm) -- +(140:10mm);
-%\draw[thin,blue] (-2mm,5mm) -- +(200:10mm);
-%\draw[fill,blue] (-2mm,-5mm) circle[radius=2pt];
-%\draw[thin,blue] (-2mm,-5mm) -- +(160:10mm);
-%\draw[thin,blue] (-2mm,-5mm) -- +(220:10mm);
-%\end{tikzpicture}
-%}
-%\hspace{\fill}
-%\rightfigure{
-%\begin{tikzpicture}[->]
-%\draw pic { robot };
-%\draw[dashed] (0,0) -- (2,0);
-%\draw (0,0) -- (150:2);
-%\draw[dashed] (.4,0) arc [start angle=0, end angle=150, radius=.4];
-%\draw[fill,blue] (0,0) circle[radius=2pt];
-%\end{tikzpicture}
-%}
-%\leftcaption{Five separate sensors\label{fig.separate-sensors}}
-%\rightcaption{A rotating sensor\label{fig.rotating-sensor}}
-%\end{figure}
-
-Com um sensor laser a largura do feixe é tão pequena que seria necessário um grande número de lasers (caros) para detectar objetos em qualquer ângulo. Uma alternativa interessante  é montar um único sensor laser em um eixo rotativo para formar um \emph{scanner a laser} (Fig.~\ref{fig.rotating-sensor}). Um sensor angular pode ser usado para determinar o ângulo no qual um objeto é detectado. Alternativamente, o computador pode medir o período de tempo após o sensor rotativo passar uma direção fixa. Uma rotação completa de $360^{circ}$ permite que um scanner laser gere um perfil dos objetos no ambiente (Fig.~\ref{fig.laser-scanner}).
+Com um sensor laser a largura do feixe é tão pequena que seria necessário um grande número de lasers (caros) para detectar objetos em qualquer ângulo. Uma alternativa interessante  é montar um único sensor laser em um eixo rotativo para formar um \emph{scanner a laser} (Fig.~\ref{fig.rotating-sensor}). Um sensor angular pode ser usado para determinar o ângulo no qual um objeto é detectado. Alternativamente, o computador pode medir o período de tempo após o sensor rotativo passar uma direção fixa. Uma rotação completa de $360^\circ{}$ permite que um scanner laser gere um perfil dos objetos no ambiente (Fig.~\ref{fig.laser-scanner}).
 
 \begin{figure}
 \begin{center}
@@ -495,9 +366,9 @@ Um \emph{acelerômetro} mede a aceleração. O uso primário de acelerômetros �
 \draw (0,0,0) -- (2,0,0);
 \draw (2.3,0,0) arc [start angle=0, end angle=270, radius=3mm];
 \path (0,-16mm) -- +(0,1mm);  % So arrow doesn't get chopped
-\node at (1,2) {\textsf{inclinação (\emph{pitch})}};
-\node at (3,0) {\textsf{rotação (\emph{roll})}};
-\node at (-2,-1) {\textsf{guinada (\emph{yaw})}};
+\node at (1.8,1.9) {\textsf{inclinação (\emph{pitch})}};
+\node at (3.4,0) {\textsf{rotação (\emph{roll})}};
+\node at (-2.8,-1) {\textsf{guinada (\emph{yaw})}};
 \end{tikzpicture}
 \caption{Acelerômetro de três eixos}\label{fig.accel}
 \end{center}
@@ -577,7 +448,7 @@ Se um sensor de distância horizontal for \emph{linear}, há um mapeamento $x = 
 
 Vamos computar a inclinação e a interceptação:
 \[
-\mathit{inclinação} = \frac{\Delta x}{\Delta s} = \frac{0-100}{30-2}=-3.57\,,
+\textit{inclinação} = \frac{\Delta x}{\Delta s} = \frac{0-100}{30-2}=-3.57\,,
 \]
 onde $s=30$, $x=0=-3,57\cdot 30+b$, então $b=107$ e $x = -3,57 s + 107$. Resolver para $s$ dá uma função que o computador do robô pode usar para mapear um valor do sensor para a distância correspondente:
 \[
