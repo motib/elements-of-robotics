@@ -545,17 +545,6 @@ Muito frequentemente um sensor terá uma alta resolução, mas baixa precisão; 
 \end{itemize}
 \end{framed}
 
-
-
-%----------------------------------------------------------
-%-------------------- Parei aqui --------------------------
-%----------------------------------------------------------
-
-
-
-
-
-
 \section{Não-linearidade}\label{s.nonlinearity}
 
 Muitos sensores retornam grandezas eletrônicas como potencial ou corrente, que são proporcionais ao que está sendo medido. Tais valores analógicos são convertidos em valores digitais. Por exemplo, um sensor de proximidade pode retornar $8$ bits de dados (valores entre $0$ e $255$) que representam um intervalo de distâncias, talvez de $0$ a $50$ cm. Um sensor de $8$ bits não pode sequer retornar ângulos na faixa de $0^{\circ}$--$360^{\circ}$ com uma resolução de um grau. O computador deve traduzir os valores digitais em medidas de uma quantidade física. O mapeamento para realizar esta tradução é chamada de \emph{calibração}. No melhor caso, o mapeamento será linear e fácil de calcular; se não, se o mapeamento for não-linear, uma tabela ou função não-linear deve ser usada. As tabelas são mais eficientes porque busca em tabela é mais rápido do que o cálculo de uma função, mas tabelas requerem muita memória.
