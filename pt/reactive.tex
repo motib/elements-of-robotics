@@ -184,11 +184,13 @@ Algorithm~\ref{alg.paranoid} implementa esse comportamento.
 
 \begin{alg}{Paranóico}{paranoid}
 \hline
-\stl{}&when object detected in front&// Quando um objeto é detectado à frente\\
+\stl{}&when object detected in front&// Quando um objeto é\\
+&&//\idc{}detectado à frente\\
 \stl{}&\idc{} left-motor-power \ass $100$&\\
 \stl{}&\idc{} right-motor-power \ass $100$&\\
 \stl{}&&\\
-\stl{}&when object not detected in front&// Quando nenhum objeto é detectado à frente\\
+\stl{}&when object not detected in front&// Quando nenhum objeto\\
+&&// \idc{}é detectado à frente\\
 \stl{}&\idc{} left-motor-power \ass $-50$&// Motor esquerdo gira para trás\\
 \stl{}&\idc{} right-motor-power \ass $50$&// Motor direito gira para frente\\
 \end{alg}
@@ -294,19 +296,23 @@ Algorithm~\ref{alg.line-two} formaliza a descrição apresentada anteriormente.
 \begin{figure}
 \begin{alg}{Seguimento de linha com dois sensores}{line-two}
 \hline
-\stl{}&when both sensors detect black&// Quando ambos sensores detectam preto (linha)\\
+\stl{}&when both sensors detect black&// Quando ambos sensores\\
+&&//\idc{}detectam preto (linha)\\
 \stl{}&\idc{} left-motor-power \ass $100$&\\
 \stl{}&\idc{} right-motor-power \ass $100$&\\
 \stl{}&&\\
-\stl{}&when neither sensor detects black&// Quando nenhum sensor detecta preto\\
+\stl{}&when neither sensor detects black&// Quando nenhum sensor\\
+&&//\idc{}detecta preto\\
 \stl{}&\idc{} left-motor-power \ass $0$&\\
 \stl{}&\idc{} right-motor-power \ass $0$&\\
 \stl{}&&\\
-\stl{}&when only the left sensor detects black&// Quando apenas o sensor esquerdo detecta preto\\
+\stl{}&when only the left sensor detects black&// Quando apenas o sensor\\
+&&//\idc{}esquerdo detecta preto\\
 \stl{}&\idc{} left-motor-power \ass $0$&\\
 \stl{}&\idc{} right-motor-power \ass $50$&\\
 \stl{}&&\\
-\stl{}&when only the right sensor detects black&// Quando apenas o sensor direito detecta preto\\
+\stl{}&when only the right sensor detects black&// Quando apenas o sensor\\
+&&//\idc{}direito detecta preto\\
 \stl{}&\idc{} left-motor-power \ass $50$&\\
 \stl{}&\idc{} right-motor-power \ass $0$&\\
 \end{alg}
