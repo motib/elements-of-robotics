@@ -60,9 +60,9 @@ Os sensores de distância de baixo custo são baseados em outro princípio: como
 
 \subsection{Sensores de Distância por Ultrassom}
 
-O ultrassom é som cuja frequência está acima de $20.000$ hertz, maior do que a frequência mais alta que pode ser ouvida pelo ouvido humano. Há dois ambientes em que o som é melhor que a visão: à noite e na água. Os morcegos usam o ultrassom para navegar quando voam à noite porque depois do pôr-do-sol há pouca luz natural para a localização de alimentos. Navios e submarinos usam o ultrassom para detectar objetos porque o som viaja muito melhor na água do que no ar. Verifique você mesmo, indo dar um mergulho em um lago lamacento ou no oceano: a que distância você pode ver um amigo? Agora, peça-lhe para fazer um som batendo dois objetos juntos ou batendo palmas. A que distância você pode ouvir o som? 
+O ultrassom é som cuja frequência está acima de $20,\!000$ hertz, maior do que a frequência mais alta que pode ser ouvida pelo ouvido humano. Há dois ambientes em que o som é melhor que a visão: à noite e na água. Os morcegos usam o ultrassom para navegar quando voam à noite porque depois do pôr-do-sol há pouca luz natural para a localização de alimentos. Navios e submarinos usam o ultrassom para detectar objetos porque o som viaja muito melhor na água do que no ar. Verifique você mesmo, indo dar um mergulho em um lago lamacento ou no oceano: a que distância você pode ver um amigo? Agora, peça-lhe para fazer um som batendo dois objetos juntos ou batendo palmas. A que distância você pode ouvir o som? 
 
-A velocidade do som no ar é de cerca de $340$ m/s ou $34.000$ cm/s. Se um objeto está a uma distância de $34$ cm de um robô, da Eq.~\ref{eq.reflected} segue-se que um sinal de ultrassom viajará até o objeto e será refletido de volta em:
+A velocidade do som no ar é de cerca de $340$ m/s ou $34,\!000$ cm/s. Se um objeto está a uma distância de $34$ cm de um robô, da Eq.~\ref{eq.reflected} segue-se que um sinal de ultrassom viajará até o objeto e será refletido de volta em:
 \[\frac{2\cdot 34}{34000} = \frac{2}{1000} = 2\times 10^{-3}\  \textrm{segundos} = 2\  \textrm{milissegundos}.\]
 Um circuito eletrônico pode medir facilmente períodos de tempo da ordem de milissegundos.
 
@@ -129,8 +129,8 @@ Três tipos de luz são mostrados na Fig.~\ref{fig.coherent}. A luz do sol ou de
 \caption{Luz branca, monocromática não-coerente, e coerente}\label{fig.coherent}
 \end{figure}
 
-Suponha que um pulso de luz seja transmitido pelo robô, refletido em um objeto e recebido por um sensor no robô. A velocidade da luz no ar é cerca de $300.000.000$ m/s, que é de $3\times 10^{8}$ m/s ou $3\times 10^{10}$ cm/s em notação científica. Se um sinal luminoso for dirigido a um objeto a $30$ cm do robô, o tempo de transmissão e recepção do sinal é (Fig.~\ref{fig.ir}):
-\[\frac{2\cdot 30}{3\times 10^{10}} = \frac{2}{10^{9}} = 2\times 10^{-9}\  \textrm{segundos} = 0,002\  \textrm{milissegundos}.\]
+Suponha que um pulso de luz seja transmitido pelo robô, refletido em um objeto e recebido por um sensor no robô. A velocidade da luz no ar é cerca de $300,\!000,\!000$ m/s, que é de $3\times 10^{8}$ m/s ou $3\times 10^{10}$ cm/s em notação científica. Se um sinal luminoso for dirigido a um objeto a $30$ cm do robô, o tempo de transmissão e recepção do sinal é (Fig.~\ref{fig.ir}):
+\[\frac{2\cdot 30}{3\times 10^{10}} = \frac{2}{10^{9}} = 2\times 10^{-9}\  \textrm{segundos} = 0,\!002\  \textrm{milissegundos}.\]
 Este é um período de tempo muito curto, mas pode ser medido por circuitos eletrônicos.
 
 \begin{figure}
@@ -192,7 +192,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \draw(28mm,14mm) node {\p{Lente}};
 \foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
   \draw(10mm,\y) circle[radius=1mm];
-\draw(11mm,4mm) node {\p{Matriz de detectores}};
+\draw(13mm,4mm) node {\p{Detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (70mm,32mm) {};
 \draw(70mm,22mm) node {\p{Objeto}};
 % Triangles
@@ -220,7 +220,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \draw(28mm,14mm) node {\p{Lente}};
 \foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
   \draw(10mm,\y) circle[radius=1mm];
-\draw(11mm,4mm) node {\p{Matriz de detectores}};
+\draw(13mm,4mm) node {\p{Detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (50mm,32mm) {};
 \draw(50mm,22mm) node {\p{Objeto}};
 % Triangles
@@ -337,7 +337,7 @@ As câmeras digitais são amplamente utilizadas na robótica porque uma câmera 
 \caption{Uma imagem capturada por uma câmera omnidirecional com um campo de visão de 360 graus.}\label{fig.camera}
 \end{figure}
 
-As câmeras digitais são caracterizadas pelo número de pixels capturados em cada quadro e pelo conteúdo dos pixels. Uma pequena câmera usada em um robô educacional pode conter  $192$ linhas de $256$ pixels cada uma, num total de $49.152$ pixels. Essa é uma imagem muito pequena: os sensores das câmeras digitais nos smartphones registram imagens de milhões de pixels.
+As câmeras digitais são caracterizadas pelo número de pixels capturados em cada quadro e pelo conteúdo dos pixels. Uma pequena câmera usada em um robô educacional pode conter  $192$ linhas de $256$ pixels cada uma, num total de $49,\!152$ pixels. Essa é uma imagem muito pequena: os sensores das câmeras digitais nos smartphones registram imagens de milhões de pixels.
 
 Uma câmera pode retornar valores para cada pixel como preto e branco ($1$ bit por pixel), tons de cinza chamados de escala de cinza ($8$ bits por pixel) ou intensidade de cores vermelha-verde-azul (RGB, do inglês) ($3\times 8=24$ bits por pixel). A pequena câmera de $256\times 192$ precisa, assim, de cerca de $50$ kilobytes para uma única imagem em tons de cinza ou $150$ kilobytes para uma imagem colorida. Como um robô móvel ou veículo autônomo precisará armazenar várias imagens por segundo (filmes e TV exibem $24$ quadros por segundo), a memória necessária para armazenar e analisar as imagens pode ser muito grande.
 
@@ -353,7 +353,7 @@ Os botões e interruptores permitem que o usuário interaja diretamente com o ro
 
 Um \emph{microfone} no robô permite que ele capture som. O robô pode simplesmente detectar o som ou pode usar algoritmos para interpretar comandos de voz.
 
-Um \emph{acelerômetro} mede a aceleração. O uso primário de acelerômetros é para medir a direção da força gravitacional que causa uma aceleração de cerca de $9,8$ m/s$^{2}$ em direção ao centro da terra. Com três acelerômetros montados perpendicularmente um ao outro (Fig.~\ref{fig.accel}), a \emph{atitude} do robô pode ser medida: os três ângulos do robô, chamados ângulos de rotação (\emph{roll}), inclinação (\emph{pitch}) e guinada (\emph{yaw}). Os acelerômetros são discutidos com mais detalhes na Sect.~\ref{s.accelerometer} e uma tarefa que utiliza acelerômetros é apresentada na Sect.~\ref{s.detect-slope}.
+Um \emph{acelerômetro} mede a aceleração. O uso primário de acelerômetros é para medir a direção da força gravitacional que causa uma aceleração de cerca de $9,\!8$ m/s$^{2}$ em direção ao centro da terra. Com três acelerômetros montados perpendicularmente um ao outro (Fig.~\ref{fig.accel}), a \emph{atitude} do robô pode ser medida: os três ângulos do robô, chamados ângulos de rotação (\emph{roll}), inclinação (\emph{pitch}) e guinada (\emph{yaw}). Os acelerômetros são discutidos com mais detalhes na Sect.~\ref{s.accelerometer} e uma tarefa que utiliza acelerômetros é apresentada na Sect.~\ref{s.detect-slope}.
 
 \begin{figure}
 \begin{center}
@@ -392,7 +392,7 @@ Sempre que uma quantidade física é medida, a medição pode ser caracterizada 
 
 O \emph{alcance} é a extensão do conjunto de valores que podem ser medidos por um sensor. Um sensor de proximidade infravermelho pode ser capaz de medir distâncias na faixa de $1$ cm a $30$ cm. Como os feixes laser concentram muita energia em um feixe estreito, eles têm um alcance muito maior. O alcance necessário por um sensor de distância para um robô em movimento em um edifício será de cerca de 10 m, enquanto um sensor de distância para um automóvel precisa medir distâncias de cerca de 100 m.
 
-A expressão \emph{resolução} refere-se à menor mudança que pode ser medida. Um sensor de distância pode retornar distâncias em centímetros ($1$ cm, $2$ cm, $3$ cm, $4$ cm, \ldots), enquanto um sensor melhor retorna distâncias em centésimos de centímetro ($4,00$ cm, $4,01$ cm, $4,02$ cm, ...). Para um veículo autônomo, uma resolução de centímetros deve ser suficiente: você não estacionaria um carro a $1$ cm de outro, e muito menos a $0,1$ cm de distância. Já um robô cirúrgico precisa de uma resolução muito mais alta\footnote{N. do T.: Resolução mais alta corresponde a intervalos menores entre os valores.}, já que até mesmo um milímetro é crítico quando se faz uma cirurgia.
+A expressão \emph{resolução} refere-se à menor mudança que pode ser medida. Um sensor de distância pode retornar distâncias em centímetros ($1$ cm, $2$ cm, $3$ cm, $4$ cm, \ldots), enquanto um sensor melhor retorna distâncias em centésimos de centímetro ($4,\!00$ cm, $4,\!01$ cm, $4,\!02$ cm, ...). Para um veículo autônomo, uma resolução de centímetros deve ser suficiente: você não estacionaria um carro a $1$ cm de outro, e muito menos a $0,1$ cm de distância. Já um robô cirúrgico precisa de uma resolução muito mais alta\footnote{N. do T.: Resolução mais alta corresponde a intervalos menores entre os valores.}, já que até mesmo um milímetro é crítico quando se faz uma cirurgia.
 
 A \emph{precisão} refere-se à consistência das medidas. Se a mesma quantidade é medida repetidamente, o mesmo valor é indicado pelo sensor? A precisão é muito importante porque medições inconsistentes levarão a decisões inconsistentes. Suponha que um sensor de um veículo autônomo meça distâncias com resolução de $10$ cm, mas medições sucessivas retornam uma ampla gama de valores (digamos, $250$ cm, $280$ cm, $210$ cm). Ao tentar manter uma separação fixa de um veículo que está seguindo, o carro irá acelerar e desacelerar sem nenhuma boa razão, resultando em uma viagem desconfortável e com desperdício de energia.
 
@@ -437,11 +437,11 @@ Se um sensor de distância horizontal for \emph{linear}, há um mapeamento $x = 
 
 Vamos computar a inclinação e a interceptação:
 \[
-\textit{inclinação} = \frac{\Delta x}{\Delta s} = \frac{0-100}{30-2}=-3.57\,,
+\textit{inclinação} = \frac{\Delta x}{\Delta s} = \frac{0-100}{30-2}=-3,\!57\,,
 \]
-onde $s=30$, $x=0=-3,57\cdot 30+b$, então $b=107$ e $x = -3,57 s + 107$. Resolver para $s$ dá uma função que o computador do robô pode usar para mapear um valor do sensor para a distância correspondente:
+onde $s=30$, $x=0=-3,\!57\cdot 30+b$, então $b=107$ e $x = -3,\!57 s + 107$. Resolver para $s$ dá uma função que o computador do robô pode usar para mapear um valor do sensor para a distância correspondente:
 \[
-s = \frac{107-x}{3.57}\,.
+s = \frac{107-x}{3,\!57}\,.
 \]
 
 \begin{framed}
