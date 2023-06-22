@@ -25,7 +25,7 @@ Os outros veículos são apresentados em atividades que especificam o comportame
 \begin{quote}
 \normalsize\noindent{}\textbf{Especificação (Tímido):} Quando o robô não detecta um objeto, ele se move para a frente. Quando ele detecta um objeto, ele pára.
 \end{quote}
-\noindent{}Algoritmo~\ref{alg.timid} implementa este comportamento.
+\noindent{}O algoritmo~\ref{alg.timid} implementa este comportamento.
 
 \begin{figure}
 \begin{alg}{Tímido}{timid}
@@ -45,7 +45,7 @@ O algoritmo utiliza dois gerenciadores de eventos, um para o evento de detecçã
 \begin{center}
 \p{Quando (when) o evento \emph{ocorre pela primeira vez}, execute as seguintes ações}.
 \end{center}
-\noindent{}Por que usamos esta construção e não a declaração mais familiar \p{while} (Algorithm~\ref{alg.timid-a})?
+\noindent{}Por que usamos esta construção e não a declaração mais familiar \p{while} (Algoritmo~\ref{alg.timid-a})?
 
 \begin{figure}
 \begin{alg}{Tímido com while}{timid-a}
@@ -65,14 +65,14 @@ Se usarmos a declaração de \p{while}, enfatizaremos que \emph{enquanto} o obje
 \begin{framed}
 \act{Tímido}{timid}
 \begin{itemize}
-\item Implementar o comportamento Tímido.
+\item Implemente o comportamento Tímido.
 \end{itemize}
 \end{framed}
 
 \begin{framed}
 \act{Indeciso}{indecisive}
 \begin{itemize}
-\item Implementar o comportamento indeciso.
+\item Implemente o comportamento indeciso.
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Indeciso):} Quando o robô não detecta um objeto, ele se move para a frente. Quando detecta um objeto, ele se move para trás.
 \end{quote}
@@ -83,7 +83,7 @@ Se usarmos a declaração de \p{while}, enfatizaremos que \emph{enquanto} o obje
 \begin{framed}
 \act{Obstinado}{dogged}
 \begin{itemize}
-\item Implementar o comportamento Obstinado.
+\item Implemente o comportamento Obstinado.
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Obstinado):} Quando o robô detecta um objeto na frente, ele se move para trás. Quando o robô detecta um objeto atrás, ele se move para frente.
 \end{quote}
@@ -93,7 +93,7 @@ Se usarmos a declaração de \p{while}, enfatizaremos que \emph{enquanto} o obje
 \begin{framed}
 \act{Obstinado (parar)}{dogged1}
 \begin{itemize}
-\item Implementar o comportamento Obstinado (parar).
+\item Implemente o comportamento Obstinado (parar).
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Obstinado (parar)):} Como em Activity~\ref{act.dogged}, mas quando um objeto não é detectado, o robô pára.
 \end{quote}
@@ -103,7 +103,7 @@ Se usarmos a declaração de \p{while}, enfatizaremos que \emph{enquanto} o obje
 \begin{framed}
 \act{Atraente e repulsivo}{attractive}
 \begin{itemize}
-\item Implementar o comportamento atraente e repulsivo.
+\item Implemente o comportamento atraente e repulsivo.
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Atraente e repulsivo):} Quando um objeto se aproxima do robô por trás, o robô foge até ficar fora de alcance.
 \end{quote}
@@ -178,7 +178,7 @@ Vamos agora implementar um veículo Braitenberg cuja especificação requer que 
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Paranóico):} Quando o robô detecta um objeto, ele se move para a frente (colidindo com o objeto). Quando não detecta um objeto, ele se gira para a esquerda.
 \end{quote}
-Algorithm~\ref{alg.paranoid} implementa esse comportamento.
+Algoritmo~\ref{alg.paranoid} implementa esse comportamento.
 
 \smallskip
 
@@ -198,7 +198,7 @@ Algorithm~\ref{alg.paranoid} implementa esse comportamento.
 \begin{framed}
 \act{Paranóico}{paranoid}
 \begin{itemize}
-\item Implementar o comportamento paranóico.
+\item Implemente o comportamento paranóico.
 \item No algoritmo, os motores esquerdo e direito são definidos para potências iguais, mas opostas. Experimente com estes níveis de potência para ver sua influência no raio de giro do robô.
 \end{itemize}
 \end{framed}
@@ -206,7 +206,7 @@ Algorithm~\ref{alg.paranoid} implementa esse comportamento.
 \begin{framed}
 \act{Paranóico (direita-esquerda)}{paranoid1}
 \begin{itemize}
-\item Implementar o comportamento paranóico (direita-esquerda).
+\item Implemente o comportamento paranóico (direita-esquerda).
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Paranóico (direita-esquerda)):}
 Quando um objeto é detectado na frente do robô, o robô se move para a frente. Quando um objeto é detectado à direita do robô, o robô vira à direita. Quando um objeto é detectado à esquerda do robô, o robô vira à esquerda. Quando nenhum objeto é detectado, o robô não se move.
@@ -217,7 +217,7 @@ Quando um objeto é detectado na frente do robô, o robô se move para a frente.
 \begin{framed}
 \act{Inseguro}{insecure}
 \begin{itemize}
-\item Implementar o comportamento inseguro.
+\item Implemente o comportamento inseguro.
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Inseguro):} Se um objeto não for detectado à esquerda do robô, defina o motor direito para girar para frente e o motor esquerdo para não girar. Se um objeto for detectado à esquerda do robô, desative o motor direito e defina o motor esquerdo para girar para a frente.
 \end{quote}
@@ -228,7 +228,7 @@ Quando um objeto é detectado na frente do robô, o robô se move para a frente.
 \begin{framed}
 \act{Dedicado}{driven}
 \begin{itemize}
-\item Implementar o comportamento Dedicado.
+\item Implemente o comportamento Dedicado.
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Dedicado):} Se um objeto for detectado à esquerda do robô, defina o motor direito para girar para frente e o motor esquerdo para não girar. Se um objeto for detectado à direita do robô, desative o motor direito e defina o motor esquerdo para girar para frente.
 \end{quote}
@@ -236,7 +236,7 @@ Quando um objeto é detectado na frente do robô, o robô se move para a frente.
 \end{itemize}
 \end{framed}
 
-\section{Seguidor de Linha}\label{s.line}
+\section{Seguimento de Linha}\label{s.line}
 
 Considere um armazém com carrinhos robóticos que tragam objetos para uma área central de despacho (Fig.~\ref{fig.warehouse}). Linhas são pintadas no piso do armazém e o robô é instruído a segui-las até chegar ao depósito do objeto desejado.
 
@@ -291,7 +291,7 @@ Para implementar o seguimento da linha, o robô deve avançar sempre que ambos o
 \end{itemize}
 Por enquanto, especificamos que o robô pára sempre que nenhum dos sensores detecta a linha.
 
-Algorithm~\ref{alg.line-two} formaliza a descrição apresentada anteriormente.
+O algoritmo~\ref{alg.line-two} formaliza a descrição apresentada anteriormente.
 
 \begin{figure}
 \begin{alg}{Seguimento de linha com dois sensores}{line-two}
@@ -578,7 +578,7 @@ As Figuras~\ref{fig.coward}--\ref{fig.aggressive} mostram robôs que demonstram 
 \item Use sensores de proximidade no lugar dos sensores de luz de Braitenberg, e a detecção ou não detecção de um objeto no lugar de fontes de luz mais fortes ou mais fracas.
 \item Os robôs nas Figs.~\ref{fig.loves}--\ref{fig.explorer} são os mesmos que os robôs nas Figs.~\ref{fig.coward}--\ref{fig.aggressive}, respectivamente, exceto que os valores dos sensores são negados (os sinais $-$ nas conexões): quanto mais luz for detectada, mais lenta a roda girará. Suponha que haja um valor mínimo aplicado aos motores para que as rodas girem para frente quando nenhuma fonte de luz for detectada.
 \item Implemente o robô da Fig.~\ref{fig.loves}. Por que ele é chamado de \emph{amoroso}?
-\item Implementar o robô na Fig.~\ref{fig.explorer}. Por que ele é chamado de \emph{explorador}?
+\item Implemente o robô na Fig.~\ref{fig.explorer}. Por que ele é chamado de \emph{explorador}?
 \end{itemize}
 \end{framed}
 
