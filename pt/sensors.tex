@@ -184,7 +184,8 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
-\begin{tikzpicture}[scale=.65]
+\begin{center}
+\begin{tikzpicture}[scale=.7]
 \draw(0,0) rectangle +(3,4);
 \node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
 \node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=2.4mm] (tip) [right=of laser] {};
@@ -209,9 +210,11 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \node at (18mm,14mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto distante}\label{fig.triangulation-left}
+\end{center}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.45\textwidth}
+\begin{center}
 \begin{tikzpicture}[scale=.7]
 \draw(0,0) rectangle +(3,4);
 \node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
@@ -237,6 +240,7 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \node at (18mm,13mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto próximo}\label{fig.triangulation-right}
+\end{center}
 \end{minipage}
 \end{figure}
 
