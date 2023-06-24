@@ -183,19 +183,18 @@ Como $l$ e $d$ são fixados por construção, medindo $d'$ a partir do índice d
 Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distância por triangulação: a potência do laser, as características ópticas da lente, o número de sensores na matriz e sua sensibilidade. Além da compensação usual entre desempenho e custo, a principal troca está entre o alcance e a distância mínima na qual um objeto pode ser detectado. Para uma distância $s$ muito curta, o tamanho da matriz do detector $d'$ torna-se muito grande, o que impõe um limite prático para a distância mínima de detecção. Tal distância mínima pode ser reduzida aumentando-se a distância entre o emissor de laser e o conjunto de detectores, mas isto reduz o alcance. Um sensor por triangulação pode ser caracterizado pela distância $s_{\textit{opt}}$ para um ótimo desempenho, a distância mínima e a faixa em torno de $s_{\textit{opt}}$ em que as medições podem ser feitas.
 
 \begin{figure}
-\begin{minipage}{.5\textwidth}
-\begin{center}
-\begin{tikzpicture}[scale=.7]
+\begin{minipage}{.6\textwidth}
+\begin{tikzpicture}[scale=.9]
 \draw(0,0) rectangle +(3,4);
 \node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
 \node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=2.4mm] (tip) [right=of laser] {};
 \draw(26mm,20mm) coordinate (lens) ellipse [x radius=2mm, y radius=4mm];
-\draw(28mm,14mm) node {\p{Lente}};
+\draw(26mm,14mm) node {\p{Lente}};
 \foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
   \draw(10mm,\y) circle[radius=1mm];
-\draw(13mm,4mm) node {\p{Detectores}};
+\draw(11mm,4mm) node {\p{Detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (70mm,32mm) {};
-\draw(70mm,22mm) node {\p{Objeto}};
+\draw(66mm,25mm) node {\p{Objeto}};
 % Triangles
 \draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
 \draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
@@ -206,26 +205,24 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \fill(lens.center) circle[radius=.8pt];
 \fill(sensor) circle[radius=.8pt];
 \fill(sensor1) circle[radius=.8pt];
-\node at (48mm,22mm) {$s'$};
+\node at (48mm,24mm) {$s'$};
 \node at (18mm,14mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto distante}\label{fig.triangulation-left}
-\end{center}
 \end{minipage}
 \hspace{\fill}
-\begin{minipage}{.45\textwidth}
-\begin{center}
-\begin{tikzpicture}[scale=.7]
+\begin{minipage}{.4\textwidth}
+\begin{tikzpicture}[scale=.9]
 \draw(0,0) rectangle +(3,4);
 \node[draw,rectangle,anchor=west,minimum height=5mm,minimum width=12mm] (laser) at (10mm,32mm) {\p{Laser}};
 \node[draw,rectangle,node distance=-.4pt,minimum height=2mm,minimum width=2.4mm] (tip) [right=of laser] {};
 \draw(26mm,20mm) coordinate (lens) ellipse [x radius=2mm, y radius=4mm];
-\draw(28mm,14mm) node {\p{Lente}};
+\draw(26mm,14mm) node {\p{Lente}};
 \foreach \y in {8mm,10mm,12mm,14mm,16mm,18mm,20mm,22mm}
   \draw(10mm,\y) circle[radius=1mm];
-\draw(13mm,4mm) node {\p{Detectores}};
+\draw(11mm,4mm) node {\p{Detectores}};
 \node[draw,rectangle,fill,color=lightgray,minimum height=8mm,minimum width=2mm] (object) at (50mm,32mm) {};
-\draw(50mm,22mm) node {\p{Objeto}};
+\draw(46.5mm,25mm) node {\p{Objeto}};
 % Triangles
 \draw[thick,blue] (tip.east) -- node[right,black] {$d$} (lens.center);
 \draw[thick,green!60!black,densely dashed] (lens.center) -- node[above,black] {$l$} +(-16mm,0) coordinate (sensor);
@@ -236,11 +233,10 @@ Há muitos parâmetros de projeto que afetam o desempenho de um sensor de distâ
 \fill(lens.center) circle[radius=.8pt];
 \fill(sensor) circle[radius=.8pt];
 \fill(sensor1) circle[radius=.8pt];
-\node at (38mm,23mm) {$s'$};
-\node at (18mm,13mm) {$l'$};
+\node at (38mm,24mm) {$s'$};
+\node at (18mm,14mm) {$l'$};
 \end{tikzpicture}
 \caption{Triangulação de um objeto próximo}\label{fig.triangulation-right}
-\end{center}
 \end{minipage}
 \end{figure}
 
