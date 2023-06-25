@@ -104,13 +104,6 @@ O segundo novo conceito é o \emph{não determinismo}. Os estados \emph{esquerda
 \end{itemize}
 O comportamento não determinístico do terceiro caso pode fazer com que o robô não se aproxime do objeto quando este for detectado pela primeira vez, se este evento ocorrer ao mesmo tempo que o evento de atingir $\pm45^{\circ}$. Entretanto, após um curto período, as condições serão verificadas novamente e é provável que apenas um dos eventos ocorra.
 
-
-% --------------------------------------------------
-% ---------------- Parei aqui ----------------------
-% --------------------------------------------------
-
-
-
 \section{Implementação de Máquinas de Estados Finitas}\label{s.fsm-implementation}
 
 Para implementar comportamentos com estados, variáveis devem ser utilizadas. O veículo Persistente (Sect.~\ref{s.reactive-state}) precisa de um timer para ativar um evento após um período de tempo ter expirado. Como explicado na seção Sect.~\ref{s.embedded}, um timer é uma variável que é definida para o período de tempo desejado. A variável é decrementada pelo sistema operacional e, quando chega a zero, ocorre um evento.
