@@ -51,6 +51,8 @@ A Figura~\ref{fig.persistent} mostra o diagrama de estados para esse comportamen
 Inicialmente, quando o sistema é ligado, os motores são ajustados para avançar. (A condição \p{verdadeiro} é sempre verdadeira, portanto a ação é realizada incondicionalmente). No estado {frente}, se um objeto for detectado,
  a transição para o estado \p{trás} é realizada, o robô se move para trás e o timer é ajustado. Quando o tempo de um segundo passa, o timer expira e a transição para o estado de \p{frente} é realizada: o robô passa a se mover para frente. Se um objeto é detectado quando o robô está no estado \p{trás}, \emph{nenhuma} ação é executada pois não há transição relacionada a essa condição. Isso mostra que o comportamento não é reativo. Ao contrário, ele depende do evento que ocorre \emph{e} do estado atual do robô.
 
+\enlargethispage{\baselineskip}
+
 \begin{framed}
 \act{Consistente}{consistent}
 \begin{itemize}
@@ -118,7 +120,8 @@ O algoritmo~\ref{alg.persistent} descreve como a FSM da Fig.~\ref{fig.persistent
 \stl{}&left-motor-power \ass $100$&\\
 \stl{}&right-motor-power \ass $100$&\\
 \stl{}&loop&\\
-\stl{}&\idc{}when current $=$ fwd and object detected in front&\\
+\stl{}&\idc{}when current $=$\\
+&\idc{}\idc{}fwd and object detected in front&\\
 \stl{}&\idc{}\idc{} left-motor-power \ass $-100$&\\
 \stl{}&\idc{}\idc{} right-motor-power \ass $-100$&\\
 \stl{}&\idc{}\idc{} timer \ass $1000$&\\

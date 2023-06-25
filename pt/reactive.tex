@@ -338,6 +338,8 @@ O algoritmo~\ref{alg.line-two} formaliza a descrição apresentada anteriormente
 \end{itemize}
 \end{framed}
 
+\newpage
+
 \begin{framed}
 \act{Recuperando a linha depois de escapar dela}{regaining}
 \begin{itemize}
@@ -380,7 +382,7 @@ Quando o robô estiver diretamente sobre o centro da linha, o sensor retornará 
 \item \p{black-threshold} (limiar preto): abaixo deste valor, o robô está deixando o lado esquerdo da linha.
 \item \p{white-threshold} (limiar branco): acima deste valor, o robô está deixando o lado direito da linha.
 \end{itemize}
-O algoritmo\ref{alg.line-one} muda as configurações de potência dos motores quando o valor retornado pelo sensor ultrapassa esses limiares.
+O algoritmo~\ref{alg.line-one} muda as configurações de potência dos motores quando o valor retornado pelo sensor ultrapassa esses limiares.
 
 \begin{figure}
 \begin{alg}{Seguimento de linha com um sensor}{line-one}
@@ -400,6 +402,8 @@ O algoritmo\ref{alg.line-one} muda as configurações de potência dos motores q
 \stl{}&\idc{} right-motor-power \ass $-50$&\\
 \end{alg}
 \end{figure}
+
+\newpage
 
 \begin{framed}
 \act{Seguimento de linha com um sensor}{line-following-two}
@@ -520,56 +524,7 @@ As Figuras~\ref{fig.coward}--\ref{fig.aggressive} mostram robôs que demonstram 
 \end{minipage}
 \end{figure}
 
-
-%\begin{figure}
-%\subfigures
-%\begin{minipage}{\textwidth}
-%\leftfigure[c]{
-%\begin{tikzpicture}[scale=.5]
-%% Draw big robot
-%\draw (-2.2cm,-2.5cm) to [rounded corners] (4cm,-2.5cm) to [rounded corners, bend right=45] (4cm,2.5cm) to (-2.2cm,2.5cm) to cycle;
-%\fill (-1.3cm,-2.5cm) rectangle +(2cm, -.4cm);
-%\fill (-1.3cm,2.5cm) rectangle +(2cm, .4cm);
-%\coordinate (right-wheel) at (-.5,-2.5);
-%\coordinate (left-wheel) at (-.5,2.5);
-%\node[below,xshift=-1mm,yshift=-2mm] at (left-wheel) {$+$};
-%\node[above,xshift=-1mm,yshift=2mm] at (right-wheel) {$+$};
-%% Left sensor and arrows
-%\coordinate (left-sensor) at (4.3,1.3);
-%\draw[red] (4.5, 1.5) arc[start angle=90, end angle=270, radius=.2cm];
-%\draw[->,red] (left-sensor) to [bend left=15] (left-wheel);
-%% Right sensor and arrows
-%\coordinate (right-sensor) at (4.3,-1.3);
-%\draw[blue] (4.5, -1.5) arc[start angle=270, end angle=90, radius=.2cm];
-%\draw[->,blue] (right-sensor) to [bend right=15] (right-wheel);
-%\end{tikzpicture}
-%}
-%\hspace{\fill}
-%\rightfigure[c]{
-%\begin{tikzpicture}[scale=.5]
-%% Draw big robot
-%\draw (-2.2cm,-2.5cm) to [rounded corners] (4cm,-2.5cm) to%
-%[rounded corners, bend right=45] (4cm,2.5cm) to (-2.2cm,2.5cm) to cycle;
-%\fill (-1.3cm,-2.5cm) rectangle +(2cm, -.4cm);
-%\fill (-1.3cm,2.5cm) rectangle +(2cm, .4cm);
-%\coordinate (right-wheel) at (-.5,-2.5);
-%\coordinate (left-wheel) at (-.5,2.5);
-%\node[below,xshift=-1mm,yshift=-2mm] at (left-wheel) {$+$};
-%\node[above,xshift=-1mm,yshift=2mm] at (right-wheel) {$+$};
-%% Left sensor and arrows
-%\coordinate (left-sensor) at (4.3,1.3);
-%\draw[red] (4.5, 1.5) arc[start angle=90, end angle=270, radius=.2cm];
-%\draw[->,red] (left-sensor) to [bend right=40] (right-wheel);
-%% Right sensor and arrows
-%\coordinate (right-sensor) at (4.3,-1.3);
-%\draw[blue] (4.5, -1.5) arc[start angle=270, end angle=90, radius=.2cm];
-%\draw[->,blue] (right-sensor) to [bend left=40] (left-wheel);
-%\end{tikzpicture}
-%}
-%\leftcaption{Coward vehicle\label{fig.coward}}
-%\rightcaption{Aggressive vehicle\label{fig.aggressive}}
-%\end{minipage}
-%\end{figure}
+\newpage
 
 \begin{framed}
 \act{A apresentação dos veículos por Braitenberg}{brait-vehicles}
