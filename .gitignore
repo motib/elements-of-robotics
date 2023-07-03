@@ -1,4 +1,7 @@
-﻿en/tikz
+﻿
+pt/er.tex
+fr/er.tex
+en/tikz
 fr/tikz
 pt/tikz
 fr/revisions
@@ -18,5 +21,3 @@ fr/revisions
 *.thm
 *.idx
 *.py
-pt/er.tex
-fr/er.tex
