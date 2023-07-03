@@ -806,7 +806,7 @@ $\scriptstyle 5$ & $30$ & $30$ & $30$ & \boldmath $50$ & \boldmath $50$ & \boldm
 
 Nós sabemos como detectar bordas em uma imagem. Um canto é definido pela intersecção de uma borda vertical e uma borda horizontal. Figura~\ref{fig.corner-pixels} é a $6\times 10$ matriz de pixels para a imagem em Fig.~\ref{fig.corner-image}. Se aplicarmos os detectores de bordas Sobel a esta matriz de pixels, obtemos duas bordas verticais (Fig.~\ref{fig.corner-vertical}) e uma horizontal (Fig.~\ref{fig.corner-horizontal}).
 
-A interseção é definida para os pixels para os quais a soma dos valores absolutos nas duas matrizes de bordas Sobel está acima de um limite. Com um limiar de $30$, as bordas se cruzam nos pixels $(2,3)$ e $(2,7)$ que são as esquinas.
+A interseção é definida para os pixels para os quais a soma dos valores absolutos nas duas matrizes de bordas Sobel está acima de um limite. Com qualquer limiar acima de $80$, as bordas se cruzam nos pixels $(2,3)$ e $(2,7)$ que são as esquinas.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
