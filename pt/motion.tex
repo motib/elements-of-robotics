@@ -1,62 +1,62 @@
 % !TeX root = er.tex
 
-\chapter{Movimento Robótico e Odometria}\label{ch.motion}
+\chapter{Movimento de Robôs e Odometria}\label{ch.motion}
 
-Os algoritmos robóticos dos capítulos anteriores reagem aos dados de seus sensores mudando a velocidade e a direção de seu movimento, mas as mudanças não foram quantitativas. Não exigimos que os robôs se movessem duas vezes mais rápido ou que girassem $90^\circ$ à direita. Os robôs no mundo real têm que se mover para locais específicos e podem ter restrições de engenharia sobre quão rápido ou lento eles podem se mover ou virar. Este capítulo apresenta a matemática do movimento robótico.
+Os algoritmos dos capítulos anteriores reagem aos dados dos sensores do robô fazendo com que este mude a velocidade e a direção de seu movimento, mas as mudanças não foram quantitativas. Não exigimos que os robôs se movessem duas vezes mais rápido ou que girassem $90^\circ$ à direita. Os robôs no mundo real têm de se mover para locais específicos e podem ter restrições de engenharia sobre quão rápido ou lento eles podem se mover ou girar. Este capítulo apresenta a matemática do movimento de robôs.
 
 As seções~\ref{s.distance-velocity}--\ref{s.acceleration} revisam os conceitos de distância, tempo, velocidade e aceleração que devem ser familiares da física introdutória. A física do movimento é geralmente ensinada usando cálculo, mas um computador não pode lidar com funções contínuas; em vez disso, devem ser usadas aproximações discretas, como descrito na seção~\ref{s.continuous}.
 
-As seções~\ref{s.odometry}--\ref{s.odometry-turns} apresentam {odometry}, o algoritmo fundamental para computar o movimento robótico. Uma aproximação da localização de um robô pode ser obtida calculando repetidamente a distância movida e a direção de mudança da velocidade das rodas em um curto período de tempo. Infelizmente, a odometria está sujeita a erros graves, como mostrado na seção Sect.~\ref{s.odometry-errors}. É importante entender que os erros de direção são muito mais significativos do que os erros de distância.
+As seções~\ref{s.odometry}--\ref{s.odometry-turns} apresentam {odometry}, o algoritmo fundamental para computar o movimento de robôs. Uma aproximação da localização de um robô pode ser obtida calculando-se repetidamente a distância movida e a direção de mudança da velocidade das rodas em um curto período de tempo. Infelizmente, a odometria está sujeita a erros graves, como mostrado na seção Sect.~\ref{s.odometry-errors}. É importante entender que os erros de orientação são muito mais significativos do que os erros de distância.
 
-Na implementação mais simples, assume-se que a velocidade das rodas de um robô é proporcional à potência aplicada pelos motores. A seção~\ref{s.wheel} mostra como a precisão da odometria pode ser melhorada com o uso de \emph{wheel encoders}, que medem o número real de rotações das rodas.
+Na implementação mais simples, assume-se que a velocidade das rodas de um robô seja proporcional à potência aplicada aos motores. A seção~\ref{s.wheel} mostra como a precisão da odometria pode ser melhorada com o uso de \emph{wheel encoders}, que medem o número real de rotações das rodas.
 
-A seção~\ref{s.imu} apresenta uma visão geral da \emph{navegação por inércia}, que é uma forma sofisticada de odometria baseada na medição da aceleração linear e angular e, em seguida, a integração para obter velocidade e posição. Os sensores para navegação inercial (acelerômetros e giroscópios) já foram muito caros, limitando sua aplicação a aeronaves e foguetes, mas a nova tecnologia chamada \emph{microeletrromecânica} tornou possível a construção de robôs com navegação inercial.
+A seção~\ref{s.imu} apresenta uma visão geral da \emph{navegação inercial}, que é uma forma sofisticada de odometria baseada na medição da aceleração linear e angular e, em seguida, a integração para obter velocidade e posição. Os sensores para navegação inercial (acelerômetros e giroscópios) já foram muito caros, limitando sua aplicação a aeronaves e foguetes, mas a nova tecnologia chamada \emph{microeletrromecânica} tornou possível a construção de robôs com navegação inercial.
 
-Os carros não podem subir e descer, ao contrário dos helicópteros e submarinos que têm maior liberdade de movimento. Isto se expressa no conceito de \emph{degrees of freedom (DOF)} que é o tema da seção~\ref{s.dof}. A seção ~\ref{s.num-actuators} discute a relação entre o DOF e o número de DOF \emph{atuadores} (motores) em um sistema robótico.
+Os carros não podem subir e descer, ao contrário dos helicópteros e submarinos que têm maior liberdade de movimento. Isso se expressa no conceito de \emph{graus de liberdade}, ou \emph{degrees of freedom (DoF)}, em inglês, que é o tema da seção~\ref{s.dof}. A seção ~\ref{s.num-actuators} discute a relação entre o DoF e o número de \emph{atuadores} (motores) em um sistema robótico.
 
-O número de DOF de um sistema não significa que um sistema como um veículo possa se mover livremente em todas essas direções. Um carro pode se mover para qualquer ponto do plano e se orientar em qualquer direção, mas não pode se mover para os lados, portanto, é necessária uma manobra difícil durante o estacionamento paralelo. Isto se deve à diferença entre o DOF e os \emph{degrees of mobility (DOM)}, um assunto explorado em Sect.~\ref{s.holonomic}, juntamente com o conceito de \emph{holonomic motion} que relaciona o DOF e o DOM.
+O número de DoF de um sistema não significa que um sistema como um veículo possa se mover livremente em todas essas direções. Um carro pode se mover para qualquer ponto do plano e se orientar em qualquer direção, mas não pode se mover para os lados. Portanto é necessária uma manobra difícil durante o estacionamento paralelo. Isso se deve à diferença entre DoF e o número de graus de mobilidade, ou \emph{Degrees of Mobility (DoM)}, em inglês. Tal assunto é explorado em Sect.~\ref{s.holonomic}, juntamente com o conceito de \emph{movimento holonômico} que relaciona  DoF com DoM.
 
-\section{Distância, velocidade e tempo}\label{s.distance-velocity}
+\section{Distância, Velocidade e Tempo}\label{s.distance-velocity}
 
-Suponha que um robô se mova com uma \emph{velocidade} constante de $10$ cm/s por um período de \emph{tempo} de $5$ s.\footnote{A velocidade é  \emph{velocidade} em um \emph{direcionamento}. Um robô pode estar movendo $10$ cm/s para frente ou para trás; em ambos os casos, a velocidade é a mesma, mas a velocidade é diferente.}
-A \emph{distance} que ele move é de $50$ cm. Em geral, se um robô se move a uma velocidade constante $v$ durante um período de tempo $t$, a distância que ele se move é $s=vt$. Quando a energia é aplicada aos motores, faz com que as rodas girem, o que, por sua vez, faz com que o robô se mova a alguma velocidade. Entretanto, não podemos especificar que uma certa potência provoca uma certa velocidade:
+Suponha que um robô se mova com uma \emph{velocidade} constante de $10$ cm/s por um período de \emph{tempo} de $5$ s.\footnote{A velocidade é um vetor, portanto possui \emph{amplitude} e \emph{direção}. Um robô pode estar movendo a $10$ cm/s para frente ou para trás; em ambos os casos, a amplitude da velocidade é a mesma, mas sua direção é diferente.}
+A \emph{distância} que ele move é de $50$ cm. Em geral, se um robô se move a uma velocidade constante $v$ durante um período de tempo $t$, a distância que ele se move é $s=vt$. Quando potência é aplicada aos motores, faz com que as rodas girem, o que, por sua vez, faz com que o robô se mova a alguma velocidade. Entretanto, não podemos especificar que uma certa potência provoca uma certa velocidade:
 
 \begin{itemize}
-\item Nunca dois componentes elétricos ou mecânicos são precisamente idênticos. Um motor é composto de ímãs e fios elétricos cuja interação provoca a rotação de um eixo mecânico. Pequenas diferenças nas propriedades do imã e do fio, assim como pequenas diferenças no tamanho e peso do eixo, podem fazer com que os eixos de dois motores girem a velocidades ligeiramente diferentes para a mesma quantidade de potência.
+\item Nunca dois componentes elétricos ou mecânicos são exatamente idênticos. Um motor é composto de ímãs e fios elétricos cuja interação provoca a rotação de um eixo mecânico. Pequenas diferenças nas propriedades do imã e do fio, assim como pequenas diferenças no tamanho e peso do eixo, podem fazer com que os eixos de dois motores girem a velocidades ligeiramente diferentes para a mesma quantidade de potência.
 
 \item O ambiente afeta a velocidade de um robô. Muito pouco atrito (gelo) ou muito atrito (lama) pode fazer com que um robô se mova mais lentamente em comparação com seu movimento em uma superfície pavimentada seca.
 
-\item Forças externas podem afetar a velocidade de um robô. Ele precisa de mais potência para sustentar uma velocidade específica ao se mover para cima e menos potência ao se mover para baixo, porque a força da gravidade diminui e aumenta a velocidade. Andar de bicicleta a uma velocidade constante ao vento exige mais esforço do que andar com o vento, e um vento cruzado torna a relação entre potência e velocidade ainda mais complicada.
+\item Forças externas podem afetar a velocidade de um robô. Ele precisa de mais potência para sustentar uma velocidade específica ao se mover para cima e menos potência ao se mover para baixo, porque a força da gravidade influencia na velocidade. Andar de bicicleta a uma velocidade constante contra o vento exige mais esforço do que andar a favor do vento, e um vento cruzado torna a relação entre potência e velocidade ainda mais complicada.
 \end{itemize}
 
-Uma vez que $s=vt$ é suficiente medir quaisquer duas dessas quantidades para calcular a terceira. Se medirmos distância e tempo, podemos computar a velocidade como $v=s/t$. Distâncias relativamente curtas (até vários metros) podem ser medidas com precisão (até 1 cm) usando uma régua ou uma fita métrica. A aplicação do cronômetro em um smartphone pode medir o tempo com precisão (centésimos de segundo).
+Uma vez que $s=vt$, é suficiente medir quaisquer duas dessas quantidades para calcular a terceira. Se medirmos distância e tempo, podemos calcular a velocidade como $v=s/t$. Distâncias relativamente curtas (até vários metros) podem ser medidas com precisão (até 1 cm) usando uma régua ou uma fita métrica. A aplicação do cronômetro em um smartphone pode medir o tempo com precisão (centésimos de segundo).
 
 \begin{framed}
 \act{Velocidade sobre uma distância fixa}{velocity}
 \begin{itemize}
-\item Escreva um programa que ajuste seu robô a um constante ajuste de potência de avanço.
-\item Marque duas linhas com $1$ m de diferença no chão. Use um cronômetro para medir o tempo que o robô leva para se mover entre as linhas. Calcule a velocidade do robô. Executar o programa dez vezes e registrar as velocidades. As velocidades variam?
+\item Escreva um programa que aplique ao seu robô uma mesma potência constante aos seus motores.
+\item Marque duas linhas com $1$ m de diferença no chão. Use um cronômetro para medir o tempo que o robô leva para se mover entre as linhas. Calcule a velocidade do robô. Execute o programa dez vezes e registre as velocidades. As velocidades variam?
 \item Coloque o robô no chão e execute-o por $5$ s. Meça a distância que ele se move. Calcule a velocidade. Execute o programa dez vezes e registre as velocidades. As velocidades variam?
 \item Qual método dá resultados mais precisos?
 \item Repita este experimento em diferentes superfícies e discuta os resultados.
 \end{itemize}
 \end{framed}
 
-A atividade~\ref{act.velocity} mostra que para um ajuste de potência constante, a velocidade de um robô pode variar significativamente. Para navegar com precisão dentro de um ambiente, um robô precisa sentir objetos em seu ambiente, tais como paredes, marcas no chão e objetos.
+A atividade~\ref{act.velocity} mostra que para um ajuste de potência constante, a velocidade de um robô pode variar significativamente. Para navegar com precisão dentro de um ambiente, um robô precisa detectar objetos em seu ambiente, tais como paredes, marcas no chão e objetos.
 
-\section{Aceleração como mudança de velocidade}\label{s.acceleration}
+\section{Aceleração como Mudança de Velocidade}\label{s.acceleration}
 
-Atividade~\ Ref{atividade-fat.velocity} especificou ajustes de potência constantes e, portanto, a velocidade do robô será (mais ou menos) constante. O que acontece quando a velocidade é variada?
+A atividade~\ Ref{atividade-fat.velocity} especificou ajustes de potência constantes e, portanto, a velocidade do robô será aproximadamente constante. O que acontece quando a velocidade é variada?
 
 \begin{framed}
 \act{Mudança de velocidade}{change-v}
 \begin{itemize}
-\item Execute o primeiro programa a partir de Activity~\ref{act.velocity} variando a distância entre as marcas: $0,25$ m, $0,5$ m, $1$ m, $1,5$ m, $2$ m. Para cada distância, execute o programa várias vezes e pegue a média das velocidades computadas. As velocidades são as mesmas para cada distância?
-\item Para melhorar a precisão da medição, coloque marcas no chão a essas distâncias e use o timer do robô para registrar as horas em que as marcas são detectadas.
+\item Execute o primeiro programa a partir da atividade~\ref{act.velocity} variando a distância entre as marcas: $0,25$ m, $0,5$ m, $1$ m, $1,5$ m, $2$ m. Para cada distância, execute o programa várias vezes e obtenha a média das velocidades calculadas. As velocidades são as mesmas para cada distância?
+\item Para melhorar a precisão da medição, coloque marcas no chão a essas distâncias e use o timer do robô para registrar os instantes de tempo em que as marcas são detectadas.
 \end{itemize}
 \end{framed}
 
-Em Activity~\ref{act.change-v}, você verá que para as distâncias maiores as velocidades estarão próximas umas das outras, mas para as distâncias mais curtas as velocidades serão consideravelmente diferentes. A razão é que a fórmula $v=s/t$ assume que a velocidade é constante ao longo de toda a distância. Na realidade, um veículo deve {acelerar {aceleração}--mudar sua velocidade- para passar de uma velocidade parada para uma velocidade constante. Da mesma forma, um veículo deve desacelerar para poder parar.
+Na atividade~\ref{act.change-v}, você verá que para as distâncias maiores as velocidades estarão próximas umas das outras, mas para as distâncias mais curtas as velocidades serão consideravelmente diferentes. A razão é que a fórmula $v=s/t$ assume que a velocidade é constante ao longo de toda a distância. Na realidade, um veículo deve \emph{acelerar} --mudar sua velocidade-- para passar de uma velocidade zero para uma velocidade constante. Da mesma forma, um veículo deve desacelerar para poder parar.
 
 Para obter uma imagem real do movimento de um robô, precisamos dividir seu movimento em pequenos segmentos $s_1,s_2,ldots$:
 \begin{center}
@@ -68,10 +68,10 @@ Para obter uma imagem real do movimento de um robô, precisamos dividir seu movi
   \draw (\x,-1mm) -- (\x,1mm) node[below,yshift=-2mm] {\l};
 \end{tikzpicture}
 \end{center}
-e medir a distância e o tempo para cada segmento individualmente. Em seguida, podemos calcular as velocidades para cada segmento. Em símbolos, se denotarmos o comprimento do segmento $s_i$ por $\Delta s_i = x_{i+1}-x_i$ e o tempo que o robô leva para cruzar o segmento $s_i$ por $\Delta t_i = t_{i+1}-t_i$, então $v_i$, a velocidade no segmento $s_i$ é dada por:
+e medir a distância e o tempo para cada segmento individualmente. Em seguida, podemos calcular as velocidades para cada segmento. Simbolicamente, se denotarmos o comprimento do segmento $s_i$ por $\Delta s_i = x_{i+1}-x_i$ e o tempo que o robô leva para cruzar o segmento $s_i$ por $\Delta t_i = t_{i+1}-t_i$, então a velocidade $v_i$ no segmento $s_i$ é dada por:
 \[v_i = \frac{\Delta s_i}{\Delta t_i}\,.\]
 
-Figura~\ref{fig.instant-v} é um gráfico de distância vs. tempo para um robô em aceleração. O eixo do tempo foi dividido em segmentos e as inclinações $ \displaystyle \frac{\Delta s_i}{\Delta t_i}$ mostram a velocidade média em cada segmento que aumenta com o tempo.
+A Figura~\ref{fig.instant-v} é um gráfico de distância em relação ao tempo para um robô em aceleração. O eixo do tempo foi dividido em segmentos e as inclinações $ \displaystyle \frac{\Delta s_i}{\Delta t_i}$ mostram a velocidade média em cada segmento, que aumenta com o tempo.
 
 \begin{figure}
 \begin{center}
@@ -84,7 +84,7 @@ Figura~\ref{fig.instant-v} é um gráfico de distância vs. tempo para um robô 
 \draw[dashed] (3,0) -- (3,2.25);
 \draw[dashed] (4,0) -- (4,4);
 \end{tikzpicture}
-\caption{Um robô acelerador: a distância aumenta como o quadrado do tempo}\label{fig.instant-v}
+\caption{Um robô em aceleração: a distância aumenta como o quadrado do tempo}\label{fig.instant-v}
 \end{center}
 \end{figure}
 
@@ -97,15 +97,15 @@ Vejamos o que acontece se a potência for aumentada com o tempo.
 \begin{framed}
 \act{Aceleração}{accel}
 \begin{itemize}
-\item Escrever um programa que faz com que o robô acelere aumentando periodicamente o ajuste de energia. Por exemplo, iniciar o robô a $20$ e aumentar para $40$ após $1$ s, depois para $60$ após $2$ s, para $80$ após $3$ s, e finalmente para $100$ após $4$ s.
-\item Colocar o robô na pista e executar o programa.
-\item Registrar as distâncias entre cada mudança da configuração de potência. Calcule e trace as velocidades em cada um desses segmentos.
+\item Escreva um programa que faz com que o robô acelere aumentando periodicamente o ajuste de potência. Por exemplo, inicie o robô a $20$ e aumente para $40$ após $1$ s, depois para $60$ após $2$ s, para $80$ após $3$ s e, finalmente, para $100$ após $4$ s.
+\item Coloque o robô na pista e execute o programa.
+\item Registre as distâncias entre cada mudança da configuração de potência. Calcule e trace as velocidades em cada um desses segmentos.
 \end{itemize}
 \end{framed}
 
-\section{De segmentos para movimento contínuo}\label{s.continuous}
+\section{De Segmentos a Movimento Contínuo}\label{s.continuous}
 
-À medida que o tamanho dos segmentos se torna menor, obtemos a velocidade instantânea do robô em um único ponto no tempo, expressa como um derivado:
+Na medida em que o tamanho dos segmentos se torna infinitesalmente pequena, obtemos a velocidade instantânea do robô em um único ponto no tempo, expressa como uma derivada:
 \[v(t) = \frac{ds(t)}{dt}\,.\]
 Da mesma forma, a aceleração instantânea do robô é definida como:
 \[a(t) = \frac{dv(t)}{dt}\,.\]
@@ -116,30 +116,30 @@ e então a distância pode ser obtida pela integração novamente:
 
 \noindent{}\textbf{Exemplo} Um carro médio acelera de $0$ a $100$ km/h em cerca de $10$ s. Primeiro, nós convertemos unidades de km/h para m/s:
 \[
-v_{\textit{max}} = 100\, \textrm{km/h} = \frac{100\cdot 1000}{60\cdot 60} \,\textrm{m/s} = 27.8 \,\textrm{m/s}\,.
+v_{\textit{max}} = 100\, \textrm{km/h} = \frac{100\cdot 1000}{60\cdot 60} \,\textrm{m/s} = 27,\!8 \,\textrm{m/s}\,.
 \]
-Assumindo aceleração constante, $v_{\textit{max}} = 27,8 = a = 10a$, então a aceleração é de $2,78$ m/s$^{2}$ (leia-se, $2,78$ metros por segundo por segundo, ou seja, a cada segundo a velocidade aumenta em $2,78$ metros por segundo). A distância que o carro se move em $10$ s é:
-\[s(10) = \frac{at^2}{2} = \frac{2.78\cdot 10^2}{2}= 139 \,\textrm{m}\,.\]
+Assumindo aceleração constante, $v_{\textit{max}} = 27,\!8 = a = 10a$, então a aceleração é de $2,\!78 m/s^{2}$ (leia-se, $2,\!78$ metros por segundo por segundo, ou seja, a cada segundo a velocidade aumenta em $2,78$ metros por segundo). A distância que o carro se move em $10$ s é:
+\[s(10) = \frac{at^2}{2} = \frac{2,\!78\cdot 10^2}{2}= 139 \,\textrm{m}\,.\]
 
 \begin{framed}
 
-\act{Distância computacional ao acelerar}{distance-a}
+\act{Calculando a Distância Enquanto Acelera}{distance-a}
 \begin{itemize}
 \item Para vários veículos (carros de corrida, motocicletas), procure o tempo necessário para acelerar de $0$ a $100$ km/h. Calcule a distância percorrida.
-\item Assumir que a aceleração de um veículo aumenta linearmente, ou seja, $a=kt$ para um constante $k$. O que são $v(t)$ e $s(t)$.
-\item Para vários valores de $k$ e $t$, computar as velocidades e distâncias finais.
+\item Assuma que a aceleração de um veículo aumenta linearmente, ou seja, $a=kt$ para um constante $k$. Obtenha $v(t)$ e $s(t)$.
+\item Para vários valores de $k$ e $t$, calcule as velocidades e distâncias finais.
 \end{itemize}
 \end{framed}
 
 \begin{framed}
-\act{Medindo o movimento em aceleração constante}{constant-a}
+\act{Medindo o movimento com aceleração constante}{constant-a}
 \begin{itemize}
-\item Escrever um programa que aplica a configuração de potência máxima a um robô.
-\item Colocar o robô sobre uma superfície e executar o programa.
-\item Quando o robô parece ter atingido o recorde de velocidade máxima do tempo desde o início da execução.
+\item Escreva um programa que aplica a configuração de potência máxima a um robô.
+\item Coloque o robô sobre uma superfície e execute o programa.
+\item Quando o robô atingir sua velocidade máxima, registre o tempo percorrido desde o início da execução.
 \item Compare a distância medida com $s = at^2/2$ (Fig.~ ~\ref{fig.acc-distance}).
-\item Executar novamente e medir as distâncias em intervalos fixos de tempo. Calcule as velocidades das distâncias divididas pelo tempo e compare com $v=at$ (Fig.~\ref{fig.acc-velocity}).
-\item Em alguns robôs você pode definir uma velocidade alvo e ler a velocidade real. Se seu robô puder fazer isso, compare as velocidades medidas com as velocidades computadas.
+\item Execute novamente e meça as distâncias em intervalos fixos de tempo. Calcule as velocidades de cada trecho usando as distâncias medidas divididas pelo tempo e compare com $v=at$ (Fig.~\ref{fig.acc-velocity}).
+\item Em alguns robôs você pode definir uma velocidade desejada e ler a velocidade real. Se seu robô puder fazer isso, compare as velocidades medidas com as velocidades calculadas.
 \end{itemize}
 \end{framed}
 \begin{figure}
@@ -183,35 +183,35 @@ Assumindo aceleração constante, $v_{\textit{max}} = 27,8 = a = 10a$, então a 
 
 \section{Navegação por odometria}\label{s.odometry}
 
-Suponha que você esteja em um carro e seu sistema de navegação emite a seguinte instrução: ``Em 700 metros vire à direita''. Agora sua tarefa é muito simples: Faça observações do odômetro do seu carro que mede a distância que você percorreu. Quando seu valor se aproximar de 700 metros além de sua leitura inicial, procure uma rua à direita. Um odômetro em um carro mede velocidade e tempo, e multiplica os dois valores para calcular a distância percorrida.
+Suponha que você esteja em um carro e seu sistema de navegação emita a seguinte instrução: ``Em 700 metros, vire à direita''. Agora sua tarefa é muito simples: Faça observações do odômetro do seu carro que mede a distância que você percorreu. Quando seu valor se aproximar de 700 metros além de sua leitura inicial, procure uma rua à direita. Um odômetro em um carro mede velocidade e tempo, e multiplica os dois valores para calcular a distância percorrida.
 
-\emph{Odometria}---a medição da distância---é um método fundamental usado por robôs para navegação. A medição do tempo é fácil usando o relógio interno do computador incorporado. A medição da velocidade é mais difícil: em alguns robôs educacionais, os codificadores de roda são usados para contar as rotações das rodas (Sect.~\ref{s.wheel}), enquanto em outros a velocidade é estimada a partir das propriedades dos motores. A partir da distância movida $s=vt$, a nova posição do robô pode ser calculada. Em uma dimensão, o cálculo é trivial, mas se torna um pouco mais complexo quando o movimento envolve curvas. Esta seção apresenta o cálculo da distância por odometria, primeiro para um robô movendo-se linearmente e depois para um robô fazendo uma curva.
+\emph{Odometria}---a medição da distância---é um método fundamental usado por robôs para navegação. A medição do tempo é fácil usando o relógio interno do computador embarcado. A medição da velocidade é mais difícil: em alguns robôs educacionais, encoders são usados para contar as rotações das rodas (Sect.~\ref{s.wheel}), enquanto em outros a velocidade é estimada a partir das propriedades dos motores. A partir da distância movida $s=vt$, a nova posição do robô pode ser calculada. Em uma dimensão, o cálculo é trivial, mas se torna um pouco mais complexo quando o movimento envolve curvas. Esta seção apresenta o cálculo da distância por odometria, primeiro para um robô movendo-se linearmente e depois para um robô fazendo uma curva.
 
-A seção~\ref{s.odometry-errors} mostra como os erros de direção são mais sérios do que os erros de distância.
+A seção~\ref{s.odometry-errors} mostra como os erros de orientação são mais sérios do que os erros de distância.
 
-Uma desvantagem da odometria (com ou sem codificadores de roda) é que as medidas são indiretas, relacionando a potência dos motores ou o movimento das rodas a mudanças na posição do robô. Isto pode ser sujeito a erros, uma vez que a relação entre a velocidade do motor e a rotação das rodas pode ser muito não-linear e variar com o tempo. Além disso, as rodas podem escorregar e patinar, de modo que pode haver erros ao relacionar o movimento das rodas com o movimento do robô. Estimativas melhoradas da posição podem ser obtidas usando um sistema de navegação inercial, que mede diretamente a aceleração e a velocidade angular que pode ser usada para determinar a posição do robô (Sect.~\ref{s.imu}).
+Uma desvantagem da odometria (com ou sem encoders de roda) é que as medidas são indiretas, relacionando a potência dos motores ou o movimento das rodas a mudanças na posição do robô. Isto pode ser sujeito a erros, uma vez que a relação entre a velocidade do motor e a rotação das rodas pode ser muito não-linear e variar com o tempo. Além disso, as rodas podem escorregar e patinar, de modo que pode haver erros ao relacionar o movimento das rodas com o movimento do robô. Estimativas melhoradas da posição podem ser obtidas usando um sistema de navegação inercial, que mede diretamente a aceleração e a velocidade angular que pode ser usada para determinar a posição do robô (Sect.~\ref{s.imu}).
 
 A odometria é uma forma de \emph{localização}: o robô deve determinar sua posição no ambiente. Na odometria, determinamos a posição medindo a mudança a partir da posição inicial conhecida do robô, enquanto a localização (Cap.~\ref{ch.local}) refere-se à determinação da posição de um robô em relação às posições conhecidas de outros objetos, tais como marcos ou faróis.
 
 \section{Odometria linear}
 
-Antes de estudar a matemática da odometria, você deve tentar a seguinte Atividade:
+Antes de estudar a matemática da odometria, você deve tentar a seguinte atividade:
 
 \begin{framed}
-\act{Distância da velocidade e do tempo}{odometry1}
+\act{Distância a partir da velocidade e do tempo}{odometry1}
 \begin{itemize}
-\item Executar o robô em um ajuste de potência constante durante um período de tempo específico e medir a distância movida.
-\item Repetir a medição várias vezes. A distância é constante? Se não, quanto varia como porcentagem da distância?
-\item Repetir a medição várias vezes para diferentes configurações de potência. A distância medida é linear no ajuste de potência? A \emph{variação} na medição da distância em várias corridas depende do ajuste de potência?
-\item Repetir a medição para uma configuração de potência fixa, mas por diferentes períodos de tempo e analisar os resultados.
+\item Acione o robô com um ajuste de potência constante durante um período de tempo específico e meça a distância percorrida.
+\item Repita a medição várias vezes. A distância é constante? Se não, qual é sua variação percentual?
+\item Repita a medição várias vezes para diferentes configurações de potência. A distância medida varia linearmente com o ajuste de potência? A \emph{variação} na medição da distância em várias corridas depende do ajuste de potência?
+\item Repita a medição para uma configuração de potência fixa, mas por diferentes períodos de tempo e analise os resultados.
 \end{itemize}
 \end{framed}
 
-Quando uma relação entre potência do motor e velocidade $v$ foi determinada, o robô pode calcular a distância movida por $s=vt$. Se ele começa na posição $(0,0)$ e se move diretamente ao longo do eixo $x$, então após $t$ segundos sua nova posição é $(vt,0)$.
+Quando uma relação entre potência do motor e velocidade $v$ é determinada, o robô pode calcular a distância movida usando $s=vt$. Se ele começa na posição $(0,0)$ e se move diretamente ao longo do eixo $x$, então após $t$ segundos sua nova posição é $(vt,0)$.
 
-Esta atividade deve demonstrar que é possível medir a distância por odometria com precisão e exatidão razoáveis. Um carro que dirige sozinho pode usar a odometria para determinar sua posição de modo que não tenha que analisar continuamente os dados de seus sensores para verificar se a rua necessária foi alcançada. Dadas as incertezas de movimento e da estrada, o carro não deve depender apenas da odometria para decidir quando virar, mas o erro não será grande e os dados do sensor podem ser analisados para detectar a curva quando a odometria indicar que o carro está nas proximidades do cruzamento.
+Esta atividade deve demonstrar que é possível medir a distância por odometria com precisão e exatidão razoáveis. Um veículo autônomo pode usar a odometria para determinar sua posição de modo que não tenha de analisar continuamente os dados de seus sensores para verificar se a rua desejada foi alcançada. Dadas as incertezas de movimento e da estrada, o carro não deve depender apenas da odometria para decidir quando virar, mas o erro não será grande e os dados do sensor podem ser analisados para detectar a curva quando a odometria indicar que o carro está nas proximidades do cruzamento.
 
-Atividade~\ref{act.odometry1} pediu que você medisse a distância movida em uma dimensão. Três itens de informação precisam ser computados se o movimento estiver em duas dimensões: o robô tem uma \emph{posição} $(x,y)$ relativa a uma origem fixa e sua \emph{cabeçalho} $\theta$, a direção na qual o robô está apontando (Fig.~\ref{fig.pos-head}). O triplo $(x,y,\theta)$ é chamado de Índex de objetivo do robô. Se o robô começa na origem $(0,0)$ e se movimenta em linha reta no ângulo $\theta$ com velocidade $v$ para o tempo $t$, a distância movida é $s=vt$. Sua nova posição $(x,y)$ é:
+A atividade~\ref{act.odometry1} pediu que você medisse a distância percorrida em uma dimensão. Três itens de informação precisam ser computados se o movimento estiver em duas dimensões: o robô tem uma \emph{posição} $(x,y)$ relativa a uma origem fixa, e uma \emph{orientação} $\theta$ - ângulo que indica a direção na qual o robô está apontando\footnote{N. do T.: A orientação do robô é medida em relação ao eixo x.} (Fig.~\ref{fig.pos-head}). O conjunto $(x,y,\theta)$ é chamado de \emph{pose} do robô. Se o robô começa na origem $(0,0)$ e se movimenta em linha reta no ângulo $\theta$ com velocidade $v$ no tempo $t$, a distância movida é $s=vt$. Sua nova posição $(x,y)$ é:
 \begin{eqnarray*}
 x &=& vt \cos \theta\\
 y &=& vt \sin \theta\,.
@@ -233,13 +233,26 @@ y &=& vt \sin \theta\,.
 \draw[->] (0,0) -- +(30:1.2) {};
 \node at (1,.3) {$\theta$};
 \end{tikzpicture}
-\caption{Posição e cabeçalho}\label{fig.pos-head}
+\caption{Posição e orientação}\label{fig.pos-head}
 \end{center}
 \end{figure}
 
-\section{Odometria com voltas}\label{s.odometry-turns}
 
-Suponha que o robô gire ligeiramente para a esquerda porque a roda direita se move mais rápido do que a roda esquerda (Fig.~\ref{fig.small-turn}). Na figura, o robô está de frente para o topo da página; o ponto azul é a roda esquerda, o ponto vermelho é a roda direita, e o ponto preto é o centro do robô que está na metade do caminho entre as rodas. O \textit{base} $b$ é a distância entre as rodas, e $d_l, d_r, d_c$ representam as distâncias movimentadas pelas duas rodas e o centro quando o robô gira. Queremos calcular a nova posição e o cabeçalho do robô.
+
+
+
+
+
+%-------------------------- Parei aqui! -------------------------------------
+
+
+
+
+
+
+\section{Odometria com Curvas}\label{s.odometry-turns}
+
+Suponha que o robô gire ligeiramente para a esquerda porque a roda direita se move mais rápido do que a roda esquerda (Fig.~\ref{fig.small-turn}). Na figura, o robô está de frente para o topo da página; o ponto azul é a roda esquerda, o ponto vermelho é a roda direita, e o ponto preto é o centro do robô que está na metade do caminho entre as rodas. O \textit{base} $b$ é a distância entre as rodas, e $d_l, d_r, d_c$ representam as distâncias movimentadas pelas duas rodas e o centro quando o robô gira. Queremos calcular a nova posição e o orientação do robô.
 
 Podemos medir $d_l$ e $d_r$, as distâncias movimentadas pelas duas rodas usando o método descrito em Activity~\ref{act.odometry1}: relacionando a potência do motor à velocidade de rotação e depois multiplicando pelo tempo. Alternativamente, podemos usar o número de rotações contadas pelos codificadores das rodas. 
 \begin{equation}
@@ -303,7 +316,7 @@ d_c&=&\theta r_c\\
 \end{eqnarray*}
 
 Se a distância movida for pequena, a linha rotulada $d_c$ é aproximadamente
-perpendicular ao raio através da posição final do robô. Por triângulos semelhantes, vemos que $\theta$ é a mudança no cabeçalho do robô (Fig.~\ref{fig.heading}). Por trigonometria:\footnote{You were likely likely expecting $\cos$ for $dx$ and $\sin$ for $dy$. Esse seria o caso se o robô estivesse enfrentando ao longo do eixo $x$. Entretanto, a pose inicial é de $\phi=\pi/2$ e nós temos $\sin(\theta+\pi/2)=\cos\theta$ e $\cos(\theta+\pi/2)=-\sin\theta$.}
+perpendicular ao raio através da posição final do robô. Por triângulos semelhantes, vemos que $\theta$ é a mudança no orientação do robô (Fig.~\ref{fig.heading}). Por trigonometria:\footnote{You were likely likely expecting $\cos$ for $dx$ and $\sin$ for $dy$. Esse seria o caso se o robô estivesse enfrentando ao longo do eixo $x$. Entretanto, a pose inicial é de $\phi=\pi/2$ e nós temos $\sin(\theta+\pi/2)=\cos\theta$ e $\cos(\theta+\pi/2)=-\sin\theta$.}
 \begin{eqnarray*}
 \textit{dx} &=& - d_c \sin \theta\\
 \textit{dy} &=& d_c \cos \theta\,,
@@ -399,7 +412,7 @@ As tabelas a seguir comparam a diferença entre um erro linear de $p\,\%$ (esque
 \end{array}
 \end{displaymath}
 
-Para um erro muito pequeno como $2\,\%$, o erro de distância após mover $10$ m é de apenas $,2$ m, o que deve colocar o robô nas proximidades do objeto que está procurando, mas um erro de direção da mesma porcentagem coloca o robô a $1,25$ m de distância do objeto. Para um erro mais significativo como $5\,\%$ ou $10\,\%$, o erro de distância ($50$ cm ou $100$ cm) ainda é possivelmente controlável, mas o erro de cabeçalho coloca o robô a $3,09$ m ou $5,88$ m de distância, que não está nem mesmo nas proximidades do objeto.
+Para um erro muito pequeno como $2\,\%$, o erro de distância após mover $10$ m é de apenas $,2$ m, o que deve colocar o robô nas proximidades do objeto que está procurando, mas um erro de direção da mesma porcentagem coloca o robô a $1,25$ m de distância do objeto. Para um erro mais significativo como $5\,\%$ ou $10\,\%$, o erro de distância ($50$ cm ou $100$ cm) ainda é possivelmente controlável, mas o erro de orientação coloca o robô a $3,09$ m ou $5,88$ m de distância, que não está nem mesmo nas proximidades do objeto.
 
 O acúmulo de erros de odometria à medida que a distância movida se torna maior é exibida na Fig.~\ref{fig.odo-errors}. A posição inicial do robô é denotada pelo ponto na origem.  Assumindo um erro de, no máximo, $pm 4\,\%$ tanto na direção linear quanto no sentido, as possíveis posições do robô depois de mover $d=1,2,\ldots,10$ metros são exibidas como elipses. Os raios menores das elipses de erro resultam dos erros lineares:
 \[.04s = 0.04, .08, \ldots, .4 \;\;\textrm{metros},
@@ -430,7 +443,7 @@ Como o erro é inevitável, periodicamente a pose do robô como computada pela o
 \begin{itemize}
 \item Escreva um programa para fazer o robô mover-se em linha reta por $2$ metros. Certifique-se de que a superfície esteja lisa para que não se desvie do curso e calibre os ajustes do motor para que o robô se movimente o mais reto possível.
 \item Variar a potência do motor de ambas as rodas juntas para que o robô funcione um pouco mais lento ou um pouco mais rápido do que antes. Trace sua posição em intervalos fixos e veja se o erro permanece linear ao longo da trajetória.
-\item Variar a potência do motor de uma roda de modo que o robô gire ligeiramente para um lado. Traçar sua posição em intervalos fixos e ver se os erros são proporcionais ao seno da diferença entre o cabeçalho original e o novo cabeçalho.
+\item Variar a potência do motor de uma roda de modo que o robô gire ligeiramente para um lado. Traçar sua posição em intervalos fixos e ver se os erros são proporcionais ao seno da diferença entre o orientação original e o novo orientação.
 \end{itemize}
 \end{framed}
 
@@ -1098,7 +1111,7 @@ A seção~\ref{s.dof} apresentou o conceito de grau de liberdade (DOF) e o papel
 
 Consideremos o DOM de vários veículos. Um trem tem um DOF porque só pode avançar ao longo dos trilhos, e tem um atuador, seu motor, que afeta diretamente este único grau de liberdade. Portanto, um trem tem um grau de mobilidade de $\delta_m = 1$, o que significa que o único DOF pode ser acessado diretamente pelo atuador.
 
-Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os dois motores que atuam sobre as rodas. Eles podem acessar diretamente dois DOF: (a) se as duas rodas giram na mesma velocidade, o robô se move para frente ou para trás; (b) se as rodas têm velocidades em direções opostas, o robô gira no lugar. Portanto, podemos acessar diretamente o DOF ao longo do eixo de translação para frente e o DOF do cabeçalho, mas não podemos acessar diretamente o DOF do eixo lateral de translação (Fig.~\ref{fig.mobility-example1}). Um robô móvel de acionamento diferencial tem um grau de mobilidade $\delta_m = 2 < 3 = \#\textrm{DOF}$.
+Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os dois motores que atuam sobre as rodas. Eles podem acessar diretamente dois DOF: (a) se as duas rodas giram na mesma velocidade, o robô se move para frente ou para trás; (b) se as rodas têm velocidades em direções opostas, o robô gira no lugar. Portanto, podemos acessar diretamente o DOF ao longo do eixo de translação para frente e o DOF do orientação, mas não podemos acessar diretamente o DOF do eixo lateral de translação (Fig.~\ref{fig.mobility-example1}). Um robô móvel de acionamento diferencial tem um grau de mobilidade $\delta_m = 2 < 3 = \#\textrm{DOF}$.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -1407,7 +1420,7 @@ Um carro e um robô com acionamento diferencial são não-holonômicos porque se
 
 \section{Sumário}
 
-Um robô móvel como um carro que dirige sozinho ou um explorador Mars não terá pontos de referência sempre disponíveis para navegação. A odometria é usada para levar o robô até as proximidades de seu objetivo sem referência ao meio ambiente. O robô estima sua velocidade e velocidade de rotação a partir da potência aplicada a seus motores. A odometria pode ser melhorada usando codificadores de roda para medir o número de rotações das rodas, em vez de inferir a velocidade a partir da potência do motor. A mudança na posição de um robô barato movendo-se em linha reta pode ser computada multiplicando a velocidade pelo tempo. Se o robô estiver girando, cálculos trigonométricos são necessários para calcular a nova posição e orientação. Mesmo com codificadores de roda, a odometria está sujeita a erros que podem ser muito grandes se o erro estiver no cabeçalho.
+Um robô móvel como um carro que dirige sozinho ou um explorador Mars não terá pontos de referência sempre disponíveis para navegação. A odometria é usada para levar o robô até as proximidades de seu objetivo sem referência ao meio ambiente. O robô estima sua velocidade e velocidade de rotação a partir da potência aplicada a seus motores. A odometria pode ser melhorada usando codificadores de roda para medir o número de rotações das rodas, em vez de inferir a velocidade a partir da potência do motor. A mudança na posição de um robô barato movendo-se em linha reta pode ser computada multiplicando a velocidade pelo tempo. Se o robô estiver girando, cálculos trigonométricos são necessários para calcular a nova posição e orientação. Mesmo com codificadores de roda, a odometria está sujeita a erros que podem ser muito grandes se o erro estiver no orientação.
 
 A navegação inercial utiliza acelerômetros e giroscópios para melhorar a precisão da odometria. A integração da aceleração dá velocidade e a integração da velocidade angular dá o rumo. Os sistemas microeletromecânicos tornaram a navegação inercial suficientemente barata para uso em robótica.
 
