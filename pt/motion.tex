@@ -237,24 +237,11 @@ y &=& vt \sin \theta\,.
 \end{center}
 \end{figure}
 
-
-
-
-
-
-
-%-------------------------- Parei aqui! -------------------------------------
-
-
-
-
-
-
 \section{Odometria com Curvas}\label{s.odometry-turns}
 
-Suponha que o robô gire ligeiramente para a esquerda porque a roda direita se move mais rápido do que a roda esquerda (Fig.~\ref{fig.small-turn}). Na figura, o robô está de frente para o topo da página; o ponto azul é a roda esquerda, o ponto vermelho é a roda direita, e o ponto preto é o centro do robô que está na metade do caminho entre as rodas. O \textit{base} $b$ é a distância entre as rodas, e $d_l, d_r, d_c$ representam as distâncias movimentadas pelas duas rodas e o centro quando o robô gira. Queremos calcular a nova posição e o orientação do robô.
+Suponha que o robô gire ligeiramente para a esquerda porque a roda direita se move mais rápido do que a roda esquerda (Fig.~\ref{fig.small-turn}). Na figura, o robô está orientado para o topo da página; o ponto azul é a roda esquerda, o ponto vermelho é a roda direita, e o ponto preto é o centro do robô que está na metade do caminho entre as rodas. A \textit{linha} $b$ indica a distância entre as rodas, e $d_l, d_r, d_c$ representam as distâncias percorridas pelas duas rodas e pelo centro enquando o robô se move. Queremos calcular a nova posição e orientação do robô após seu deslocamento.
 
-Podemos medir $d_l$ e $d_r$, as distâncias movimentadas pelas duas rodas usando o método descrito em Activity~\ref{act.odometry1}: relacionando a potência do motor à velocidade de rotação e depois multiplicando pelo tempo. Alternativamente, podemos usar o número de rotações contadas pelos codificadores das rodas. 
+Podemos medir $d_l$ e $d_r$, as distâncias movimentadas pelas duas rodas, usando o método descrito na Actividade~\ref{act.odometry1}: relacionando a potência do motor à velocidade de rotação e depois multiplicando pelo tempo. Alternativamente, podemos usar o número de rotações contadas pelos encoders das rodas. 
 \begin{equation}
 d_i=2\pi R \omega_i t,\;\;\; i=l,r\,. \label{eq.rotation}
 \end{equation}
@@ -290,15 +277,15 @@ A tarefa é determinar a nova pose do robô após as rodas terem movido essas di
 \caption{Geometria de uma curva à esquerda por um robô com duas rodas}\label{fig.small-turn}
 \end{figure}
 
-A figura~\ref{fig.small-turn} mostra o robô inicialmente na pose $(x,y,\phi)$, onde o robô está voltado para o norte ($\phi=\pi/2$). Depois de girar $\theta$ radians, qual é a nova pose $(x',y',\phi')$? Claramente, o título do robô agora é $\phi'=\phi+\theta$, mas também temos que computar $x',y'$.
+A figura~\ref{fig.small-turn} mostra o robô inicialmente na pose $(x,y,\phi)$, onde o robô está voltado para o norte ($\phi=\pi/2$). Depois de girar $\theta$ radianos, qual é sua nova pose $(x',y',\phi')$? Claramente, a nova orientação do robô é $\phi'=\phi+\theta$, mas também temos de calcular $x',y'$.
 
 O comprimento de um arco de ângulo $\theta$ radianos é dado por sua fração da circunferência do círculo: $2\pi r,(\theta/2\pi)=\theta r$. Para ângulos pequenos, as distâncias $d_l,d_c,d_r$ são aproximadamente iguais ao comprimento dos arcos correspondentes, portanto temos:
 \begin{eqnarray}
 \theta &=& d_l/r_l = d_c/r_c = d_r/r_r\,,\label{eqn.theta}
 \end{eqnarray}
-onde $r_l, r_r, r_c$ são as distâncias a partir de $P$, a origem da curva.
+onde $r_l, r_r, r_c$ são as distâncias a partir de $P$, o centro da curva.
 
-As distâncias de $d_l$ e $d_r$ são obtidas a partir das rotações das rodas (Eq.~\ref{eq.rotation}) e a linha de base $b$ é uma medida física fixa do robô. De Eq.~\ref{eqn.theta}, pode-se calcular o ângulo $\theta$:
+As distâncias de $d_l$ e $d_r$ são obtidas a partir das rotações das rodas (Eq.~\ref{eq.rotation}) e a distância $b$ é uma medida física fixa do robô (distância entre as rodas). Da Eq.~\ref{eqn.theta}, pode-se calcular o ângulo $\theta$:
 \begin{eqnarray*}
 \theta r_r &=& d_r\\
 \theta r_l &=& d_l\\
@@ -307,7 +294,7 @@ As distâncias de $d_l$ e $d_r$ são obtidas a partir das rotações das rodas (
 \theta &=& (d_r - d_l) / b\,.
 \end{eqnarray*}
 O centro fica a meio caminho entre as rodas $r_c =(r_l+r_r)/2$,
-novamente por Eq.~\ref{eqn.theta}:
+novamente a partir da Eq.~\ref{eqn.theta}, tem-se:
 \begin{eqnarray*}
 d_c&=&\theta r_c\\
 &=&\theta \left(\frac{r_l+r_r}{2}\right)\\
@@ -316,12 +303,12 @@ d_c&=&\theta r_c\\
 \end{eqnarray*}
 
 Se a distância movida for pequena, a linha rotulada $d_c$ é aproximadamente
-perpendicular ao raio através da posição final do robô. Por triângulos semelhantes, vemos que $\theta$ é a mudança no orientação do robô (Fig.~\ref{fig.heading}). Por trigonometria:\footnote{You were likely likely expecting $\cos$ for $dx$ and $\sin$ for $dy$. Esse seria o caso se o robô estivesse enfrentando ao longo do eixo $x$. Entretanto, a pose inicial é de $\phi=\pi/2$ e nós temos $\sin(\theta+\pi/2)=\cos\theta$ e $\cos(\theta+\pi/2)=-\sin\theta$.}
+perpendicular ao raio através da posição final do robô. Por semelhança de triângulos, vemos que $\theta$ é a mudança na orientação do robô (Fig.~\ref{fig.heading}). Por trigonometria:\footnote{Talvez você esperasse ver $\cos$ para $dx$ e $\sin$ para $dy$. Esse seria o caso se o robô estivesse orientado ao longo do eixo $x$. Entretanto, a orientação inicial é de $\phi=\pi/2$, e nós temos $\sin(\theta+\pi/2)=\cos\theta$ e $\cos(\theta+\pi/2)=-\sin\theta$.}
 \begin{eqnarray*}
 \textit{dx} &=& - d_c \sin \theta\\
 \textit{dy} &=& d_c \cos \theta\,,
 \end{eqnarray*}
-Assim, a pose do robô após a vez é:
+Assim, a pose do robô após seu deslocamento é:
 \[
 (x',y',\phi') = ( - d_c \sin \theta, d_c \cos \theta, \phi+\theta)\,.
 \]
@@ -345,17 +332,17 @@ Assim, a pose do robô após a vez é:
 \draw[rotate=20] (B) rectangle +(-6pt,-6pt);
 \end{tikzpicture}
 \end{center}
-\caption{Mudança no título}\label{fig.heading}
+\caption{Mudança na orientação}\label{fig.heading}
 \end{figure}
 
-As fórmulas mostram como computar as mudanças \textit{dx}, \textit{dy} e $\theta$ quando o robô se move a uma curta distância. Para computar a odometria em distâncias maiores, este cálculo deve ser feito com freqüência. Há duas razões pelas quais os intervalos entre os cálculos devem ser curtos: (a) a suposição de velocidade constante se mantém apenas para distâncias curtas, e (b) o cálculo trigonométrico é simplificado ao supor que a distância movida é curta.
+As fórmulas mostram como calcular as mudanças \textit{dx}, \textit{dy} e $\theta$ quando o robô se move a uma curta distância. Para computar a odometria em distâncias maiores, este cálculo deve ser feito com frequência. Há duas razões pelas quais os intervalos entre os cálculos devem ser curtos: (a) a suposição de velocidade constante se mantém apenas para distâncias curtas, e (b) o cálculo trigonométrico é simplificado ao supor que a distância movida é curta.
 
 \begin{framed}
 \act{Odometria em duas dimensões}{odometry2}
 \begin{itemize}
-\item Escrever um programa que faça o robô virar suavemente à esquerda por um período de tempo específico.
-\item Calcule a pose $( - d_c \sin \theta, d_c \cos \theta, \theta)$ e compare o resultado com os valores medidos usando uma régua e um transferidor. Execute o programa várias vezes e veja se as medidas são consistentes.
-\item Executar o programa por diferentes períodos de tempo. Como isso afeta a precisão e a exatidão do cálculo da odometria?
+\item Escreva um programa que faça o robô girar suavemente à esquerda por um período de tempo específico.
+\item Calcule sua pose $( - d_c \sin \theta, d_c \cos \theta, \theta)$ e compare o resultado com os valores medidos usando uma régua e um transferidor. Execute o programa várias vezes e verifique se as medidas são consistentes.
+\item Execute o mesmo programa por diferentes períodos de tempo. Como isso afeta a precisão e a exatidão do cálculo da odometria?
 \end{itemize}
 \end{framed}
 
@@ -363,11 +350,11 @@ As fórmulas mostram como computar as mudanças \textit{dx}, \textit{dy} e $\the
 
 Já observamos que a odometria não é precisa porque medições inconsistentes e irregularidades na superfície podem causar erros. Nesta seção mostramos que mesmo pequenas mudanças na direção do movimento do robô podem causar erros muito maiores do que aqueles causados por mudanças em seu movimento linear.
 
-Para simplificar a apresentação, vamos assumir que um robô deve mover $10$ metros a partir da origem de um sistema de coordenadas ao longo do eixo $x$ e, em seguida, verificar seu entorno em busca de um objeto específico. Qual é o efeito de um erro de $p\,\%$? Se o erro está na medida de $x$, a distância movimentada, então $\Delta x$, o erro em $x$ é:
+Para simplificar a apresentação, vamos assumir que um robô deve mover-se por $10$ metros a partir da origem de um sistema de coordenadas ao longo do eixo $x$ e, em seguida, verificar seu entorno em busca de um objeto específico. Qual é o efeito de um erro de até $p\,\%$? Se o erro está na medida de $x$, a distância movimentada, então o erro $\Delta x$ em $x$ é:
 \[\Delta x \leq \pm 10\cdot\frac{p}{100} = \pm\frac{p}{10}\; \textrm{meter}\,,\]
-onde o valor é negativo ou positivo porque o robô poderia subir para $p\,\%$ antes ou depois da distância pretendida.
+onde o valor é negativo ou positivo porque o robô poderia mover-se para uma posição a uma distância $p\,\%$ antes ou depois da posição pretendida.
 
-Suponha agora que há um erro de $p\%$ na \emph{rubrica} do robô, e, para simplificar, suponha que não há erro na distância movida. A geometria é:
+Suponha agora que exista um erro de $p\%$ na \emph{orientação} do robô, e, para simplificar, suponha que não há erro na distância movida. A geometria é:
 \begin{center}
 \begin{tikzpicture}
 \draw[->] (0,0) -- node[below] {$10\,m$} (6,0);
@@ -376,7 +363,7 @@ Suponha agora que há um erro de $p\%$ na \emph{rubrica} do robô, e, para simpl
 \node[above right,xshift=12mm] at (0,0) {$\Delta \theta$};
 \end{tikzpicture}
 \end{center}
-O robô pretendia mover $10$ m ao longo do eixo $x$, mas em vez disso, moveu-se levemente para a esquerda num ângulo de $\Delta\theta$. Vamos computar o desvio esquerda-direita de $\Delta y$. Por trigonometria, $\Delta y = 10\sin \Delta\theta$. Um erro de $p\,\%$ no título é:
+O robô pretendia mover-se por $10$ m ao longo do eixo $x$ mas, em vez disso, moveu-se levemente para a esquerda num ângulo de $\Delta\theta$. Vamos computar o desvio esquerda-direita de $\Delta y$. Por trigonometria, $\Delta y = 10\sin \Delta\theta$. Um erro de $p\,\%$ na orientação é:
 \[
 \Delta\theta=360\cdot\frac{p}{100}=(3.6p)^\circ\,,
 \]
@@ -385,7 +372,7 @@ portanto, o desvio esquerda-direita é:
 \Delta y \leq \pm 10 \sin (3.6p)\,.
 \]
 
-As tabelas a seguir comparam a diferença entre um erro linear de $p\,\%$ (esquerda) e um erro no título de $p\,\%$ (à direita):
+As tabelas a seguir comparam a diferença entre um erro linear (esquerda) de $p\,\%$ e um erro angular (à direita) de $p\,\%$:
 \begin{displaymath}
 \setlength{\arraycolsep}{2ex}
 \renewcommand{\arraystretch}{1.1}
@@ -404,22 +391,22 @@ As tabelas a seguir comparam a diferença entre um erro linear de $p\,\%$ (esque
 \hline\noalign{\smallskip}
 \multicolumn{1}{c|}{p\,\%} & \multicolumn{1}{c}{\Delta \theta\,({}^\circ)} & \multicolumn{1}{c}{\sin\Delta\theta} & \multicolumn{1}{c}{\Delta y \,(\textrm{m})}\\
 \noalign{\smallskip}\hline\noalign{\smallskip}
-1 &  3.6 & .063 & .63\\
-2 &  7.2 & .125 & 1.25\\
-5 &  18.0 & .309 & 3.09\\
-10 & 36.0 & .588 & 5.88\\
+1 &  3,6 & 0,063 & 0,63\\
+2 &  7,2 & 0,125 & 1,25\\
+5 &  18,0 & 0,309 & 3,09\\
+10 & 36,0 & 0,588 & 5,88\\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 \end{array}
 \end{displaymath}
 
-Para um erro muito pequeno como $2\,\%$, o erro de distância após mover $10$ m é de apenas $,2$ m, o que deve colocar o robô nas proximidades do objeto que está procurando, mas um erro de direção da mesma porcentagem coloca o robô a $1,25$ m de distância do objeto. Para um erro mais significativo como $5\,\%$ ou $10\,\%$, o erro de distância ($50$ cm ou $100$ cm) ainda é possivelmente controlável, mas o erro de orientação coloca o robô a $3,09$ m ou $5,88$ m de distância, que não está nem mesmo nas proximidades do objeto.
+Para um erro muito pequeno como $2\,\%$, o erro de distância após mover $10$ m é de apenas $0,2$ m, o que deve colocar o robô nas proximidades do objeto que está procurando. No entanto, um erro de direção da mesma porcentagem coloca o robô a $1,25$ m de distância do objeto. Para um erro mais significativo como $5\,\%$ ou $10\,\%$, o erro de distância ($50$ cm ou $100$ cm) ainda é possivelmente contornável, mas o erro de orientação coloca o robô a $3,09$ m ou $5,88$ m de distância, que não está nem mesmo nas proximidades do objeto.
 
-O acúmulo de erros de odometria à medida que a distância movida se torna maior é exibida na Fig.~\ref{fig.odo-errors}. A posição inicial do robô é denotada pelo ponto na origem.  Assumindo um erro de, no máximo, $pm 4\,\%$ tanto na direção linear quanto no sentido, as possíveis posições do robô depois de mover $d=1,2,\ldots,10$ metros são exibidas como elipses. Os raios menores das elipses de erro resultam dos erros lineares:
-\[.04s = 0.04, .08, \ldots, .4 \;\;\textrm{metros},
+O acúmulo de erros de odometria à medida que a distância movida se torna maior é exibida na Fig.~\ref{fig.odo-errors}. A posição inicial do robô é denotada pelo ponto na origem.  Assumindo um erro máximo de $pm 4\,\%$ tanto na direção linear quanto na orientação do robô, as possíveis posições do robô depois de mover-se por $d=1,2,\ldots,10$ metros são exibidas como elipses. Os raios menores das elipses de erro resultam dos erros lineares:
+\[0,04s = 0,04, 0,08, \ldots, 0,4 \;\;\textrm{metros},
 \]
-enquanto os raios principais das elipses de erro resultam dos erros angulares:
+enquanto os raios maiores das elipses de erro resultam dos erros angulares:
 \[
-d\sin \,(.04\cdot 360^\circ)=d \sin 14.4^\circ \approx{} .25, .50, \ldots 2.5\;\;\textrm{metros}.
+d\sin \,(0,04\cdot 360^\circ)=d \sin 14,4^\circ \approx{} 0,25, 0,50, \ldots 2,5\;\;\textrm{metros}.
 \]
 Claramente, os erros angulares são muito mais significativos do que os erros lineares.
 
@@ -436,23 +423,23 @@ Claramente, os erros angulares são muito mais significativos do que os erros li
 \caption{Erros de odometria}\label{fig.odo-errors}
 \end{figure}
 
-Como o erro é inevitável, periodicamente a pose do robô como computada pela odometria deve ser comparada com uma posição absoluta; esta se torna a nova posição inicial para posterior cálculo. Os métodos para determinar a posição absoluta do robô são apresentados no Cap.~\ref{ch.local}.
+Como o erro é inevitável, periodicamente a pose do robô computada pela odometria deve ser comparada com uma posição absoluta; esta se torna a nova posição inicial para posterior cálculo. Os métodos para determinar a posição absoluta do robô são apresentados no Capítulo~\ref{ch.local}.
 
 \begin{framed}
 \act{Erros de odometria}{odo-error}
 \begin{itemize}
-\item Escreva um programa para fazer o robô mover-se em linha reta por $2$ metros. Certifique-se de que a superfície esteja lisa para que não se desvie do curso e calibre os ajustes do motor para que o robô se movimente o mais reto possível.
-\item Variar a potência do motor de ambas as rodas juntas para que o robô funcione um pouco mais lento ou um pouco mais rápido do que antes. Trace sua posição em intervalos fixos e veja se o erro permanece linear ao longo da trajetória.
-\item Variar a potência do motor de uma roda de modo que o robô gire ligeiramente para um lado. Traçar sua posição em intervalos fixos e ver se os erros são proporcionais ao seno da diferença entre o orientação original e o novo orientação.
+\item Escreva um programa para fazer o robô mover-se em linha reta por $2$ metros. Certifique-se de que a superfície esteja lisa para que ele não se desvie do curso e calibre as potências dos motores para que o robô se movimente o máximo possível em linha reta.
+\item Varie a potência do motor de ambas as rodas juntas para que o robô funcione um pouco mais lento ou um pouco mais rápido do que antes. Trace sua posição em intervalos fixos e veja se o erro permanece linear ao longo da trajetória.
+\item Varie a potência do motor de uma roda de modo que o robô gire ligeiramente para um lado. Trace sua posição em intervalos fixos e verifique se os erros são proporcionais ao seno da diferença entre a orientação original e a nova orientação.
 \end{itemize}
 \end{framed}
 
 \begin{framed}
 \act{Efeito combinado de erros de odometria}{odo-combine}
 \begin{itemize}
-\item Escreva um programa que faça o robô mover-se em linha reta por $2$ metros e depois vire $360^\circ$. Qual é o erro na posição do robô?
+\item Escreva um programa que faça o robô mover-se em linha reta por $2$ metros e depois gire $360^\circ$. Qual é o erro na posição do robô?
 \item Escreva um programa que faz com que o robô gire $360^\circ$ e depois se movimente em linha reta por $2$ metros. Qual é o erro na posição do robô? Existe uma diferença entre este erro e o erro da experiência anterior?
-\item Escreva um programa que faz o robô mover-se em linha reta por $2$ metros, girar $180^\circ$ e depois mover-se em linha reta por $2$ metros. A que distância está de sua posição inicial?
+\item Escreva um programa que faz o robô mover-se em linha reta por $2$ metros, girar $180^\circ$, e em seguida mover-se em linha reta por mais $2$ metros. A que distância está de sua posição inicial?
 \end{itemize}
 \end{framed}
 
@@ -460,22 +447,22 @@ Como o erro é inevitável, periodicamente a pose do robô como computada pela o
 \act{Correção de erros de odometria}{odo-correct}
 \begin{itemize}
 \item Modifique o programa que você escreveu para a Activity~\ref{act.odo-error} para introduzir \emph{jitter}, variação aleatória na potência fornecida ao motor. Verifique se a distância que o robô se move em um tempo fixo não é constante, mas muda ligeiramente de corrida para corrida.
-\item Marcar uma linha de meta no chão e calcular o tempo que o robô deve levar para alcançar a meta.
-\item Quando o robô tiver se movido por esse período de tempo, veja se ele pode encontrar a meta se movendo para frente e para trás em pequenos passos até detectar a meta.
+\item Marque uma linha de destino no chão e calcule o tempo que o robô deve levar para alcançar tal destino.
+\item Execute o programa. Após o período de tempo calculado no item anterior, verifique se o robô pode encontrar a linha movendo-se para frente e para trás em pequenos passos até detectá-la.
 \end{itemize}
 \end{framed}
 
-\section{Codificadores de roda}\label{s.wheel}
+\section{Encoders de roda}\label{s.wheel}
 
-A odometria em um veículo com rodas como um carro pode ser melhorada medindo a rotação das rodas ao invés de mapear a potência do motor em velocidade. A circunferência de uma roda é de $2\pi r$, onde $r$ é o raio da roda em cm, portanto, se as rotações de $n$ forem contadas, sabemos que o robô moveu $2\pi n r$ cm. Os codificadores de roda podem ser construídos para medir as frações de uma revolução. Se um sinal é gerado $8$ vezes por revolução, a distância movida é $2\pi nr /8$ cm, que $n$ é agora o número de sinais contados pelo computador.
+A odometria em um veículo com rodas como um carro pode ser melhorada medindo a rotação das rodas ao invés de se inferir sua velocidade a partir da potência aplicada aos motores. A circunferência de uma roda é de $2\pi r$, onde $r$ é o raio da roda (por exemplo, em cm). Portanto, se $n$ rotações forem contadas, sabemos que o robô se moveu $2\pi n r$ cm. Os encoders de roda podem ser construídos para medir as frações de uma revolução. Se um pulso é gerado $8$ vezes por revolução, a distância movida é $2\pi nr /8$ cm, onde $n$ é agora o número de pulsos gerados pelo sensor do encoder.
 
-Há muitas maneiras diferentes de implementar codificadores de roda. Um projeto popular é usar uma fonte de luz como um diodo emissor de luz (LED), um sensor de luz e um disco codificador que é anexado ao eixo da roda (Fig.~\ref{fig.wheel}). O disco é perfurado com furos (Fig.~\ref{fig.encoding-disk}) para que sempre que o furo for oposto à fonte de luz, o sensor gere um sinal.
+Há muitas maneiras diferentes de implementar encoders de roda. Um projeto popular é usar uma fonte de luz como um diodo emissor de luz (LED), um sensor de luz e um disco codificador que é anexado ao eixo da roda (Fig.~\ref{fig.wheel}). O disco é perfurado com furos (Fig.~\ref{fig.encoding-disk}) para que o sensor gere um sinal sempre que o furo estiver alinhado com a fonte de luz.
 
 \begin{figure}
 \begin{minipage}{.5\textwidth}
 \begin{tikzpicture}[scale=.7]
 % Draw axle
-\draw[thick,fill=gray!80] (0,-.18) rectangle (5,.18) node[right=4pt,yshift=10pt,text width=8mm] {\textsf{a motor}};
+\draw[thick,fill=gray!80] (0,-.18) rectangle (5,.18) node[right=4pt,yshift=10pt,text width=8mm] {\textsf{ao motor}};
 % Draw disk
 \draw[rounded corners,fill=gray!10] (3,-1.6) node[right=10pt,yshift=3pt] {\textsf{disco codificador}} rectangle +(.4,3.2);
 % Draw wheel
@@ -490,7 +477,7 @@ Há muitas maneiras diferentes de implementar codificadores de roda. Um projeto 
 \end{scope}
 \draw[raxis] (-15mm,0) -- (64mm,0);
 \end{tikzpicture}
-\caption{Codificador óptico de roda}\label{fig.wheel}
+\caption{Encoder óptico de roda}\label{fig.wheel}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.45\textwidth}
@@ -559,27 +546,41 @@ Há muitas maneiras diferentes de implementar codificadores de roda. Um projeto 
 %\end{minipage}
 %\end{figure}
 
-O suporte para codificadores de roda em robôs educacionais varia:
+O suporte para encoders de roda em robôs educacionais varia:
 \begin{itemize}
-\item Se um robô não tiver codificadores de roda, ele deve ser calibrado;
-\item O robô pode ter codificadores de roda que são usados internamente;
-\item Alguns robôs como o \lego. As tempestades de mente permitem que o usuário leia os codificadores.
+\item Se um robô não tiver encoders de roda, ele deve ser calibrado;
+\item O robô pode ter encoders de roda que são usados internamente;
+\item Alguns robôs como o \lego Mindstorms permitem que o usuário leia os encoders.
 \end{itemize}
-A seguinte atividade propõe uma experiência para medir a distância movimentada pela contagem das rotações de uma roda. Ela pode ser realizada mesmo que seu robô não possua codificadores de roda ou não sejam acessíveis.
+A seguinte atividade propõe uma experiência para medir a distância movimentada através da contagem das rotações de uma roda. Ela pode ser realizada mesmo que seu robô não possua encoders de roda, ou que não sejam acessíveis.
 
 \begin{framed}
-\act{Codificação de rodas}{wheel}
+\act{Encoders de rodas}{wheel}
 \begin{itemize}
-\item Fazer uma marca no topo de uma roda do robô usando giz ou prendendo um pedaço estreito de fita adesiva colorida. Escreva um programa que faça com que o robô se mova em frente durante um período de tempo fixo. Execute o programa e pegue um vídeo da lateral do robô usando a câmera de seu smartphone.
+\item Faça uma marca no topo de uma roda do robô usando giz ou prendendo um pedaço estreito de fita adesiva colorida. Escreva um programa que faça com que o robô se mova para frente durante um período de tempo fixo. Execute o programa e faça um vídeo da lateral do robô usando a câmera de seu smartphone.
 \item Veja o vídeo e determine o número de rotações contando o número de vezes que a marca está na parte superior da roda.
 \item Meça o raio da roda e calcule a distância movida. Quão próximo está o resultado da distância real medida no chão?
-\item Repetir a medição usando $n=2$ e depois $n=4$ marcas igualmente espaçadas no rebolo. Determine o número de rotações contando o número de vezes que uma marca está na parte superior do rebolo e divida por $n$. Calcule a distância.
+\item Repeta a medição usando $n=2$ e depois $n=4$ marcas igualmente espaçadas na roda. Determine o número de rotações contando o número de vezes que uma marca está na parte superior da roda e divida por $n$. Calcule a distância.
 \end{itemize}
 \end{framed}
 
-\section{Sistemas de navegação por inércia}\label{s.imu}
 
-Um \emph{sistema de navegação por inércia (INS)} mede diretamente a aceleração linear e a velocidade angular e os utiliza para calcular a pose de um veículo. O termo \emph{intial measurement unit (IMU)} também é usado, mas preferimos o termo INS que se refere a todo o sistema. A integração da aceleração desde a pose inicial até a hora atual $\tau$ dá a velocidade atual:
+
+
+
+
+%-------------------------- Parei aqui! -------------------------------------
+
+
+
+
+
+
+
+
+\section{Sistemas de navegação inercial}\label{s.imu}
+
+Um \emph{sistema de navegação inercial (INS, em inglês)} mede diretamente a aceleração linear e a velocidade angular e os utiliza para calcular a pose de um veículo. O termo \emph{intial measurement unit (IMU)} também é usado, mas preferimos o termo INS que se refere a todo o sistema. A integração da aceleração desde a pose inicial até a hora atual $\tau$ dá a velocidade atual:
 \[
 v=\int_0^\tau a(t) \,dt\,.
 \]
