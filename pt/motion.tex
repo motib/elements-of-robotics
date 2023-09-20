@@ -564,43 +564,29 @@ A seguinte atividade propõe uma experiência para medir a distância movimentad
 \end{itemize}
 \end{framed}
 
-
-
-
-
-
-%-------------------------- Parei aqui! -------------------------------------
-
-
-
-
-
-
-
-
 \section{Sistemas de navegação inercial}\label{s.imu}
 
-Um \emph{sistema de navegação inercial (INS, em inglês)} mede diretamente a aceleração linear e a velocidade angular e os utiliza para calcular a pose de um veículo. O termo \emph{intial measurement unit (IMU)} também é usado, mas preferimos o termo INS que se refere a todo o sistema. A integração da aceleração desde a pose inicial até a hora atual $\tau$ dá a velocidade atual:
+Um \emph{sistema de navegação inercial (INS, em inglês)} mede diretamente a aceleração linear e a velocidade angular e os utiliza para calcular a pose de um veículo. O termo \emph{inertial measurement unit (IMU)} também é usado, mas preferimos o termo INS, que se refere a todo o sistema. A integração da aceleração desde a pose inicial até o instante atual $\tau$ resulta na velocidade atual:
 \[
 v=\int_0^\tau a(t) \,dt\,.
 \]
-Da mesma forma, a integração da velocidade angular dá a mudança de direção:
+Da mesma forma, a integração da velocidade angular resulta no valor de mudança de orientação:
 \[
 \theta = \int_0^\tau \omega(t) \, dt\,.
 \]
-Em um INS, não nos são dadas funções contínuas de integração; em vez disso, a aceleração e a velocidade angular são amostradas e a soma substitui a integração:
+Em um INS, funções contínuas de integração não são fornecidas; em vez disso, a aceleração e a velocidade angular são amostradas e a soma substitui a integração:
 \[
 v_n = \sum^{n}_{i=0} a_n \Delta t,\;\; \theta_n = \sum^{n}_{i=0} \omega_n \Delta t\,.
 \]
-Os INSs estão sujeitos a erros causados por imprecisões na própria medição, bem como por variações causadas por fatores ambientais, como temperatura, e pelo desgaste da unidade. A medição inercial é freqüentemente combinada com GPS (Sect.~\ref{s.gps}) para atualizar a posição com uma localização absoluta.
+Os INSs estão sujeitos a erros causados por imprecisões na própria medição, bem como por variações causadas por fatores ambientais, como temperatura, e pelo desgaste da unidade. A medição inercial é frequentemente combinada com GPS (Sect.~\ref{s.gps}) para atualizar a posição com uma localização absoluta.
 
 Os INS para robôs são construídos com \emph{microelectromechanical systems (MEMS)}, que utilizam técnicas de fabricação de circuitos integrados que combinam elementos mecânicos com eletrônicos que fazem interface com o computador do robô.
 
 \subsection{Acelerômetros}\label{s.accelerometer}
 
-Se você já voou em um avião, você já experimentou uma força que o empurrou de volta para seu assento como resultado da rápida aceleração do avião na decolagem. Ao pousar, você é empurrado para longe de seu assento. Você também pode experimentar isto em um carro que acelera rapidamente ou faz uma parada de emergência. A aceleração está relacionada à força pela segunda lei de Newton $F=ma$, onde $m$ é a massa. Ao medir a força sobre um objeto, medimos a aceleração.
+Se você já voou em um avião, você já experimentou uma força que o empurrou contra seu assento como resultado da rápida aceleração do avião na decolagem. Ao pousar, você é empurrado para longe de seu assento. Você também pode experimentar isto em um carro que acelera rapidamente ou faz uma parada de emergência. A aceleração está relacionada à força pela segunda lei de Newton $F=ma$, onde $m$ é a massa. Ao medir a força sobre um objeto, podemos calcular sua aceleração.
 
-As figuras~\ref{fig.acc-forward}--\ref{fig.acc-backward} mostram como um acelerômetro pode ser construído a partir de um objeto (chamado de \emph{massa}) conectado a uma mola. Quanto maior a aceleração, maior a força exercida pela massa sobre a mola, que por sua vez faz com que a mola seja comprimida. A direção que a massa se move dá o sinal da aceleração: para frente ou para trás. A magnitude da força é medida indiretamente, medindo a distância que a massa se move. Você pode ver que os diagramas correspondem à nossa experiência: quando um carro acelera, você é empurrado de volta para o banco, mas quando ele desacelera (freios) você continua para frente.
+As figuras~\ref{fig.acc-forward}--\ref{fig.acc-backward} mostram como um acelerômetro pode ser construído a partir de um objeto (\emph{massa}) conectado a uma mola. Quanto maior a aceleração, maior a força exercida pela massa sobre a mola, que por sua vez faz com que a mola seja comprimida. O sentido que a massa se move dá o sinal da aceleração: para frente ou para trás. A magnitude da força é obtida indiretamente medindo-se a distância que a massa se move. Você pode ver que os diagramas correspondem à nossa experiência: quando um carro acelera, você é empurrado de volta para o banco, mas quando ele desacelera (freios) você continua para frente.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -662,23 +648,23 @@ As figuras~\ref{fig.acc-forward}--\ref{fig.acc-backward} mostram como um aceler�
 
 \subsection{Giroscópios}
 
-Um \emph{giroscópio} ("gyro") utiliza o princípio da força de Coriolis para medir a velocidade angular. Este conceito é explicado em livros didáticos sobre física e não entraremos em detalhes aqui. Há muitos tipos de giroscópios:
+Um \emph{giroscópio} (em inglês também chamado de \emph{gyro}) utiliza o princípio da força de Coriolis para medir a velocidade angular. Este conceito é explicado em livros didáticos sobre física e não entraremos em detalhes aqui. Há muitos tipos de giroscópios:
 \begin{itemize}
 \item Os giroscópios clássicos possuem discos mecânicos giratórios que são montados em cardan para que o eixo de rotação permaneça fixo no espaço. Estes giroscópios são extremamente precisos, mas são muito pesados e consomem muita energia. Eles são encontrados em veículos de alto valor, tais como aeronaves e foguetes.
-\item Os giroscópios a laser de anel (RLG) não possuem (quase) peças móveis e são preferidos em relação aos giroscópios mecânicos para a maioria das aplicações. Eles são baseados no envio de dois feixes de laser em direções opostas em torno de um caminho circular ou triangular. Se o giro estiver girando, o caminho seguido por um feixe laser será mais longo do que o caminho seguido pelo outro feixe. A diferença é proporcional à velocidade angular e pode ser medida e transferida para o computador de navegação.
-\item Os giroscópios vibratórios Coriolis (CVG) fabricados com técnicas MEMS são encontrados em smartphones e robôs. Eles são baratos e extremamente robustos, embora sua precisão não seja tão boa quanto os giroscópios discutidos anteriormente. Agora damos uma visão geral de como eles funcionam.
+\item Os giroscópios a laser de anel (RLG) não possuem (quase) peças móveis e são preferidos em relação aos giroscópios mecânicos para a maioria das aplicações. Eles são baseados no envio de dois feixes de laser em sentidos opostos em torno de um caminho circular ou triangular. Se o giroscópio estiver girando, o caminho seguido por um dos feixes de laser será mais longo do que o caminho seguido pelo outro feixe. A diferença é proporcional à velocidade angular e pode ser medida e transferida para o computador de navegação.
+\item Os giroscópios vibratórios Coriolis (CVG) fabricados com técnicas MEMS são encontrados em smartphones e robôs. Eles são baratos e extremamente robustos, embora sua precisão não seja tão boa quanto a dos giroscópios discutidos anteriormente. Agora damos uma visão geral de como eles funcionam.
 \end{itemize}
 
-A figura~\ref{fig.tuning-gyro-image} mostra um CVG chamado \emph{garfo oscilador giroscópio}. Duas massas quadradas são fixadas por vigas flexíveis a âncoras que são montadas na base do componente. Os condutores forçam as massas a vibrar para a esquerda e para a direita. Se o componente girar, as massas se movem para cima e para baixo a uma distância proporcional à velocidade angular. As massas e os eletrodos formam as placas de condensadores cuja capacitância aumenta ou diminui conforme as placas se juntam ou se afastam.
+A figura~\ref{fig.tuning-gyro-image} mostra um CVG chamado \emph{giroscópio diapasão}, ou giroscópio de garfo oscilante. Duas massas quadradas são fixadas por vigas flexíveis a âncoras que são montadas na base do componente. Os condutores forçam as massas a vibrar para a esquerda e para a direita. Se o componente girar, as massas se movem para cima e para baixo a uma distância proporcional à velocidade angular. As massas e os eletrodos formam as placas de capacitores cuja capacitância aumenta ou diminui conforme as placas se juntam ou se afastam.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=.7\textwidth]{tuning-fork-gyro}
 \end{center}
-\caption{Giroscópio de garfo de afinação (Cortesia de Zhili Hao, Old Dominion University)}\label{fig.tuning-gyro-image}
+\caption{Giroscópio diapasão (Cortesia de Zhili Hao, Old Dominion University)}\label{fig.tuning-gyro-image}
 \end{figure}
 
-A teoria de funcionamento do giroscópio do garfo oscilante é mostrada na Fig.~\ref{fig.tuning-gyro}. As massas (quadrados cinza) são forçadas a vibrar na mesma freqüência como os dois dentes de um garfo oscilante. Elas vibram em direções diferentes, ou seja, ou se aproximam uma da outra (setas com pontos azuis) ou se afastam uma da outra (setas vermelhas tracejadas). O componente gira em torno de um eixo perpendicular a seu centro (o círculo com uma cruz denota o eixo de rotação que é perpendicular ao plano do papel). A força de Coriolis é uma força cuja direção é dada pelo produto transversal vetorial do eixo de rotação e do movimento da massa, e cuja magnitude é proporcional à velocidade linear da massa e à velocidade angular do giroscópio. Como as massas estão se movendo em diferentes direções, as forças resultantes serão iguais, mas em direções opostas (setas sólidas). As massas se aproximam ou retrocedem dos eletrodos (pequenos retângulos) e a mudança na capacitância pode ser medida por um circuito.
+A teoria de funcionamento do giroscópio do garfo oscilante é mostrada na Fig.~\ref{fig.tuning-gyro}. As massas (quadrados cinza) são forçadas a vibrar na mesma frequência como os dois dentes de um garfo oscilante. Elas vibram em sentidos diferentes, ou seja, ou se aproximam uma da outra (setas com pontos azuis) ou se afastam uma da outra (setas vermelhas tracejadas). O componente gira em torno de um eixo perpendicular a seu centro (o círculo com uma cruz denota o eixo de rotação que é perpendicular ao plano do papel). A força de Coriolis é uma força cuja direção e sentido são dados pelo produto vetorial do eixo de rotação e do eixo de movimento da massa, e cuja magnitude é proporcional à velocidade linear da massa e à velocidade angular do giroscópio. Como as massas estão se movendo em sentidos opostos, as forças resultantes serão iguais, com mesma direção, mas em sentidos opostos (setas sólidas). As massas se aproximam ou retrocedem dos eletrodos (pequenos retângulos) e a mudança na capacitância pode ser medida por um circuito.
 
 \begin{figure}
 \begin{center}
@@ -701,27 +687,27 @@ A teoria de funcionamento do giroscópio do garfo oscilante é mostrada na Fig.~
 }
 \end{tikzpicture}
 \end{center}
-\caption{Física de um giroscópio de garfo de afinação: setas vermelhas tracejadas e setas azuis pontilhadas indicam a direção da vibração; setas negras sólidas indeiam a direção da força de Coriolis}\label{fig.tuning-gyro}
+\caption{Física de um giroscópio diapasão (garfo oscilante): setas vermelhas tracejadas e setas azuis pontilhadas indicam a direção e sentido da vibração; setas negras sólidas indeiam a força de Coriolis}\label{fig.tuning-gyro}
 \end{figure}
 
-\subsection{Applications}
+\subsection{Aplicações}
 
-Um sistema de navegação inercial tem três acelerômetros e três giroscópios para que a pose do veículo possa ser computada em três dimensões. Isto é necessário para aeronaves robóticas e outros veículos robóticos. Os airbags utilizam um acelerômetro que detecta a desaceleração rápida na direção frente-lombar que ocorre quando um carro trava. Isto causa uma expansão explosiva do airbag. É possível conceber mais aplicações para estes componentes em automóveis. Um acelerômetro na direção ascendente pode detectar se o carro caiu em um buraco. Um giroscópio medindo a rotação ao redor do eixo vertical pode detectar derrapagens, enquanto o giroscópio medindo a rotação ao redor do eixo dianteiro-traseiro pode detectar se o carro está capotando.
+Um sistema de navegação inercial tem três acelerômetros e três giroscópios para que a pose do veículo possa ser computada em três dimensões. Isto é necessário para aeronaves robóticas e outros veículos robóticos. Os airbags utilizam um acelerômetro que detecta a desaceleração rápida na direção frente-lombar que ocorre quando um carro freia bruscamente. Isto causa uma expansão explosiva do airbag. É possível conceber mais aplicações para estes componentes em automóveis. Um acelerômetro na direção ascendente pode detectar se o carro caiu em um buraco. Um giroscópio medindo a rotação ao redor do eixo vertical pode detectar derrapagens, enquanto o giroscópio medindo a rotação ao redor do eixo dianteiro-traseiro pode detectar se o carro está capotando.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Graus de liberdade e número de atuadores}\label{s.dof}
+\section{Graus de Liberdade e Número de Atuadores}\label{s.dof}
 
-O número de \emph{graus de liberdade (DOF)} de um sistema é a dimensionalidade das coordenadas necessárias para descrever uma pose de um robô móvel ou a pose do efeito final de um manipulador robótico.\footnote{Esta seção e as seguintes são mais avançadas e podem ser puladas durante sua primeira leitura. Além disso, alguns dos exemplos são de manipuladores robóticos descritos em Chap.~\ref{ch.kinematics}.} Por exemplo, um helicóptero tem seis DOF porque pode mover-se nas três dimensões espaciais e pode girar ao redor dos três eixos. Portanto, uma coordenada de seis dimensões $(x,y,z,\phi,\phi,\psi,\theta)$ é necessária para descrever sua pose.
+O número de \emph{graus de liberdade (DoF)} de um sistema é a dimensionalidade das coordenadas necessárias para descrever uma pose de um objeto, como a de um robô móvel ou a pose do efetuador de um manipulador robótico.\footnote{Esta seção e as seguintes são mais avançadas e podem ser puladas durante uma primeira leitura. Além disso, alguns dos exemplos são de manipuladores robóticos descritos em Chap.~\ref{ch.kinematics}.} Por exemplo, um helicóptero tem seis DoF porque pode mover-se nas três dimensões espaciais e pode girar ao redor dos três eixos. Portanto, uma coordenada de seis dimensões $(x,y,z,\phi,\phi,\psi,\theta)$ é necessária para descrever sua pose\footnote{N. do T.: Lembre-se de que o termo "pose" refere-se à posição e à orientação do objeto.}.
 
 \begin{quote}
 \begin{center}
-\textbf{Os termos usados para descrever as rotações}
+\textbf{Termos usados para descrever rotações}
 \end{center}
-Um helicóptero pode girar ao redor de todos os três eixos. As rotações são chamadas: (a) passo: o nariz se move para cima e para baixo; (b) rotação: o corpo gira ao redor de seu eixo longitudinal; (c) guinada: o corpo gira à esquerda e à direita ao redor do eixo de seu rotor.
+Um helicóptero pode girar ao redor de todos os três eixos. As rotações são chamadas: (a) arfagem (\emph{pitch}): o nariz se move para cima e para baixo; (b) rolamento (\emph{roll}): o corpo gira ao redor de seu eixo longitudinal; (c) guinada (\emph{yaw}): o corpo gira à esquerda e à direita ao redor do eixo de seu rotor.
 \end{quote}
 
-O braço robótico de duas ligações em Fig.~\ref{fig.two-link} tem apenas duas DOF porque seu efeito final se move em um plano e não gira; portanto, pode ser descrito por uma coordenada bidimensional $(x,y)$. Ao examinar novamente a Fig.~\ref{fig.pos-head}, você pode ver que um robô móvel movendo-se em uma superfície plana tem três DOF, porque sua pose é definida por uma coordenada tridimensional $(x,y,\theta)$. Um trem tem apenas um DOF, uma vez que é obrigado pelos trilhos a se mover para frente (ou ocasionalmente para trás) ao longo dos trilhos. É preciso apenas uma coordenada $(x)$, a distância do trem de uma origem arbitrária da via, para especificar a pose do trem.
+O braço robótico de dois elos em Fig.~\ref{fig.two-link} tem apenas dois DoF porque seu efeito final se move em um plano e não gira; portanto, pode ser descrito por uma coordenada bidimensional $(x,y)$. Ao examinar novamente a Fig.~\ref{fig.pos-head}, você pode ver que um robô móvel movendo-se em uma superfície plana tem três DoF porque sua pose é definida por uma coordenada tridimensional $(x,y,\theta)$. Um trem tem apenas um DoF, uma vez que é obrigado pelos trilhos a se mover para frente (ou ocasionalmente para trás) ao longo da linha. É preciso apenas uma coordenada $(x)$, a distância do trem a uma origem arbitrária da via, para especificar a pose do trem.
 
 \begin{figure}
 \begin{center}
@@ -742,17 +728,17 @@ O braço robótico de duas ligações em Fig.~\ref{fig.two-link} tem apenas duas
 \node[below right] at (prime) {\p{móvel}\\\p{junta rotativa}};
 \end{tikzpicture}
 \end{center}
-\caption{Um braço robótico de dois elos com dois DOF}\label{fig.two-link}
+\caption{Um braço robótico de dois elos com dois DoF}\label{fig.two-link}
 \end{figure}
 
-Precisamos de mais informações do que os graus de liberdade para descrever o movimento robótico. Considere um veículo como um carro, uma bicicleta ou uma cadeira de escritório. Embora três coordenadas $(x,y,\theta)$ sejam necessárias para descrever sua pose, não podemos necessariamente mover o veículo diretamente de uma pose para outra. Uma cadeira de escritório pode ser movida \emph{diretamente} para qualquer ponto do avião e orientada em qualquer direção. Um carro ou uma bicicleta a $(2,0,0^\circ)$ (apontada ao longo do eixo positivo $x$) não pode ser movida diretamente para cima do eixo $y$ para a posição $(2,2,0^\circ)$. Uma manobra mais complexa é necessária.
+Precisamos de mais informações do que os graus de liberdade para descrever o movimento robótico. Considere um veículo como um carro, uma bicicleta ou uma cadeira de escritório. Embora três coordenadas $(x,y,\theta)$ sejam necessárias para descrever sua pose, não podemos necessariamente mover o veículo diretamente de uma pose para outra. Uma cadeira de escritório pode ser movida \emph{diretamente} para qualquer ponto do plano e orientada em qualquer direção. Um carro ou uma bicicleta a $(2,0,0^\circ)$ (orientada na direção do eixo positivo $x$) não pode ser movida diretamente para cima do eixo $y$ para a posição $(2,2,0^\circ)$. Uma manobra mais complexa é necessária.
 
-Precisamos saber o número de seus \emph{acionadores} (geralmente motores) e sua configuração. Um robô de acionamento diferencial tem dois atuadores, um para cada roda, embora o próprio robô tenha três DOF. Os motores movem o robô ao longo de um eixo para frente e para trás, mas aplicando uma potência desigual, podemos mudar o título do robô. O braço de dois elos na Fig.~\ref{fig.two-link} tem dois motores, um em cada junta rotativa, portanto o número de atuadores é igual ao número de DOF. Finalmente, um trem tem apenas um atuador, o motor que o move para frente ou para trás em seu único DOF.
+Precisamos saber o número de seus \emph{atuadores} (geralmente motores) e sua configuração. Um robô móvel de acionamento diferencial tem dois atuadores, um para cada roda, embora o próprio robô tenha três DoF. Os motores movem o robô ao longo de um eixo para frente e para trás, mas aplicando uma potência diferente a cada motor podemos mudar a orientação do robô. O braço de dois elos na Fig.~\ref{fig.two-link} tem dois motores, um em cada junta rotativa, portanto o número de atuadores é igual ao número de DoF. Finalmente, um trem tem apenas um atuador, o motor que o move para frente ou para trás em seu único DoF\footnote{N. do T.: Ainda que um trem tenha vários motores, todos atuam em paralelo e resultam num mesmo movimento. Para efeitos de análise, tudo se passe como se existisse apenas um atuador.}.
 
 \begin{framed}
 \act{Robô que só pode girar}{rotate-only}
 \begin{itemize}
-\item A figura~\ref{fig.rot-dof} mostra um robô de acionamento diferencial com uma haste fixa através de seu centro de rotação. A haste impede que o robô mude de posição, permitindo que ele só gire em torno de seu eixo vertical. Caracterize esta configuração: o número de atuadores e o número de DOF.
+\item A figura~\ref{fig.rot-dof} mostra um robô de acionamento diferencial com uma haste fixa através de seu centro de rotação. A haste impede que o robô mude de posição, permitindo que ele só gire em torno de seu eixo vertical. Caracterize esta configuração: o número de atuadores e o número de DoF.
 \item Que tipos de tarefas este robô poderia realizar? Quais são as vantagens e desvantagens desta configuração?
 \end{itemize}
 \end{framed}
@@ -775,37 +761,37 @@ Precisamos saber o número de seus \emph{acionadores} (geralmente motores) e sua
 \caption{Um robô que só pode girar em torno de um eixo (ponto cinza)}\label{fig.rot-dof}
 \end{figure}
 
-\section{O número relativo de atuadores e DOF}\label{s.num-actuators}
+\section{O Número Relativo de Atuadores e Graus de Liberdade (DoF)}\label{s.num-actuators}
 
 Vamos analisar os sistemas onde:
 \begin{itemize}
-\item O número de atuadores é igual ao número de DOF;
-\item O número de atuadores é menor do que o número de DOF;
-\item O número de atuadores é maior do que o número de DOF.
+\item O número de atuadores é igual ao número de DoF;
+\item O número de atuadores é menor do que o número de DoF;
+\item O número de atuadores é maior do que o número de DoF.
 \end{itemize}
 
-\subsubsection*{O número de atuadores é igual ao número de DOF}
+\subsubsection*{O Número de Atuadores é Igual ao Número de DoF}
 
-Um trem tem um atuador (seu motor) que move o trem ao longo de seu único DOF. O braço robótico de duas linhas na Fig.~\ref{fig.two-link} tem dois atuadores e dois DOF. Uma garra robótica pode ser construída com três motores que giram a garra em cada uma das três orientações (rolo, passo, guinada). A vantagem de ter um número igual de atuadores e DOF é que o sistema é relativamente fácil de controlar: cada atuador é comandado individualmente para mover o robô para a posição desejada no DOF que ele controla.
+Um trem tem um atuador (seu motor) que move o trem ao longo de seu único DoF. O braço robótico de dois elos da Fig.~\ref{fig.two-link} tem dois atuadores e dois DoF. Uma garra robótica pode ser construída com três motores que giram a garra em cada uma das três orientações (rolamento, arfagem, guinada). A vantagem de ter um número igual de atuadores e DoF é que o sistema é relativamente fácil de controlar: cada atuador é comandado individualmente para mover o robô para a posição desejada no DoF que ele controla.
 
-\subsubsection*{O número de atuadores é menor do que o número de DOF}
+\subsubsection*{O Número de Atuadores é Menor do que o Número de DoF}
 
-Os robôs móveis geralmente terão menos atuadores do que o DOF. Um robô com acionamento diferencial e um carro têm apenas dois atuadores, mas podem alcançar todas as poses tridimensionais possíveis no plano. Ter menos atuadores torna o sistema menos caro, mas os problemas de planejamento e controle de movimento são muito mais difíceis. O estacionamento paralelo de um carro é notório por sua dificuldade: são necessárias duas rotações e uma tradução para realizar um simples movimento lateral (Figs.~\ref{fig.parallel-diff}--\ref{fig.parallel-car}).
+Os robôs móveis geralmente têm menos atuadores do que o DoF. Um robô com acionamento diferencial e um carro têm apenas dois atuadores, mas podem alcançar todas as poses possíveis num plano. Ter menos atuadores torna o sistema menos caro, mas os problemas de planejamento e controle de movimento são muito mais difíceis. O estacionamento paralelo de um carro é notório por sua dificuldade: são necessárias duas rotações e uma translação para realizar um simples movimento lateral (Figs.~\ref{fig.parallel-diff}--\ref{fig.parallel-car}).
 
-Um exemplo extremo é um balão de ar quente que tem apenas um único atuador (um aquecedor) que injeta mais ou menos ar quente no balão e assim controla sua altitude. Entretanto, os ventos podem fazer com que o balão se mova em qualquer uma das três direções espaciais e até mesmo girar (pelo menos parcialmente) em três orientações, de modo que o operador do balão nunca pode controlar com precisão o balão. Portanto, um balão de ar quente difere de um elevador: ambos têm um único atuador, mas o elevador é obrigado por seu eixo a se mover em apenas um DOF.
+Um exemplo extremo é um balão de ar quente que tem apenas um único atuador (um aquecedor) que injeta mais ou menos ar quente no balão e assim controla sua altitude. Entretanto, os ventos podem fazer com que o balão se mova em qualquer uma das três direções espaciais e até mesmo girar (pelo menos parcialmente) em três orientações, de modo que o operador do balão nunca pode controlar com precisão a sua pose. Portanto, um balão de ar quente difere de um elevador: ambos têm um único atuador, mas o elevador é obrigado por seu eixo a se mover em apenas um DoF.
 
-Para outro exemplo da complexa relação entre o DOF e o número de atuadores, o leitor é convidado a estudar o controle de vôo em helicópteros. Os helicópteros são altamente manobráveis (ainda mais que os aviões que não podem voar para trás), mas um piloto controla o vôo do helicóptero usando apenas três atuadores:
+Para outro exemplo da complexa relação entre o número de DoF e o número de atuadores, o leitor é convidado a estudar o controle de voo em helicópteros. Os helicópteros são altamente manobráveis (ainda mais que os aviões, que não podem voar para trás), mas um piloto controla o voo do helicóptero usando apenas três atuadores:
 \begin{itemize}
-\item O \emph{ciclic} controla o passo do rotor principal \emph{shaft} que determina se o helicóptero se move para frente, para trás ou para ambos os lados.
-\item O \emph{coletivo} controla o passo das \emph{lâminas} do rotor principal, que determina se o helicóptero se move para cima ou para baixo.
-\item O \emph{pedais} controla a velocidade do rotor de cauda que determina a direção em que o nariz do helicóptero aponta.
+\item O \bold{cíclico} controla o passo do eixo do rotor principal, que determina se o helicóptero se move para frente, para trás ou para ambos os lados.
+\item O \bold{coletivo} controla o passo das lâminas do rotor principal, que determina se o helicóptero se move para cima ou para baixo.
+\item Os \bold{pedais} controlam a velocidade do rotor de cauda que determina a direção em que o nariz do helicóptero aponta.
 \end{itemize}
 
-\subsubsection*{O número de atuadores é maior do que o número de DOF}
+\subsubsection*{O Número de Atuadores é Maior do que o Número de DoF}
 
-Não parece ser uma boa idéia ter atuadores de força maior do que o DOF, mas na prática tais configurações são muitas vezes úteis. Os sistemas na Figs.~\ref{fig.hi-act-low-dof-1}--\ref{fig.hi-act-low-dof-2} têm mais atuadores do que DOF. O braço manipulador robótico na Figs.~\ref{fig.hi-act-low-dof-1} tem quatro elos girando no plano com atuadores (motores) \p{a1}, \p{a2}, \p{a3}, \p{a4} nas juntas. Assumimos que o efetor final é fixado ao elo a partir de \p{a4} e não pode girar, portanto sua pose é definida por sua posição $(x,y)$ e uma orientação fixa. Portanto, embora o braço tenha quatro atuadores, ele tem apenas dois DOF porque pode mover o efetor final apenas horizontal e verticalmente.
+Não parece ser uma boa ideia ter mais atuadores do que o DoF, mas na prática tais configurações são muitas vezes úteis. Os sistemas na Figs.~\ref{fig.hi-act-low-dof-1}--\ref{fig.hi-act-low-dof-2} têm mais atuadores do que DoF. O braço manipulador robótico na Figs.~\ref{fig.hi-act-low-dof-1} tem quatro elos girando no plano com atuadores (motores) \p{a1}, \p{a2}, \p{a3}, \p{a4} em cada uma das juntas. Assumimos que o efetuador seja fixado ao elo a partir de \p{a4} e não possa girar, portanto sua pose é definida por sua posição $(x,y)$ e uma orientação fixa. Logo, embora o braço tenha quatro atuadores, ele possui apenas dois DoF porque pode mover o efetuador apenas no plano $(x,y)$ (horizontal e verticalmente).
 
-O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuadores: um motor que move o robô para frente e para trás, e motores para cada uma das duas juntas rotativas. Entretanto, o sistema tem apenas dois DOF desde que a pose de seu efetor final é definida por uma coordenada bidimensional de $(x,y)$. Sistemas com mais atuadores que DOF são chamados de \emph{sistemas redundantes}.
+O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuadores: um motor que move o robô para frente e para trás, e motores para cada uma das duas juntas rotativas do manipulador. Entretanto, o sistema tem apenas dois DoF já que a pose de seu efetuador é definida por uma coordenada bidimensional de $(x,y)$. Sistemas com mais atuadores que DoF são chamados de \emph{sistemas redundantes}.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -813,7 +799,7 @@ O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuador
 \coordinate (j1) at (1,0);
 \fill[gray!50] (0,-2mm) rectangle +(4,-2mm);
 \draw[very thick] (j1) -- +(0,-2mm);
-\draw[thick] (j1) node[above right,xshift=5pt] {\p{a1}} -- ++(120:10mm) coordinate (j2) node[left,xshift=-2pt,yshift=-2pt] {\p{a2}} -- ++(30:15mm) coordinate (j3) node[above left,xshift=-4pt,yshift=-2pt] {\p{a3}} -- ++(10:12mm) coordinate (j4) node[right,xshift=2pt,yshift=-2pt] {\p{a4}} -- ++(80:8mm) coordinate (ee) node[left,xshift=-2pt] {\p{efeito final}};
+\draw[thick] (j1) node[above right,xshift=5pt] {\p{a1}} -- ++(120:10mm) coordinate (j2) node[left,xshift=-2pt,yshift=-2pt] {\p{a2}} -- ++(30:15mm) coordinate (j3) node[above left,xshift=-4pt,yshift=-2pt] {\p{a3}} -- ++(10:12mm) coordinate (j4) node[right,xshift=2pt,yshift=-2pt] {\p{a4}} -- ++(80:8mm) coordinate (ee) node[left,xshift=-2pt] {\p{efetuador}};
 \draw[->] ($(j1)+(-7pt,2pt)$) arc (180:0:6pt);
 \draw[->] ($(j2)+(-5pt,4pt)$) arc (140:-40:6pt);
 \draw[->] ($(j3)+(-5pt,2pt)$) arc (160:-60:6pt);
@@ -824,7 +810,7 @@ O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuador
 \fill (j4) circle [radius=2pt];
 \fill (ee) circle [radius=2pt];
 \end{tikzpicture}
-\caption{Braço do robô: dois DOF e quatro atuadores}\label{fig.hi-act-low-dof-1}
+\caption{Braço robótico: dois DoF e quatro atuadores}\label{fig.hi-act-low-dof-1}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.45\textwidth}
@@ -841,14 +827,14 @@ O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuador
 \draw[raxis] (29mm,0) -- +(2mm,0);
 \draw[raxis] (29mm,0) -- +(0,2mm);
 \draw[raxis] (29mm,0) -- +(0,-2mm);
-\draw (17mm,1) coordinate (j1) node[above right] {\p{a1}} -- ++(130:10mm) coordinate (j2) node[left,xshift=-2pt] {\p{a2}} -- ++(60:10mm) coordinate (ee) node[right,xshift=2pt] {\p{efeito final}};
+\draw (17mm,1) coordinate (j1) node[above right] {\p{a1}} -- ++(130:10mm) coordinate (j2) node[left,xshift=-2pt] {\p{a2}} -- ++(60:10mm) coordinate (ee) node[right,xshift=2pt] {\p{efetuador}};
 \draw[->] ($(j1)+(0pt,-5pt)$) arc (-90:-270:6pt);
 \draw[->] ($(j2)+(-3pt,6pt)$) arc (120:-100:6pt);
 \fill (j1) circle [radius=2pt];
 \fill (j2) circle [radius=2pt];
 \fill (ee) circle [radius=2pt];
 \end{tikzpicture}
-\caption{Robô móvel e braço: dois DOF e três atuadores}\label{fig.hi-act-low-dof-2}
+\caption{Robô móvel e manipulador: dois DoF e três atuadores}\label{fig.hi-act-low-dof-2}
 \end{minipage}
 \end{figure}
 
@@ -898,7 +884,7 @@ O robô móvel com um braço (Fig.~\ref{fig.hi-act-low-dof-2}) tem três atuador
 %\rightcaption{Mobile robot and arm: two DOF and three actuators}\label{fig.hi-act-low-dof-2}
 %\end{figure}
 
-Se possível, os engenheiros evitam usar mais de um atuador agindo sobre o mesmo DOF porque isso aumenta a complexidade e o custo de um sistema. A cinemática inversa (Sect.~\ref{s.inverse-kinematics}) de um sistema redundante resulta em um número infinito de soluções que complicam a operação do sistema. Para o robô móvel com o braço (Fig.~\ref{fig.hi-act-low-dof-2}), há um número infinito de posições da base e do braço que levam o efeito final a uma posição específica alcançável.
+Se possível, os engenheiros evitam usar mais de um atuador agindo sobre um mesmo DoF porque isso aumenta a complexidade e o custo de um sistema. A cinemática inversa (Sect.~\ref{s.inverse-kinematics}) de um sistema redundante resulta em um número infinito de soluções que complicam sua operação. Para o robô móvel com manipulador (Fig.~\ref{fig.hi-act-low-dof-2}), há um número infinito de posições da base e do braço que levam o efetuador a uma posição específica alcançável.
 
 Há situações em que é necessário um sistema redundante porque a tarefa não poderia ser realizada com menos atuadores. A Figura~\ref{fig.redundant1} mostra como o braço robótico de quatro elos da Fig.~\ref{fig.hi-act-low-dof-1} pode mover o efetor final para uma posição bloqueada por um obstáculo e, portanto, inalcançável por um braço de dois elos (Fig.~\ref{fig.redundant2}), mesmo que em ambas as configurações o comprimento total dos elos seja igual.
 
@@ -918,7 +904,7 @@ Há situações em que é necessário um sistema redundante porque a tarefa não
 \fill (j4) circle [radius=2pt];
 \fill (ee) circle [radius=2pt];
 \end{tikzpicture}
-\caption{Braço com quatro atuadores pode alcançar uma posição escondida}\label{fig.redundant1}
+\caption{Braço com quatro atuadores pode alcançar uma posição atrás de um obstáculo}\label{fig.redundant1}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.45\textwidth}
@@ -976,11 +962,12 @@ Há situações em que é necessário um sistema redundante porque a tarefa não
 %\rightcaption{Arm with two actuators is blocked by an obstacle}\label{fig.redundant2}
 %\end{figure}
 
-Uma vantagem importante dos sistemas redundantes surge de atuadores com características diferentes. O robô móvel na Fig.~\ref{fig.hi-act-low-dof-2} pode se aproximar rapidamente do alvo, embora sua posição final possa não ser precisa por causa de erros como terreno irregular. Uma vez que o robô móvel pare, os motores nas juntas que não têm que lidar com o terreno podem ser posicionados com precisão. Embora o posicionamento seja preciso, estas juntas não têm o amplo alcance da base móvel.
+Uma vantagem importante dos sistemas redundantes surge de atuadores com características diferentes. O robô móvel na Fig.~\ref{fig.hi-act-low-dof-2} pode se aproximar rapidamente do alvo, embora sua posição final possa não ser precisa por causa de erros como terreno irregular. Uma vez que o robô móvel pare, os motores nas juntas que não têm de lidar com o terreno podem ser posicionados com precisão. Embora o posicionamento seja preciso, estas juntas sozinhas não podem proporcionar o mesmo alcance da base móvel.
 
-\subsubsection*{Um exemplo de um sistema com mais atuadores do que o DOF}
 
-A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração com \emph{dois atuadores e um DOF}. O sistema modela um guindaste robótico que move um peso pesado para uma posição vertical específica. A figura ~\ref{fig.crane} mostra um guindaste construído a partir de um robô Thymio e componentes de \lego.\footnote{O guincho está à direita do robô e não à esquerda como na figura~\ref{fig.act-dof}.}
+\subsubsection*{Um Exemplo de um Sistema com Mais Atuadores do que DoF}
+
+A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração com \emph{dois atuadores e um DoF}. O sistema modela um guindaste robótico que move um objeto pesado para uma posição vertical específica. A figura ~\ref{fig.crane} mostra um guindaste construído a partir de um robô Thymio e componentes de \lego.\footnote{O guincho está à direita do robô e não à esquerda como na figura~\ref{fig.act-dof}.}
 
 \begin{figure}
 \begin{center}
@@ -996,11 +983,11 @@ A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração 
 % Drive wheels
 \fill (-11mm,0) rectangle +(8mm, 2mm);
 \fill (-11mm,-18mm) rectangle +(8mm, -2mm);
-\node at (-12mm,-8mm) {\p{rodas acionadas}};
+\node at (-12mm,-8mm) {\p{rodas de tração}};
 \draw[->] (-8mm,-6mm) -- +(0,14pt);
 \draw[->] (-8mm,-10mm) -- +(0,-20pt);
 % Road wheels
-\fill[gray!70] (-3mm,0) rectangle +(10mm, 2mm) node[above left,black,xshift=-38pt,yshift=13pt] {\p{roda da estrada}};
+\fill[gray!70] (-3mm,0) rectangle +(10mm, 2mm) node[above left,black,xshift=-38pt,yshift=13pt] {\p{roda de deslocamento}};
 \draw[->] (1mm,5mm) -- +(0,-8pt);
 \fill[gray!70] (-3mm,-23mm) rectangle +(10mm, -2mm);
 \draw[fill,cyan] (2mm,0) rectangle +(2pt,-23mm);
@@ -1027,7 +1014,7 @@ A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração 
 \draw[fill,gray!20] (-1,-23.5mm) rectangle +(4mm,-15mm);
 \draw[fill,gray!20] (5,-23.5mm) rectangle +(4mm,-15mm);
 % Big wheel
-\draw[fill,gray!70] (62mm,-9mm) circle[radius=1.25] node[left,black,xshift=-34pt,yshift=-8pt] {\p{roda da estrada}};
+\draw[fill,gray!70] (62mm,-9mm) circle[radius=1.25] node[left,black,xshift=-34pt,yshift=-8pt] {\p{roda de deslocamento}};
 % Attachment
 \draw[fill,cyan] (62mm,-9mm) circle[radius=4pt];
 \draw[fill,cyan] (61.5mm,-9mm) rectangle +(3pt,20.5mm);
@@ -1040,7 +1027,7 @@ A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração 
 % Robot
 \draw[rounded corners,fill=white] (.2,0) -- (.2,2) -- (5.9, 2) -- (5.9,0) -- cycle;
 % Wheel
-\draw[fill,black] (4.3,9pt) circle[radius=1] node[left,black,xshift=-24pt,yshift=23pt] {\p{roda acionada}};
+\draw[fill,black] (4.3,9pt) circle[radius=1] node[left,black,xshift=-24pt,yshift=23pt] {\p{roda de tração}};
 % Winch
 \draw[fill,red]  (4.3,9pt) circle[radius=.5] node[above right,black,xshift=5pt,yshift=28pt] {\p{guincho}};
 \draw[->] (5,39pt) -- +(-16pt,-24pt);
@@ -1074,22 +1061,22 @@ A figura~\ref{fig.act-dof} (vista superior e lateral) mostra uma configuração 
 \end{center}
 \end{figure}
 
-O sistema é construído a partir de um robô móvel com acionamento diferencial, mas as rodas não são usadas diretamente para controlar o movimento do sistema. Ao invés disso, cada roda é um atuador independente. (Lembre-se que a potência de cada roda de um robô com acionamento diferencial pode ser ajustada independentemente para qualquer valor em uma faixa como $-100$ a $100$).
+O sistema é construído a partir de um robô móvel com tração diferencial, mas as rodas não são usadas diretamente para controlar o movimento do sistema. Ao invés disso, cada roda é um atuador independente. (Lembre-se que a potência de cada roda de um robô com acionamento diferencial pode ser ajustada independentemente para qualquer valor em uma faixa como $-100$ a $100$).
 
 O robô está virado para a esquerda. A roda acionada à direita na Fig.~\ref{fig.act-dof} (o retângulo preto no topo da vista superior e oculto atrás do robô na vista lateral) controla um par de rodas (cinzas) que movem o robô rapidamente para frente e para trás. Por sua vez, isto faz com que o cabo mova o peso rapidamente para cima e para baixo.
 
-As rodas da estrada são montadas em uma estrutura (em azul) que é fixada ao corpo do robô. Há várias opções para transferir a potência da roda motriz direita para as rodas da estrada: atrito, roldanas e correias e engrenagens. Cada opção tem suas próprias vantagens e desvantagens, e todas as três são usadas em carros: a embreagem usa fricção, correias são usadas para o sincronismo e para operar componentes auxiliares como bombas d'água, e engrenagens são usadas na transmissão para controlar o torque aplicado a cada roda.
+As rodas de deslocamento são montadas em uma estrutura (em azul) que é fixada ao corpo do robô. Há várias opções para transferir a potência da roda de tração direita para as rodas de deslocamento: atrito, roldanas e correias e engrenagens. Cada opção tem suas próprias vantagens e desvantagens, e todas as três são usadas em carros: a embreagem usa fricção, correias são usadas para o sincronismo e para operar componentes auxiliares como bombas d'água, e engrenagens são usadas na transmissão para controlar o torque aplicado a cada roda.
 
-A roda acionada à esquerda (o retângulo preto na parte inferior da vista superior e na frente da vista lateral) controla um guincho (vermelho) que rola ou desenrola um cabo preso ao peso que se move para cima ou para baixo sobre um rolamento fixo. O guincho tem um diâmetro muito menor do que o diâmetro das rodas acionadas, de modo que ele pode mover o peso em pequenos incrementos à medida que a roda acionada à esquerda gira. O objetivo do projeto é ser capaz de realizar o posicionamento preciso do peso mesmo que o guincho mova o cabo a uma velocidade muito mais lenta do que o corpo do robô.
+A roda de tração à esquerda (o retângulo preto na parte inferior da vista superior e na frente da vista lateral) controla um guincho (vermelho) que enrola ou desenrola um cabo preso ao peso que se move para cima ou para baixo sobre um rolamento fixo. O guincho tem um diâmetro muito menor do que o diâmetro das rodas acionadas, de modo que ele pode mover o peso em pequenos incrementos à medida que a roda acionada à esquerda gira. O objetivo do projeto é ser capaz de realizar o posicionamento preciso do peso mesmo que o guincho mova o cabo a uma velocidade muito mais lenta do que o corpo do robô.
 
-Há duas atividades para esta seção. Esta atividade é para leitores que possuem boas habilidades de construção e um kit de robótica apropriado. A segunda atividade sugere formas alternativas de demonstrar o conceito de dois atuadores em um DOF.
+Há duas atividades para esta seção. Esta atividade é para leitores que possuem boas habilidades de construção e um kit de robótica apropriado. A segunda atividade sugere formas alternativas de demonstrar o conceito de dois atuadores em um DoF.
 
 \begin{framed}
 \act{Guindaste robótico}{act-dof}
 \begin{itemize}
-\item Construir a grua robótica mostrada na Fig.~\ref{fig.act-dof}. Explique sua escolha de mecanismo para conectar a roda motriz às rodas da estrada.
-\item Escreva um programa que, dada a posição atual do peso e uma posição de objetivo, mova o peso para a posição de objetivo. Alternativamente, envie comandos para os motores usando um dispositivo de controle remoto ou um computador conectado ao robô.
-\item Experimentar as velocidades relativas de rotação das rodas acionadas à esquerda e à direita que controlam as rodas e o guincho, respectivamente. Você deve mover os dois atuadores separadamente ou simultaneamente?
+\item Construa o guindaste robótico mostrado na Fig.~\ref{fig.act-dof}. Explique sua escolha de mecanismo para conectar a roda de tração às rodas de deslocamento.
+\item Escreva um programa que, dada a posição atual do peso e uma posição desejada, mova o peso para a posição desejada. Alternativamente, envie comandos para os motores usando um dispositivo de controle remoto ou um computador conectado ao robô.
+\item Experimente as velocidades relativas de rotação das rodas acionadas à esquerda e à direita que controlam as rodas e o guincho, respectivamente. Você deve mover os dois atuadores separadamente ou simultaneamente?
 \end{itemize}
 \end{framed}
 
@@ -1097,11 +1084,30 @@ Há duas atividades para esta seção. Esta atividade é para leitores que possu
 \act{Guindaste robótico (alternativas)}{act-dof-alt}
 \begin{itemize}
 \item Escreva um programa que faz com que um robô móvel se mova para frente e para trás. Coloque um pedaço de fita preta relativamente longe da posição inicial do robô. O objetivo é fazer com que o robô pare o mais próximo possível do início da fita adesiva \emph{sem} verificação contínua do sensor. 
-\item O programa tem três modos de operação. (1) O robô se move rapidamente, verificando seu sensor ocasionalmente e parando quando detecta a fita adesiva. (2) Como em (1), mas o robô move-se lentamente, verificando seu sensor com relativa freqüência. (3) Como em (1), mas quando a fita é detectada, o robô se move para trás usando a velocidade e o período de amostragem como em (2).
-\item Executar o programa e comparar os resultados dos três modos: o tempo até que o robô pare e erro entre a posição final do robô e o início da fita adesiva.
-\item Como alternativa, executar o programa com os três modos em um computador e experimentar com os parâmetros de movimento e os períodos de amostragem. Você precisará escolher um modelo para o movimento: velocidade constante, aceleração constante, ou aceleração (mais realista), depois velocidade constante e finalmente desaceleração quando a fita for detectada.
+\item O programa tem três modos de operação. (1) O robô se move rapidamente, verificando seu sensor ocasionalmente e parando quando detecta a fita adesiva. (2) Como em (1), mas o robô move-se lentamente, verificando seu sensor com relativa frequência. (3) Como em (1), mas quando a fita é detectada, o robô se move para trás usando a velocidade e o período de amostragem como em (2).
+\item Execute o programa e compare os resultados dos três modos: o tempo até que o robô pare e o erro entre a posição final do robô e o início da fita adesiva.
+\item Como alternativa, execute o programa com os três modos em um computador e experimente com os parâmetros de movimento e os períodos de amostragem. Você precisará escolher um modelo para o movimento: velocidade constante, aceleração constante, ou (mais realista) aceleração seguida de velocidade constante e finalmente desaceleração quando a fita for detectada.
 \end{itemize}
 \end{framed}
+
+
+
+
+
+
+
+
+
+%-------------------------- Parei aqui! -------------------------------------
+
+
+
+
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
