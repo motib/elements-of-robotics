@@ -1114,11 +1114,11 @@ Há duas atividades para esta seção. Esta atividade é para leitores que possu
 
 \section{Movimento holonômico e não-holonômico}\label{s.holonomic}
 
-A seção~\ref{s.dof} apresentou o conceito de grau de liberdade (DOF) e o papel do número de atuadores. Há outro conceito que liga o DOF e os atuadores no caso dos robôs móveis: o \emph{índice de mobilidade (DOM)}. O grau de mobilidade $\delta_m$ corresponde ao número de graus de liberdade que podem ser \emph{acessados diretamente} pelos atuadores. Um robô móvel no avião tem no máximo três DOF ($(x,y)$ posição e direção), portanto o grau máximo de mobilidade de um robô móvel é $\delta_m = 3$.
+A seção~\ref{s.dof} apresentou o conceito de graus de liberdade (DoF) e o papel do número de atuadores. Há outro conceito que liga os DoF e os atuadores no caso dos robôs móveis: os graus de mobilidade (em inglês, \emph{Degrees of Mobility - DoM}). Os graus de mobilidade $\delta_m$ correspondem ao número de graus de liberdade que podem ser \emph{acessados diretamente} pelos atuadores. Um robô móvel no plano tem no máximo três DoF ($(x,y)$ posição e orientação), portanto o maior número de graus de mobilidade de um robô móvel é $\delta_m = 3$.
 
-Consideremos o DOM de vários veículos. Um trem tem um DOF porque só pode avançar ao longo dos trilhos, e tem um atuador, seu motor, que afeta diretamente este único grau de liberdade. Portanto, um trem tem um grau de mobilidade de $\delta_m = 1$, o que significa que o único DOF pode ser acessado diretamente pelo atuador.
+Consideremos os DoM de vários veículos. Um trem tem um DoF porque só pode avançar ao longo dos trilhos, e tem um atuador, seu motor, que afeta diretamente este único grau de liberdade. Portanto, um trem tem um grau de mobilidade de $\delta_m = 1$, o que significa que o único DoF pode ser acessado diretamente pelo atuador.
 
-Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os dois motores que atuam sobre as rodas. Eles podem acessar diretamente dois DOF: (a) se as duas rodas giram na mesma velocidade, o robô se move para frente ou para trás; (b) se as rodas têm velocidades em direções opostas, o robô gira no lugar. Portanto, podemos acessar diretamente o DOF ao longo do eixo de translação para frente e o DOF do orientação, mas não podemos acessar diretamente o DOF do eixo lateral de translação (Fig.~\ref{fig.mobility-example1}). Um robô móvel de acionamento diferencial tem um grau de mobilidade $\delta_m = 2 < 3 = \#\textrm{DOF}$.
+Um robô com acionamento diferencial tem três DoF. Os dois atuadores são os dois motores que atuam sobre as rodas. Eles podem acessar diretamente dois DoF: (a) se as duas rodas giram na mesma velocidade, o robô se move para frente ou para trás; (b) se as rodas têm velocidades em direções opostas, o robô gira no lugar. Portanto, podemos acessar diretamente o DoF ao longo do eixo de translação para frente e o DoF da orientação, mas não podemos acessar diretamente o DoF do eixo lateral de translação (Fig.~\ref{fig.mobility-example1}). Um robô móvel de acionamento diferencial tem grau de mobilidade $\delta_m = 2 < 3 = \#\textrm{DoF}$.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -1134,7 +1134,7 @@ Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os do
 \node at (18mm,26mm) {\p{não acessível}\\\p{DOF}};
 \draw[->] (6mm,26mm) -- +(-5mm,0);
 \end{tikzpicture}
-\caption{DOF acessível e inacessível para um robô com acionamento diferencial}\label{fig.mobility-example1}
+\caption{DoF acessível e inacessível para um robô com acionamento diferencial}\label{fig.mobility-example1}
 \end{minipage}
 \hspace{\fill}
 \begin{minipage}{.5\textwidth}
@@ -1165,7 +1165,7 @@ Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os do
 \draw[raxis] (3.4,2.1) -- +(120:4mm);
 \draw[raxis] (3.4,2.1) -- +(300:4mm);
 \end{tikzpicture}
-\caption{DOF acessível e inacessível para um robô com direção Ackermann}\label{fig.mobility-example2}
+\caption{DoF acessível e inacessível para um robô com direção Ackermann}\label{fig.mobility-example2}
 \end{minipage}
 \end{figure}
 
@@ -1222,11 +1222,11 @@ Um robô com acionamento diferencial tem três DOF. Os dois atuadores são os do
 %\rightcaption{Accessible and non-accesible DOF for a robot with Ackermann steering}\label{fig.mobility-example2}
 %\end{figure}
 
-Um carro, como um robô com acionamento diferencial, tem apenas dois atuadores para três DOF: um atuador, o motor, dá acesso direto ao grau de liberdade ao longo do eixo longitudinal do carro, permitindo que ele se mova para frente e para trás. O outro atuador, o volante, dá \emph{não} acesso direto a qualquer DOF adicional, ele só pode orientar o primeiro DOF. O carro não pode girar ao redor do eixo vertical e não pode mover-se lateralmente (Fig.~\ref{fig.mobility-example2}). Portanto, um carro tem apenas um grau de mobilidade, $\delta_m = 1$. Intuitivamente, você pode ver o menor grau de mobilidade de um carro em comparação com um robô com tração diferencial, observando que o robô pode girar no lugar enquanto o carro não pode.
+Um carro, assim como um robô com acionamento diferencial, tem apenas dois atuadores para três DoF: um atuador, o motor, dá acesso direto ao grau de liberdade ao longo do eixo longitudinal do carro, permitindo que ele se mova para frente e para trás. O outro atuador, o volante, \emph{não} dá acesso direto a nenhum DoF adicional, mas apenas orienta o primeiro DoF. O carro não pode girar ao redor do eixo vertical e não pode mover-se lateralmente (Fig.~\ref{fig.mobility-example2}). Portanto, um carro tem apenas um grau de mobilidade, $\delta_m = 1$. Intuitivamente, você pode ver o menor grau de mobilidade de um carro em comparação com um robô com tração diferencial, observando que o robô pode girar no lugar enquanto o carro não pode.
 
-Por si só, uma roda padrão tem $\delta_m=2$: pode rolar para frente e para trás e pode girar ao redor do eixo vertical que passa pelo ponto de contato da roda com o solo. Uma roda não pode se mover lateralmente, o que na verdade é uma coisa boa porque evita que o veículo derrape para fora da estrada durante uma curva. No carro, o grau de mobilidade é reduzido ainda mais para $\delta_m=1$, porque há dois pares de rodas, uma na frente e outra na traseira do carro. Esta configuração torna impossível que o carro gire em torno de seu eixo vertical, mesmo que as rodas individuais o possam fazer (geralmente apenas as rodas dianteiras). A limitação a $\delta_m=1$ dá estabilidade ao carro - não pode derrapar lateralmente e não pode girar - tornando fácil e seguro dirigir em altas velocidades. De fato, pode ocorrer um acidente quando a chuva ou a neve reduzem o atrito para que o carro possa derrapar ou girar.
+Por si só, uma roda padrão tem $\delta_m=2$: pode rolar para frente e para trás e pode girar ao redor do eixo vertical que passa pelo ponto de contato da roda com o solo. Uma roda não pode se mover lateralmente, o que desejável porque evita que o veículo derrape para fora da estrada durante uma curva. No carro, o grau de mobilidade é reduzido ainda mais para $\delta_m=1$, porque há dois pares de rodas, uma na frente e outra na traseira do carro. Esta configuração torna impossível que o carro gire em torno de seu eixo vertical, mesmo que as rodas individuais o possam fazer (geralmente apenas as rodas dianteiras). A limitação a $\delta_m=1$ dá estabilidade ao carro - não pode derrapar lateralmente e não pode girar - tornando fácil e seguro dirigir em altas velocidades. De fato, pode ocorrer um acidente quando a chuva ou a neve reduzem o atrito e o carro pode derrapar ou girar.
 
-Um robô móvel autônomo pode lucrar se tiver um DOM maior $\delta_m = 3$. Para acessar diretamente o terceiro DOF, o robô precisa ser capaz de se mover lateralmente. Um método é ter o robô rolando sobre uma bola ou uma roda de rodas como uma cadeira de escritório. Outro método é usar a \emph{roda sueca} (Fig.~\ref{fig.swheel}). Uma roda sueca é uma roda padrão que possui pequenas rodas livres ao longo de seu aro para que possa se mover lateralmente, permitindo acesso direto ao terceiro DOF.
+Um robô móvel autônomo pode se beneficiar se tiver um DoM maior $\delta_m = 3$. Para acessar diretamente o terceiro DoF, o robô precisa ser capaz de se mover lateralmente. Um método é ter o robô rolando sobre uma bola ou uma roda castor como uma cadeira de escritório. Outro método é usar a \emph{roda sueca} (Fig.~\ref{fig.swheel}). Uma roda sueca é uma roda padrão que possui pequenas rolos livres ao longo de seu aro para que possa se mover lateralmente, permitindo acesso direto ao terceiro DoF.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -1255,7 +1255,7 @@ Um robô móvel autônomo pode lucrar se tiver um DOM maior $\delta_m = 3$. Para
 %\rightcaption{Omnidirectional robot (Courtesy LAMI-EPFL)}\label{fig.omni-robot}
 %\end{figure}
 
-Os robôs móveis que podem acessar diretamente os três DOF ($\delta_m=3$) são chamados de \emph{robôs omnidirecionais}. A figura~\ref{fig.omni-robot} mostra um robô omnidirecional construído com quatro rodas suecas. Os dois pares de rodas em lados opostos do robô podem mover diretamente o robô para a esquerda, direita, para frente e para trás. Esta configuração é redundante, mas muito fácil de controlar. Para evitar redundância, a maioria dos robôs omnidirecionais tem três rodas suecas montadas a um ângulo de $120^\circ$ uma da outra (Fig.~\ref{fig.omni3}). Esta configuração tem $\delta_m=3$ mas não é fácil de controlar usando as conhecidas coordenadas $x,y$.
+Os robôs móveis que podem acessar diretamente os três DoF ($\delta_m=3$) são chamados de \emph{robôs omnidirecionais}. A figura~\ref{fig.omni-robot} mostra um robô omnidirecional construído com quatro rodas suecas. Os dois pares de rodas em lados opostos do robô podem mover diretamente o robô para a esquerda, direita, para frente e para trás. Esta configuração é redundante, mas muito fácil de controlar. Para evitar redundância, a maioria dos robôs omnidirecionais tem três rodas suecas montadas a um ângulo de $120^\circ$ uma da outra (Fig.~\ref{fig.omni3}). Esta configuração tem $\delta_m=3$ mas não é fácil de controlar usando as conhecidas coordenadas $x,y$.
 
 \begin{figure}
 \begin{center}
@@ -1283,15 +1283,15 @@ Os robôs móveis que podem acessar diretamente os três DOF ($\delta_m=3$) são
 	  \draw[raxis] (0,0) -- +(\r:\len);
   \end{scope}
 }
-\draw[->] (-3.75,1) -- +(0,.5) node[right] {\p{movimento movido}};
-\draw[->,thick] (-4,0) -- +(-1,0) node[above,xshift=-2mm] {\p{livre movimento}};
+\draw[->] (-3.75,1) -- +(0,.5) node[right] {\p{movimento atuado}};
+\draw[->,thick] (-4,0) -- +(-1,0) node[above,xshift=-2mm] {\p{movimento livre}};
 \node[xshift=-1.6cm,yshift=.2cm] at (0,0) {\p{motor}};
 \end{tikzpicture}
 \end{center}
 \caption{Robô omnidirecional com três rodas suecas}\label{fig.omni3}
 \end{figure}
 
-Os valores relativos do DOF e do DOM de um robô definem o conceito de movimento holonômico. Um robô tem \emph{movimento holonómico} se $\delta_m = \#\textrm{DOF}$ e tem um movimento {não-holonômico} se $\delta_m < \#\textrm{DOF}$. Um robô holonômico como o da Fig.~\ref{fig.omni-robot} pode controlar diretamente todo seu DOF sem manobras difíceis. A Figura~\ref{fig.parallel-omni} mostra como é fácil para o robô omnidirecional com rodas suecas (Fig.~\ref{fig.omni3}) realizar o estacionamento paralelo.
+Os valores relativos do DoF e do DoM de um robô definem o conceito de movimento holonômico. Um robô tem \emph{movimento holonômico} se $\delta_m = \#\textrm{DoF}$ e tem um movimento {não-holonômico} se $\delta_m < \#\textrm{DoF}$. Um robô holonômico como o da Fig.~\ref{fig.omni-robot} pode controlar diretamente todos os seus DoF sem manobras difíceis. A Figura~\ref{fig.parallel-omni} mostra como é fácil para o robô omnidirecional com rodas suecas (Fig.~\ref{fig.omni3}) realizar o estacionamento paralelo.
 
 \begin{figure}
 \begin{center}
@@ -1313,10 +1313,10 @@ Os valores relativos do DOF e do DOM de um robô definem o conceito de movimento
 \draw[thick,red,->] (0,0) arc (90:166:41mm);
 \end{tikzpicture}
 \end{center}
-\caption{Estacionamento paralelo por um robô omnidirecional}\label{fig.parallel-omni}
+\caption{Estacionamento paralelo feito por um robô omnidirecional}\label{fig.parallel-omni}
 \end{figure}
 
-Um carro e um robô com acionamento diferencial são não-holonômicos porque seu DOM ($\delta_m=1$ e $\delta_m=2$, respectivamente) são inferiores ao seu DOF, que é três. Devido a este grau limitado de mobilidade, estes veículos precisam de manobras de direção complexas, por exemplo, para realizar estacionamentos paralelos. Há uma diferença significativa entre os dois veículos. O robô de tração diferencial precisa de três movimentos separados, mas eles são muito simples (Fig.~\ref{fig.parallel-diff}): gire para a esquerda, para trás, para a direita. O carro também precisa de três movimentos separados, mas eles são extremamente difíceis de executar corretamente (Fig.~\ref{fig.parallel-car}). Você tem que estimar onde iniciar a manobra, como fazer cada curva e até onde deve se mover entre as curvas. O DOM superior do robô de acionamento diferencial é vantajoso nesta situação.
+Um carro e um robô com acionamento diferencial são não-holonômicos porque seus números de DoM ($\delta_m=1$ e $\delta_m=2$, respectivamente) são inferiores aos seus números de DoF, que são igauis a três. Devido a este grau limitado de mobilidade, estes veículos precisam de manobras de direção mais complexas, por exemplo, para realizar estacionamentos paralelos. Há uma diferença significativa entre os dois veículos. O robô de tração diferencial precisa de três movimentos separados, mas eles são muito simples (Fig.~\ref{fig.parallel-diff}): gire para a esquerda, para trás, para a direita. O carro também precisa de três movimentos separados, mas eles são extremamente difíceis de executar corretamente (Fig.~\ref{fig.parallel-car}). Você tem que estimar onde iniciar a manobra, como fazer cada curva e até onde deve se mover entre as curvas. O DoM superior do robô de acionamento diferencial é vantajoso nesta situação.
 
 \begin{figure}
 \begin{minipage}{.45\textwidth}
@@ -1381,8 +1381,8 @@ Um carro e um robô com acionamento diferencial são não-holonômicos porque se
 \begin{framed}
 \act{Movimento holonômico e não-holonômico}{holonomic}
 \begin{itemize}
-\item Olhe novamente para o robô móvel que é limitado apenas ao movimento rotacional (Fig.~\ref{fig.rot-dof}). Qual é o seu grau de mobilidade $\delta_m$? É holonômico ou não?
-\item O Fig.~\ref{fig.wallcleaning} mostra um robô para a limpeza das paredes de um edifício. Há duas âncoras das quais descem os cabos, passando pelos olhos fixados ao corpo do robô e depois pelos guinchos alimentados pelas rodas do robô. Ao rolar e desenrolar os cabos, o robô se move para cima e para baixo da parede. Entretanto, se os dois motores não fizerem com que as rodas se movimentem precisamente à mesma velocidade de rotação, o robô irá balançar de um lado para o outro. Quantos DOF e quantos DOM este robô tem? É ou não holonômico?
+\item Olhe novamente para o robô móvel que é limitado apenas ao movimento rotacional (Fig.~\ref{fig.rot-dof}). Quantos graus de mobilidade $\delta_m$ ele possui? É holonômico ou não?
+\item O Fig.~\ref{fig.wallcleaning} mostra um robô para a limpeza de paredes de um edifício. Há duas âncoras das quais descem os cabos, passando hastes fixadas ao corpo do robô e depois pelos guinchos alimentados pelas rodas do robô. Ao enrolar e desenrolar os cabos, o robô se move para cima e para baixo da parede. Entretanto, se os dois motores não fizerem com que as rodas se movimentem precisamente à mesma velocidade de rotação, o robô irá balançar de um lado para o outro. Quantos DoF e quantos DoM este robô tem? É ou não holonômico?
 \end{itemize}
 \end{framed}
 
@@ -1427,12 +1427,12 @@ Um carro e um robô com acionamento diferencial são não-holonômicos porque se
 
 \section{Sumário}
 
-Um robô móvel como um carro que dirige sozinho ou um explorador Mars não terá pontos de referência sempre disponíveis para navegação. A odometria é usada para levar o robô até as proximidades de seu objetivo sem referência ao meio ambiente. O robô estima sua velocidade e velocidade de rotação a partir da potência aplicada a seus motores. A odometria pode ser melhorada usando codificadores de roda para medir o número de rotações das rodas, em vez de inferir a velocidade a partir da potência do motor. A mudança na posição de um robô barato movendo-se em linha reta pode ser computada multiplicando a velocidade pelo tempo. Se o robô estiver girando, cálculos trigonométricos são necessários para calcular a nova posição e orientação. Mesmo com codificadores de roda, a odometria está sujeita a erros que podem ser muito grandes se o erro estiver no orientação.
+Um robô móvel como um carro que dirige sozinho ou um explorador de Marte não terá pontos de referência sempre disponíveis para navegação. A odometria é usada para levar o robô até as proximidades de seu objetivo sem referência ao meio ambiente. O robô estima sua velocidade e velocidade de rotação a partir da potência aplicada a seus motores. A odometria pode ser melhorada usando encoders de roda para medir o número de rotações das rodas, em vez de inferir a velocidade a partir da potência do motor. A mudança na posição de um robô barato movendo-se em linha reta pode ser computada multiplicando-se a velocidade pelo tempo. Se o robô estiver girando, cálculos trigonométricos são necessários para calcular a nova posição e orientação. Mesmo com encoders de roda, a odometria está sujeita a erros que podem ser muito grandes se o erro estiver no orientação.
 
-A navegação inercial utiliza acelerômetros e giroscópios para melhorar a precisão da odometria. A integração da aceleração dá velocidade e a integração da velocidade angular dá o rumo. Os sistemas microeletromecânicos tornaram a navegação inercial suficientemente barata para uso em robótica.
+A navegação inercial utiliza acelerômetros e giroscópios para melhorar a precisão da odometria. A integração da aceleração dá velocidade e a integração da velocidade angular dá a orientação. Os sistemas microeletromecânicos tornaram a navegação inercial suficientemente barata para uso em robótica.
 
-O DOF de um sistema é o número de dimensões nas quais ele pode se mover - até três dimensões em uma superfície e até seis dimensões no ar ou debaixo d'água - mas um robô pode ser obrigado a ter menos do que o número máximo de DOF. Uma consideração adicional é o número e a configuração dos atuadores de um robô que definem seu grau de mobilidade. Se o DOM for igual ao número de DOF, o robô é holonômico e pode se mover diretamente de uma pose para outra, embora possa ser difícil de controlar. Se o DOM for menor que o número de DOF, o robô é não-holonômico; ele não pode mover-se diretamente de uma pose para outra e exigirá manobras complexas para realizar algumas tarefas.
+O número de graus de liberdade (DoF) de um sistema é o número de dimensões nas quais ele pode se mover - até três dimensões em uma superfície e até seis dimensões no ar ou debaixo d'água - mas um robô pode ser obrigado a ter menos do que o número máximo de DoF. Uma consideração adicional é o número e a configuração dos atuadores de um robô que definem seu grau de mobilidade. Se o DoM for igual ao número de DoF, o robô é holonômico e pode se mover diretamente de uma pose para outra, embora possa ser difícil de controlar. Se o DoM for menor que o número de DoF, o robô é não-holonômico; ele não pode mover-se diretamente de uma pose para outra e exigirá manobras complexas para realizar algumas tarefas.
 
 \section{Leitura adicional}
 
-Um tratamento matemático detalhado dos erros de odometria em duas dimensões é dado em \cite[Sect.~5.24]{siegwart}. Para uma visão geral da navegação inercial, veja em \cite{king,oxford}. Livros didáticos avançados sobre robótica apresentam a holonomia da \cite{correll,craig,siegwart,spong}.
+Um tratamento matemático detalhado dos erros de odometria em duas dimensões é dado em \cite[Sect.~5.24]{siegwart}. Para uma visão geral da navegação inercial, veja em \cite{king,oxford}. Livros didáticos avançados sobre robótica apresentam o conceito de holonomia \cite{correll,craig,siegwart,spong}.
