@@ -1,75 +1,82 @@
 % !TeX root = er.tex
 
-\chapter{Control}\label{ch.control}
+\chapter{Controle}\label{ch.control}
 
-Os algoritmos de robótica tomam decisões. O robô recebe uma tarefa, mas para realizar a tarefa ele deve tomar ações e estas ações dependem do ambiente, conforme detectado pelos sensores. Por exemplo, se um robô quiser trazer um objeto de uma prateleira em um armazém para uma pista de entrega, ele deve usar sensores para navegar até a prateleira apropriada, para detectar e agarrar o objeto, e então navegar de volta para o caminhão e carregar o objeto. Somente robôs que atuam em ambientes extremamente bem definidos podem realizar tais tarefas sem a informação dos sensores. Um exemplo é um braço robótico montando um dispositivo em uma fábrica; se as peças estiverem precisamente posicionadas na superfície de trabalho, o robô pode manipular as peças sem detectá-las. Mas, na maioria dos ambientes, os sensores devem ser usados. Em um armazém pode haver obstáculos no caminho até a prateleira, o objeto não será posicionado com precisão na prateleira e o caminhão nunca será estacionado exatamente no mesmo lugar. O robô precisa se adaptar a estas pequenas variações usando \emph{algoritmos de controle} para tomar decisões: com base nos dados dos sensores, que ações o robô precisa realizar para realizar a tarefa? Existe uma sofisticada teoria matemática de controle que é fundamental na robótica. Neste capítulo, apresentamos os conceitos básicos dos algoritmos de controle.
+Em robótica, algoritmos tomam decisões. O robô recebe uma tarefa, mas para realizar a tarefa ele deve tomar ações e estas ações dependem do ambiente, conforme detectado pelos sensores. Por exemplo, se um robô deve trazer um objeto de uma prateleira em um armazém para um caminhão de entrega, ele deve usar sensores para navegar até a prateleira apropriada, para detectar e agarrar o objeto, e então navegar de volta para o caminhão e deixar o objeto. Somente robôs que atuam em ambientes extremamente bem definidos podem realizar tais tarefas sem a informação dos sensores. Um exemplo é um braço robótico montando um dispositivo em uma fábrica; se as peças estiverem precisamente posicionadas na superfície de trabalho, o robô pode manipular as peças sem detectá-las. Mas, na maioria dos ambientes, sensores devem ser usados. Em um armazém pode haver obstáculos no caminho até a prateleira, o objeto não será posicionado com precisão na prateleira e o caminhão nunca será estacionado exatamente no mesmo lugar. O robô precisa se adaptar a estas pequenas variações usando \emph{algoritmos de controle} para tomar decisões: com base nos dados dos sensores, que ações o robô precisa realizar para realizar a tarefa? Existe uma sofisticada teoria matemática de controle que é fundamental na robótica. Neste capítulo, apresentamos os conceitos básicos dos algoritmos de controle.
 
-A seção~\ref{s.control-model} explica a diferença entre dois modelos de controle: controle de malha aberta onde os parâmetros do algoritmo são definidos com antecedência e controle de malha fechada onde os dados dos sensores influenciam o comportamento do algoritmo. As seções~\ref{s.on-off}--\ref{s.pid} apresentam quatro algoritmos de controle de malha fechada cada vez mais sofisticados. O projetista de um robô deve escolher entre estes e outros algoritmos similares para selecionar aquele que oferece o desempenho adequado pelo menor custo computacional.
+A seção~\ref{s.control-model} explica a diferença entre dois modelos de controle: controle em malha aberta, onde os parâmetros do algoritmo são definidos com antecedência, e controle em malha fechada, onde os dados dos sensores influenciam no comportamento do algoritmo. As seções~\ref{s.on-off}--\ref{s.pid} apresentam quatro algoritmos de controle em malha fechada cada vez mais sofisticados. O projetista de um robô deve escolher entre estes e outros algoritmos similares para selecionar aquele que oferece o desempenho adequado pelo menor custo computacional.
 
-\section{Modelos de controle}\label{s.control-model}
+\section{Modelos de Controle}\label{s.control-model}
 
-Há duas maneiras que um algoritmo de controle pode decidir sobre uma ação. Em um sistema de circuito aberto, os parâmetros do algoritmo de controle são predefinidos e não mudam enquanto o sistema funciona. Em um sistema de circuito fechado, os sensores medem o erro entre o estado desejado do sistema e seu estado real, e este erro é usado para decidir que ação tomar.
+Há duas maneiras para que um algoritmo decida sobre uma ação. Num sistema em malha aberta, os parâmetros do algoritmo de controle são predefinidos e não mudam enquanto o sistema funciona. Num sistema em malha fechada, os sensores medem o erro entre o estado desejado do sistema e seu estado real, e este erro é usado para decidir que ação tomar.
 
-\subsection{Controle de circuito aberto}
+\subsection{Controle em Malha Aberta}
 
-Uma torradeira é uma máquina que realiza ações semi-autônomas. Você coloca fatias de pão na torradeira, ajusta o temporizador e empurra a alavanca para baixo para iniciar a ação de torrar. Como todos sabemos, os resultados não são garantidos: se a duração do temporizador for muito curta, temos que torrar o pão novamente; se a duração do temporizador for muito longa, o cheiro de torrada queimada flutua através da cozinha. O resultado é incerto porque uma torradeira é um \emph{sistema de controle de laço aberto}. Ele não verifica o resultado da ação do torrador para ver se o resultado necessário foi alcançado. Os sistemas de circuito aberto são muito familiares: em uma máquina de lavar você pode ajustar a temperatura da água, a duração do ciclo e a quantidade de detergente utilizada, mas a máquina não mede a "limpeza" da roupa (o que quer que isso signifique) e modifica suas ações de acordo.
+Uma torradeira é uma máquina que realiza ações semi-autônomas. Você coloca fatias de pão na torradeira, ajusta o temporizador e empurra a alavanca para baixo para iniciar a ação de torrar. Como todos sabemos, os resultados não são garantidos: se a duração do temporizador for muito curta, temos que torrar o pão novamente; se a duração do temporizador for muito longa, o cheiro de torrada queimada flutua através da cozinha. O resultado é incerto porque uma torradeira é um \emph{sistema de controle em malha aberta}. Ele não verifica o resultado da ação do tostador para se certificar que o resultado necessário foi alcançado. Os sistemas em malha aberta são muito familiares: em uma máquina de lavar você pode ajustar a temperatura da água, a duração do ciclo e a quantidade de detergente utilizada, mas a máquina não mede a "limpeza" da roupa (o que quer que isso signifique) e modifica suas ações de maneira correspondente.
 
-Um robô móvel que se desloca para uma posição alvo baseada apenas na odometria (Sect.~\ref{s.odometry}) também está utilizando o controle de malha aberta. Ao controlar a potência do motor e a duração do funcionamento dos motores, o robô pode calcular a distância que se moveu. No entanto, variações na velocidade das rodas e na superfície sobre a qual o robô se move causarão incerteza na posição final do robô. Na maioria das aplicações, a odometria pode ser usada para mover o robô para as proximidades da posição de objetivo, ponto em que são usados sensores para mover o robô para a posição exata de objetivo, por exemplo, usando sensores para medir a distância até um objeto.
+Um robô móvel que se desloca para uma posição desejada com base apenas na odometria (Sect.~\ref{s.odometry}) também está utilizando o controle em malha aberta. Ao controlar a potência do motor e a duração do funcionamento dos motores, o robô pode calcular a distância que se moveu. No entanto, variações na velocidade das rodas e na superfície sobre a qual o robô se move causarão incerteza na posição final do robô. Na maioria das aplicações, a odometria pode ser usada para mover o robô para as proximidades da posição desejada, ponto em que são usados outros sensores para mover o robô para a posição desejada exata, por exemplo, usando sensores para medir a distância até um objeto.
 
-\subsection{Controle de circuito fechado}
+\subsection{Controle em Malha Fechada}
 
-Para alcançar um comportamento autônomo, os robôs utilizam \emph{sistemas de controle de loop fechado}. Já encontramos sistemas de circuito fechado nos veículos Braintenberg (Activity~\ref{act.attractive}):
+Para alcançar um comportamento autônomo, os robôs utilizam \emph{sistemas de controle em malha fechada}. Já encontramos sistemas em malha fechada nos veículos Braintenberg (Activity~\ref{act.attractive}):
 \begin{quote}
 \normalsize\noindent\textbf{Especificação (Atrativo e repulsivo):} Quando um objeto se aproxima do robô por trás, ele foge até ficar fora de alcance.
 \end{quote}
-O robô deve \emph{medir} a distância até o objeto e parar quando essa distância for suficientemente grande. O ajuste de potência dos motores depende da medição da distância, mas o robô se move a uma velocidade que depende da potência dos motores, o que muda a distância até o objeto, o que novamente modifica o ajuste de potência, o que faz com que o robô se mova a uma velocidade que depende da potência dos motores, o que muda a distância até o objeto, o que novamente modifica o ajuste de potência, \ldots. Este comportamento circular é a origem do termo "loop fechado".
+O robô deve \emph{medir} a distância até o objeto e parar quando essa distância for suficientemente grande. O ajuste de potência dos motores depende da medição da distância, mas o robô se move a uma velocidade que depende da potência dos motores, o que muda a distância até o objeto, o que novamente modifica o ajuste de potência, o que faz com que o robô se mova a uma velocidade que depende da potência dos motores, o que muda a distância até o objeto, o que novamente modifica o ajuste de potência, \ldots. Este comportamento circular dá origem ao termo "malha fechada".
 
-Agora formalizamos a especificação de um sistema de controle de loop fechado para um robô (Fig.~\ref{fig.control-model}). A variável $r$ representa o valor \emph{reference value}, a especificação da tarefa do robô. Em um robô de armazém, os valores de referência incluem a posição do robô em relação a uma pilha de prateleiras e a distância do braço da pinça em relação ao objeto a ser pego. Um valor de referência não pode ser usado diretamente pelo robô; ao invés disso, ele deve ser transformado em um valor \emph{control value} $u$. Por exemplo, se o valor de referência for a posição do robô em relação a uma prateleira, o valor de controle será a potência dos motores e a duração que os motores estão em funcionamento. A variável $y$ representa a saída, ou seja, o estado real do robô, por exemplo, a distância até um objeto.
+Agora formalizamos a especificação de um sistema de controle em malha fechada para um robô (Fig.~\ref{fig.control-model}). A variável $r$ representa o \emph{valor de referencia}, a especificação da tarefa do robô. Para o robô do armazém, os valores de referência incluem a posição do robô em relação a uma pilha de prateleiras e a distância da garra do braço em relação ao objeto a ser pego. Um valor de referência não pode ser usado diretamente pelo robô; ao invés disso, ele deve ser transformado em um \emph{sinal de controle} $u$. Por exemplo, se o valor de referência for a posição do robô em relação a uma prateleira, o sinal de controle será a potência dos motores e a duração que os motores estão em funcionamento. A variável $y$ representa a saída, ou seja, o estado real do robô, por exemplo, a distância até um objeto.
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[scale=1.4]
 \node (input) at (0,1) {};
 \node[circle,draw] (diff) at (1,1) {$-$};
-\node[rectangle,draw] (control) at (3,1) {\textsf{control}};
-\node[rectangle,draw] (robot) at (5,1) {\textsf{robot}};
+\node[rectangle,draw] (control) at (3,1) {\textsf{controlador}};
+\node[rectangle,draw] (robot) at (5,1) {\textsf{robô}};
 \draw[->] (input) -- node[above] {$r$} (diff);
 \draw[->] (diff)  -- node[above] {$e=r-y$} (control);
 \draw[->] (control) -- node[above] {$u$} (robot);
 \draw[->] (robot) -- ++(1,0) -- ++(0,-1) -- ++(-5,0) -- node[left] {$y$} (diff);
 \end{tikzpicture}
-\caption{Um sistema de controle de circuito fechado}\label{fig.control-model}
+\caption{Um sistema de controle em malha fechada}\label{fig.control-model}
 \end{center}
 \end{figure}
 
-O modelo na Fig.~\ref{fig.control-model} também é chamado de \emph{feedback control system}, porque o valor de saída $y$ é alimentado pelo algoritmo de controle e usado para calcular o valor de controle. A saída é comparada com o valor de referência para computar $e=r-y$, o \emph{error}. O algoritmo de controle usa o erro para gerar o sinal de controle $u$, que é a entrada para o robô.
+O modelo na Fig.~\ref{fig.control-model} também é chamado de \emph{sistema de controle por realimentação}, porque o valor de saída $y$ é realimentado pelo algoritmo de controle e usado para calcular o sinal de controle. A saída é comparada com o valor de referência para calcular $e=r-y$, o \emph{erro}. O algoritmo de controle usa o valor do erro para gerar o sinal de controle $u$, que é a entrada para o robô.
 
-\subsection{O período de um algoritmo de controle}
+\subsection{O Período de um Algoritmo de Controle}
 
-Algoritmos de controle são executados periodicamente (Algoritmo~\ref{alg.control-loop}). O software do robô inicializa uma variável \emph{timer} para a duração necessária do período de execução do algoritmo, por exemplo, a cada $20$ ms. O computador embutido tem um \emph{relógio de hardware} que ``fixa'' em intervalos fixos, causando uma interrupção. A interrupção é tratada pelo sistema operacional que decreta o valor da variável temporizador. Quando o valor desta variável chega a zero, o timer expira e um evento é levantado no software causando a execução do algoritmo de controle.
+Algoritmos de controle são executados periodicamente (Algoritmo~\ref{alg.control-loop}). O software do robô inicializa uma variável \emph{temporizador} que corresponde ao período de execução do algoritmo, por exemplo, a $20$ ms. O computador embarcado tem um \emph{relógio em hardware (clock)} que ``toca'' a intervalos fixos, causando uma interrupção. A interrupção é tratada pelo sistema operacional que decrementa o valor da variável temporizador. Quando o valor desta variável chega a zero, o temporizador expira e um evento é causado em software, levando à execução do algoritmo de controle.
 
 \begin{figure}
 \begin{alg}{Esboço do algoritmo de controle}{control-loop}
 \hline
-&\idv{}integer period&// Duration of timer period\\
-&\idv{}integer timer&// Timer variable\\
+&\idv{}integer period&// Duração do período\\
+&\idv{}integer timer&// Variável Temporizador\\
 \hline
-\stl{}&period \ass $\cdots$&// Period in milliseconds\\
-\stl{}&timer \ass period&// Initialize the timer\\
+\stl{}&period \ass $\cdots$&// Periodo em milisegundos\\
+\stl{}&timer \ass period&// Initializa o temporizador\\
 \stl{}&loop&\\
 \stl{}&\idc{}when timer-expired-event occurs&\\
-\stl{}&\idc{}\idc{}control algorithm&// Run the algorithm\\
-\stl{}&\idc{}\idc{}timer \ass period&// Reset the timer\\
+\stl{}&\idc{}\idc{}control algorithm&// Executa o algoritmo\\
+\stl{}&\idc{}\idc{}timer \ass period&// Reseta o temporizador\\
 \hline\hline
-&// {\bfseries Operating system}&\\
+&// {\bfseries Sistema Operacional}&\\
 \stl{}&when hardware-clock-interrupt occurs&\\
-\stl{}&\idc{} timer \ass timer $-$ $1$&// Decrement the timer\\
-\stl{}&\idc{} if timer $=$ $0$&// If the timer expires\\
-\stl{}&\idc{}\idc{} raise timer-expired-event&// \ \ \ \ raise an event\\
+\stl{}&\idc{} timer \ass timer $-$ $1$&// Decrementa o temporizador\\
+\stl{}&\idc{} if timer $=$ $0$&// Se temporizador expirou\\
+\stl{}&\idc{}\idc{} raise timer-expired-event&// \ \ \ \ causa um evento\\
 \end{alg}
 \end{figure}
 
 O período do algoritmo é um parâmetro importante no projeto de um sistema de controle. Se o período for muito curto, recursos computacionais valiosos serão desperdiçados e o computador pode ficar sobrecarregado ao ponto de os comandos para o robô chegarem tarde demais. Se o período for muito longo, o robô não responderá a tempo para corrigir erros em seu movimento.
+
+
+
+
+%-------------------- Parei aqui. ----------------------
+
+
 
 \smallskip
 
